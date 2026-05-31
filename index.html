@@ -1,0 +1,1188 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>GlycoChef — Analyseur d'Index Glycémique</title>
+<style>
+  :root {
+    --green:  #27ae60; --green-light: #eafaf1; --green-border: #a9dfbf;
+    --orange: #e67e22; --orange-light: #fef9f0; --orange-border: #f5cba7;
+    --red:    #e74c3c; --red-light: #fdf2f2;   --red-border:   #f1948a;
+    --blue:   #2980b9; --blue-light: #eaf4fb;
+    --navy:   #1a3a5c;
+    --bg:     #f4f7fa;
+    --card:   #ffffff;
+    --text:   #2c3e50;
+    --muted:  #7f8c8d;
+    --radius: 12px;
+    --shadow: 0 2px 16px rgba(0,0,0,.08);
+  }
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+  body { font-family: 'Segoe UI', Arial, sans-serif; background: var(--bg); color: var(--text); min-height: 100vh; }
+
+  /* HEADER */
+  header {
+    background: linear-gradient(135deg, #1a3a5c 0%, #2980b9 100%);
+    color: #fff; padding: 28px 24px 22px; text-align: center;
+    box-shadow: 0 4px 20px rgba(26,58,92,.3);
+  }
+  header h1 { font-size: 2rem; letter-spacing: 1px; }
+  header h1 span { color: #f9ca24; }
+  header p { margin-top: 6px; opacity: .85; font-size: .95rem; }
+
+  /* NAV TABS */
+  nav { display: flex; background: var(--navy); justify-content: center; flex-wrap: wrap; }
+  nav button {
+    background: none; border: none; color: rgba(255,255,255,.7);
+    padding: 14px 22px; cursor: pointer; font-size: .92rem;
+    border-bottom: 3px solid transparent; transition: all .2s;
+  }
+  nav button.active, nav button:hover { color: #fff; border-bottom-color: #f9ca24; }
+
+  /* SECTIONS */
+  .section { display: none; max-width: 860px; margin: 0 auto; padding: 28px 16px 60px; }
+  .section.active { display: block; }
+
+  /* CARD */
+  .card { background: var(--card); border-radius: var(--radius); box-shadow: var(--shadow); padding: 24px; margin-bottom: 20px; }
+  .card h2 { color: var(--navy); font-size: 1.1rem; margin-bottom: 14px; display: flex; align-items: center; gap: 8px; }
+
+  /* FORM ELEMENTS */
+  label { display: block; font-size: .88rem; font-weight: 600; color: var(--muted); margin-bottom: 4px; text-transform: uppercase; letter-spacing: .5px; }
+  input, select, textarea {
+    width: 100%; padding: 10px 14px; border: 1.5px solid #dde3ea;
+    border-radius: 8px; font-size: .95rem; color: var(--text);
+    background: #fff; transition: border-color .2s;
+  }
+  input:focus, select:focus, textarea:focus { outline: none; border-color: var(--blue); }
+  textarea { resize: vertical; min-height: 90px; }
+
+  /* CUISINE SELECTOR */
+  .cuisine-grid { display: flex; gap: 12px; flex-wrap: wrap; margin-top: 4px; }
+  .cuisine-btn {
+    flex: 1 1 120px; padding: 14px 10px; border: 2px solid #dde3ea;
+    border-radius: var(--radius); cursor: pointer; text-align: center;
+    background: #fff; transition: all .2s; font-size: .95rem; font-weight: 600;
+  }
+  .cuisine-btn .icon { font-size: 1.6rem; display: block; margin-bottom: 4px; }
+  .cuisine-btn.selected { border-color: var(--blue); background: var(--blue-light); color: var(--blue); }
+
+  /* INGREDIENT ROW */
+  .ingredient-row {
+    display: grid; grid-template-columns: 1fr 110px 36px;
+    gap: 8px; margin-bottom: 8px; align-items: center;
+  }
+  .ingredient-row input { margin-bottom: 0; }
+  .autocomplete-wrap { position: relative; }
+  .autocomplete-list {
+    position: absolute; top: 100%; left: 0; right: 0; background: #fff;
+    border: 1.5px solid var(--blue); border-top: none;
+    border-radius: 0 0 8px 8px; max-height: 200px; overflow-y: auto;
+    z-index: 999; box-shadow: 0 4px 12px rgba(0,0,0,.1);
+  }
+  .autocomplete-list div {
+    padding: 9px 14px; cursor: pointer; font-size: .9rem;
+    display: flex; justify-content: space-between; align-items: center;
+  }
+  .autocomplete-list div:hover { background: var(--blue-light); }
+  .autocomplete-list div .gi-badge { font-size: .78rem; padding: 2px 7px; border-radius: 20px; font-weight: 700; }
+  .btn-remove {
+    background: #fee; border: none; color: var(--red); cursor: pointer;
+    border-radius: 6px; font-size: 1.1rem; width: 36px; height: 36px;
+    display: flex; align-items: center; justify-content: center; transition: background .2s;
+  }
+  .btn-remove:hover { background: var(--red); color: #fff; }
+
+  /* BUTTONS */
+  .btn {
+    padding: 11px 24px; border: none; border-radius: 8px; cursor: pointer;
+    font-size: .95rem; font-weight: 600; transition: all .2s;
+  }
+  .btn-primary { background: var(--blue); color: #fff; }
+  .btn-primary:hover { background: #1a6fa3; }
+  .btn-success { background: var(--green); color: #fff; }
+  .btn-success:hover { background: #1e8449; }
+  .btn-outline {
+    background: none; border: 2px solid var(--blue); color: var(--blue);
+    padding: 9px 18px; border-radius: 8px; cursor: pointer; font-weight: 600;
+    font-size: .9rem; transition: all .2s;
+  }
+  .btn-outline:hover { background: var(--blue); color: #fff; }
+  .btn-row { display: flex; gap: 12px; flex-wrap: wrap; margin-top: 16px; }
+
+  /* RESULTS */
+  .gi-meter { background: #eee; border-radius: 20px; height: 18px; overflow: hidden; margin: 8px 0; }
+  .gi-meter-bar { height: 100%; border-radius: 20px; transition: width .6s ease; }
+  .gi-score { font-size: 2.4rem; font-weight: 700; line-height: 1; }
+  .gi-label { font-size: .85rem; font-weight: 600; text-transform: uppercase; letter-spacing: 1px; }
+
+  .result-row {
+    display: flex; justify-content: space-between; align-items: center;
+    padding: 10px 0; border-bottom: 1px solid #f0f0f0;
+  }
+  .result-row:last-child { border-bottom: none; }
+  .result-name { font-size: .95rem; flex: 1; }
+  .result-qty { font-size: .85rem; color: var(--muted); margin-right: 12px; }
+  .badge {
+    padding: 3px 10px; border-radius: 20px; font-size: .8rem;
+    font-weight: 700; white-space: nowrap;
+  }
+  .badge-green  { background: var(--green-light); color: var(--green); border: 1px solid var(--green-border); }
+  .badge-orange { background: var(--orange-light); color: var(--orange); border: 1px solid var(--orange-border); }
+  .badge-red    { background: var(--red-light); color: var(--red); border: 1px solid var(--red-border); }
+  .badge-grey   { background: #f0f0f0; color: var(--muted); border: 1px solid #ddd; }
+
+  .summary-grid { display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 16px; text-align: center; }
+  .summary-box { padding: 16px; border-radius: 10px; }
+
+  /* ALTERNATIVES */
+  .alt-card {
+    background: var(--blue-light); border: 1.5px solid #aed6f1;
+    border-radius: 10px; padding: 14px 16px; margin-bottom: 10px;
+  }
+  .alt-card h4 { color: var(--navy); font-size: .95rem; margin-bottom: 6px; }
+  .alt-card p { font-size: .88rem; color: var(--muted); }
+  .arrow { color: var(--green); font-weight: 700; margin: 0 8px; }
+
+  /* TIPS */
+  .tip-item { display: flex; gap: 12px; padding: 12px 0; border-bottom: 1px solid #f0f0f0; }
+  .tip-item:last-child { border-bottom: none; }
+  .tip-icon { font-size: 1.4rem; flex-shrink: 0; }
+  .tip-text strong { display: block; font-size: .93rem; margin-bottom: 2px; }
+  .tip-text span { font-size: .86rem; color: var(--muted); }
+
+  /* COMMENTS */
+  .comment-form { display: flex; flex-direction: column; gap: 12px; }
+  .comment-card {
+    background: #f9f9fb; border-radius: 10px; padding: 14px 16px; margin-bottom: 10px;
+    border-left: 4px solid var(--blue);
+  }
+  .comment-meta { font-size: .8rem; color: var(--muted); margin-top: 6px; }
+  .comment-card h4 { font-size: .95rem; color: var(--navy); margin-bottom: 4px; }
+  .comment-card p { font-size: .9rem; }
+  .star-row { display: flex; gap: 6px; font-size: 1.4rem; cursor: pointer; }
+  .star { color: #ddd; transition: color .15s; }
+  .star.active { color: #f9ca24; }
+
+  /* EMPTY STATE */
+  .empty { text-align: center; padding: 40px 20px; color: var(--muted); }
+  .empty .icon { font-size: 3rem; margin-bottom: 12px; }
+
+  /* ALERT */
+  .alert { padding: 12px 16px; border-radius: 8px; font-size: .9rem; margin-top: 12px; }
+  .alert-warn { background: #fef9e7; border: 1px solid #f9e79f; color: #7d6608; }
+  .alert-info { background: var(--blue-light); border: 1px solid #aed6f1; color: #1a5276; }
+  .alert-success { background: var(--green-light); border: 1px solid var(--green-border); color: #186a3b; }
+
+  /* ABOUT */
+  .about-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 16px; }
+  @media(max-width: 600px) { .about-grid { grid-template-columns: 1fr; } .summary-grid { grid-template-columns: 1fr; } }
+
+  .progress-ring { margin: 0 auto; }
+  hr { border: none; border-top: 1px solid #eee; margin: 16px 0; }
+
+  .not-found { font-size: .82rem; color: var(--red); padding: 6px 0; }
+
+  /* Footer */
+  footer { text-align: center; padding: 20px; font-size: .82rem; color: var(--muted); background: #fff; border-top: 1px solid #eee; }
+</style>
+</head>
+<body>
+
+<header>
+  <h1>🥗 Glyco<span>Chef</span></h1>
+  <p>Analysez l'index glycémique de vos recettes et découvrez des alternatives plus saines</p>
+</header>
+
+<nav>
+  <button class="active" onclick="showTab('analyser')">🔍 Analyser une recette</button>
+  <button onclick="showTab('resultats')" id="tab-resultats" style="display:none">📊 Résultats</button>
+  <button onclick="showTab('conseils')">💡 Conseils généraux</button>
+  <button onclick="showTab('commentaires')">💬 Vos suggestions</button>
+  <button onclick="showTab('apropos')">ℹ️ À propos</button>
+</nav>
+
+<!-- ═══════════════════════════════════════════════════════ ANALYSER -->
+<div class="section active" id="analyser">
+
+  <div class="card">
+    <h2>🍽️ Type de cuisine</h2>
+    <div class="cuisine-grid">
+      <div class="cuisine-btn selected" onclick="selectCuisine(this,'occidentale')">
+        <span class="icon">🥖</span>Occidentale
+      </div>
+      <div class="cuisine-btn" onclick="selectCuisine(this,'orientale')">
+        <span class="icon">🧆</span>Orientale
+      </div>
+      <div class="cuisine-btn" onclick="selectCuisine(this,'asiatique')">
+        <span class="icon">🍜</span>Asiatique
+      </div>
+    </div>
+  </div>
+
+  <div class="card">
+    <h2>📝 Ingrédients de la recette</h2>
+    <p style="font-size:.87rem;color:var(--muted);margin-bottom:14px;">
+      Tapez le nom d'un aliment et saisissez la quantité en grammes. L'autocomplétions vous guide.
+    </p>
+    <div id="ingredients-list"></div>
+    <button class="btn btn-outline" onclick="addIngredient()" style="margin-top:8px;">+ Ajouter un aliment</button>
+  </div>
+
+  <div class="card" id="recipe-name-card">
+    <h2>🏷️ Nom de la recette (optionnel)</h2>
+    <input type="text" id="recipe-name" placeholder="Ex : Curry de pois chiches, Risotto au parmesan…">
+  </div>
+
+  <div class="btn-row">
+    <button class="btn btn-primary" onclick="analyzeRecipe()" style="font-size:1rem;padding:14px 32px;">
+      ⚡ Analyser la recette
+    </button>
+    <button class="btn btn-outline" onclick="clearAll()">🗑️ Effacer</button>
+  </div>
+
+  <div class="alert alert-info" style="margin-top:16px;">
+    <strong>💡 Astuce :</strong> Entrez tous les ingrédients <em>avec glucides</em> (farines, riz, légumes, fruits, sauces…).
+    Les viandes, poissons et corps gras purs ont un IG = 0 et n'influencent pas le calcul.
+  </div>
+</div>
+
+<!-- ═══════════════════════════════════════════════════════ RÉSULTATS -->
+<div class="section" id="resultats">
+  <div id="results-container">
+    <div class="empty"><div class="icon">📊</div><p>Lancez une analyse pour voir les résultats.</p></div>
+  </div>
+</div>
+
+<!-- ═══════════════════════════════════════════════════════ CONSEILS -->
+<div class="section" id="conseils">
+  <div class="card">
+    <h2>🥗 L'ordre de dégustation</h2>
+    <div class="tip-item">
+      <div class="tip-icon">🥗</div>
+      <div class="tip-text">
+        <strong>Commencer par une salade verte</strong>
+        <span>Les fibres de la salade ralentissent l'absorption des glucides qui suivent. Une simple salade avant les pâtes ou le riz réduit le pic glycémique de 30 à 40 %.</span>
+      </div>
+    </div>
+    <div class="tip-item">
+      <div class="tip-icon">🥩</div>
+      <div class="tip-text">
+        <strong>Manger les protéines et légumes avant les glucides</strong>
+        <span>Les protéines et graisses consommées en premier ralentissent la vidange gastrique et aplatissent la courbe glycémique.</span>
+      </div>
+    </div>
+    <div class="tip-item">
+      <div class="tip-icon">🍵</div>
+      <div class="tip-text">
+        <strong>Terminer par les fruits ou le dessert</strong>
+        <span>En fin de repas, les sucres des fruits ou desserts ont un impact glycémique nettement moindre qu'à jeun.</span>
+      </div>
+    </div>
+  </div>
+
+  <div class="card">
+    <h2>🍳 Modes de cuisson</h2>
+    <div class="tip-item">
+      <div class="tip-icon">⏱️</div>
+      <div class="tip-text">
+        <strong>Al dente pour les pâtes et le riz</strong>
+        <span>Une cuisson al dente préserve la structure de l'amidon. Les pâtes al dente ont un IG ~45 contre ~65 pour des pâtes très cuites. Réduire le temps de cuisson de 2–3 minutes suffit.</span>
+      </div>
+    </div>
+    <div class="tip-item">
+      <div class="tip-icon">❄️</div>
+      <div class="tip-text">
+        <strong>Refroidir puis réchauffer</strong>
+        <span>Refroidir le riz ou les pâtes après cuisson transforme une partie de l'amidon en amidon résistant (non digérable). Réchauffer ne détruit pas cet effet. L'IG peut chuter de 15 à 20 points.</span>
+      </div>
+    </div>
+    <div class="tip-item">
+      <div class="tip-icon">🥘</div>
+      <div class="tip-text">
+        <strong>Éviter la surcuisson des légumes</strong>
+        <span>Les carottes crues ont un IG de 16, cuites elles passent à 47. Privilégier les cuissons courtes à la vapeur ou wok.</span>
+      </div>
+    </div>
+    <div class="tip-item">
+      <div class="tip-icon">🥔</div>
+      <div class="tip-text">
+        <strong>Pommes de terre : cuire à la vapeur et laisser refroidir</strong>
+        <span>La pomme de terre vapeur froide (salade de pommes de terre) a un IG ~58 contre ~85 au four chaud.</span>
+      </div>
+    </div>
+  </div>
+
+  <div class="card">
+    <h2>🔄 Substitutions intelligentes</h2>
+    <div class="tip-item">
+      <div class="tip-icon">🌾</div>
+      <div class="tip-text">
+        <strong>Remplacer la farine blanche</strong>
+        <span>Farine de blé T55 (IG 85) → farine d'orge (IG 35), farine de pois chiche (IG 35), farine de sarrasin (IG 40) ou mélange 50/50 complet + amande.</span>
+      </div>
+    </div>
+    <div class="tip-item">
+      <div class="tip-icon">🍚</div>
+      <div class="tip-text">
+        <strong>Choisir le bon riz</strong>
+        <span>Riz blanc (IG 72) → riz basmati complet (IG 45) → riz brun (IG 50). Le riz jasmin (IG 89) et gluant (IG 98) sont à éviter en grande quantité.</span>
+      </div>
+    </div>
+    <div class="tip-item">
+      <div class="tip-icon">🍯</div>
+      <div class="tip-text">
+        <strong>Sucrer intelligemment</strong>
+        <span>Sucre blanc (IG 68) → sucre de coco (IG 35) → sirop d'agave (IG 15) → stévia (IG 0). Pour les pâtisseries : purée de dattes ou compote de pomme sans sucre ajouté.</span>
+      </div>
+    </div>
+    <div class="tip-item">
+      <div class="tip-icon">🥖</div>
+      <div class="tip-text">
+        <strong>Le pain au levain plutôt que la baguette</strong>
+        <span>L'acidité du levain abaisse l'IG de 20 à 30 points. Pain au levain (IG 54) vs baguette blanche (IG 95).</span>
+      </div>
+    </div>
+  </div>
+
+  <div class="card">
+    <h2>➕ Aliments qui abaissent l'IG global</h2>
+    <div class="tip-item">
+      <div class="tip-icon">🍋</div>
+      <div class="tip-text">
+        <strong>Ajouter du vinaigre ou du citron</strong>
+        <span>L'acidité ralentit l'enzyme amylase et retarde la digestion des glucides. Une cuillère à soupe de vinaigre de cidre ou de citron dans la sauce peut réduire l'IG de 20 à 35 %.</span>
+      </div>
+    </div>
+    <div class="tip-item">
+      <div class="tip-icon">🫒</div>
+      <div class="tip-text">
+        <strong>Graisses saines dans le plat</strong>
+        <span>Un filet d'huile d'olive sur les pâtes ou le riz ralentit l'absorption des sucres. À ne pas confondre avec les graisses saturées en excès.</span>
+      </div>
+    </div>
+    <div class="tip-item">
+      <div class="tip-icon">🫘</div>
+      <div class="tip-text">
+        <strong>Associer des légumineuses</strong>
+        <span>Ajouter des lentilles, pois chiches ou haricots à un plat de riz ou pâtes réduit l'IG moyen du plat et augmente la satiété.</span>
+      </div>
+    </div>
+    <div class="tip-item">
+      <div class="tip-icon">🧂</div>
+      <div class="tip-text">
+        <strong>Les épices : cannelle, fenugrec, curcuma</strong>
+        <span>La cannelle améliore la sensibilité à l'insuline. Le fenugrec ralentit la vidange gastrique. Intégrez-les dans vos recettes sucrées et salées.</span>
+      </div>
+    </div>
+  </div>
+
+  <div class="card">
+    <h2>🏃 Mode de vie</h2>
+    <div class="tip-item">
+      <div class="tip-icon">🚶</div>
+      <div class="tip-text">
+        <strong>Marche de 10–15 min après le repas</strong>
+        <span>Une courte marche après manger réduit le pic glycémique de 20 à 30 % en utilisant le glucose musculaire.</span>
+      </div>
+    </div>
+    <div class="tip-item">
+      <div class="tip-icon">🕐</div>
+      <div class="tip-text">
+        <strong>Ne pas sauter de repas</strong>
+        <span>Arriver à table avec une glycémie basse amplifie le pic glycémique. 3 repas réguliers ou des collations protéinées maintiennent la glycémie stable.</span>
+      </div>
+    </div>
+    <div class="tip-item">
+      <div class="tip-icon">😴</div>
+      <div class="tip-text">
+        <strong>Sommeil et glycémie</strong>
+        <span>Un manque de sommeil augmente la résistance à l'insuline. 7–9h de sommeil améliorent la régulation glycémique indépendamment de l'alimentation.</span>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- ═══════════════════════════════════════════════════════ COMMENTAIRES -->
+<div class="section" id="commentaires">
+  <div class="card">
+    <h2>💬 Laissez votre suggestion</h2>
+    <p style="font-size:.88rem;color:var(--muted);margin-bottom:16px;">
+      Quel aliment aimeriez-vous voir analysé ? Quelle cuisine souhaitez-vous voir davantage couverte ? Votre retour améliore GlycoChef.
+    </p>
+    <div class="comment-form">
+      <div style="display:grid;grid-template-columns:1fr 1fr;gap:12px;">
+        <div>
+          <label>Votre prénom</label>
+          <input type="text" id="c-name" placeholder="Sophie…">
+        </div>
+        <div>
+          <label>Thème</label>
+          <select id="c-theme">
+            <option value="aliment">🥦 Nouvel aliment à ajouter</option>
+            <option value="cuisine">🌍 Nouvelle cuisine à couvrir</option>
+            <option value="recette">🍽️ Suggestion de recette</option>
+            <option value="bug">🐛 Signaler un problème</option>
+            <option value="autre">💡 Autre idée</option>
+          </select>
+        </div>
+      </div>
+      <div>
+        <label>Votre message</label>
+        <textarea id="c-text" placeholder="Ex : J'aimerais voir les aliments de la cuisine éthiopienne (injera, berbéré…), ou que vous ajoutiez le teff et le sorgho dans la base…"></textarea>
+      </div>
+      <div>
+        <label>Votre note pour le site</label>
+        <div class="star-row" id="star-row">
+          <span class="star" onclick="setStars(1)">★</span>
+          <span class="star" onclick="setStars(2)">★</span>
+          <span class="star" onclick="setStars(3)">★</span>
+          <span class="star" onclick="setStars(4)">★</span>
+          <span class="star" onclick="setStars(5)">★</span>
+        </div>
+      </div>
+      <button class="btn btn-success" onclick="submitComment()" style="align-self:flex-start;">
+        📩 Envoyer ma suggestion
+      </button>
+      <div id="c-feedback"></div>
+    </div>
+  </div>
+
+  <div class="card">
+    <h2>📋 Suggestions reçues <span id="comment-count" style="font-weight:400;color:var(--muted);font-size:.9rem;"></span></h2>
+    <div id="comments-list">
+      <div class="empty"><div class="icon">💬</div><p>Aucune suggestion pour le moment. Soyez le premier !</p></div>
+    </div>
+  </div>
+</div>
+
+<!-- ═══════════════════════════════════════════════════════ À PROPOS -->
+<div class="section" id="apropos">
+  <div class="card">
+    <h2>🎯 Objectif de GlycoChef</h2>
+    <p style="line-height:1.7;font-size:.95rem;">
+      GlycoChef vous aide à comprendre l'impact glycémique de vos recettes et à faire des choix alimentaires éclairés.
+      L'outil ne remplace pas un avis médical ou diététique. Il est conçu pour la sensibilisation et l'éducation nutritionnelle.
+    </p>
+    <hr>
+    <div class="about-grid">
+      <div class="summary-box" style="background:var(--green-light);border:1px solid var(--green-border);">
+        <div style="font-size:1.8rem;">🟢</div>
+        <strong>IG Faible ≤ 55</strong>
+        <p style="font-size:.85rem;margin-top:4px;color:var(--muted);">Libération lente du glucose. Idéal pour une glycémie stable.</p>
+      </div>
+      <div class="summary-box" style="background:var(--orange-light);border:1px solid var(--orange-border);">
+        <div style="font-size:1.8rem;">🟠</div>
+        <strong>IG Modéré 56–69</strong>
+        <p style="font-size:.85rem;margin-top:4px;color:var(--muted);">Impact intermédiaire. À consommer avec modération.</p>
+      </div>
+      <div class="summary-box" style="background:var(--red-light);border:1px solid var(--red-border);">
+        <div style="font-size:1.8rem;">🔴</div>
+        <strong>IG Élevé ≥ 70</strong>
+        <p style="font-size:.85rem;margin-top:4px;color:var(--muted);">Pic glycémique rapide. Limiter ou trouver des alternatives.</p>
+      </div>
+    </div>
+    <hr>
+    <h2 style="margin-top:0;">📚 Sources scientifiques</h2>
+    <ul style="font-size:.88rem;line-height:1.8;padding-left:18px;color:var(--muted);">
+      <li>Atkinson FS, Foster-Powell K, Brand-Miller JC. — <em>International Tables of Glycemic Index and Glycemic Load Values: 2008.</em> Diabetes Care.</li>
+      <li>Foster-Powell K, Holt SHA, Brand-Miller JC. — <em>International table of GI and GL values: 2002.</em> Am J Clin Nutr.</li>
+      <li>Base de données nutritionnelles Ciqual — ANSES (France).</li>
+      <li>Harvard T.H. Chan School of Public Health — Glycemic Index and Glycemic Load.</li>
+    </ul>
+    <div class="alert alert-warn" style="margin-top:12px;">
+      <strong>⚠️ Avertissement médical :</strong> Les valeurs d'IG varient selon le mode de cuisson, la maturité, la variété de l'aliment et la combinaison alimentaire. Consultez un professionnel de santé pour des conseils personnalisés, notamment en cas de diabète.
+    </div>
+  </div>
+</div>
+
+<footer>GlycoChef · Base de données : 306 aliments · Données issues de tables internationales d'index glycémique · Usage éducatif uniquement</footer>
+
+<script>
+// ═══════════════════════════════════════════════════════════════
+//  DATABASE  (aliment, IG, catégorie, origine, alternatives par cuisine)
+// ═══════════════════════════════════════════════════════════════
+const DB = [
+  // Farines & Céréales
+  {n:"Farine de blé blanche (T55)",      gi:85, cat:"Farine",      ori:["occidentale"],           alt:{occidentale:"Farine d'orge (IG 35) ou farine de sarrasin (IG 40)", orientale:"Farine de pois chiche (IG 35) ou farine de teff (IG 57)", asiatique:"Farine de riz brun (IG 65) ou farine de coco (IG 35)"}},
+  {n:"Farine de blé complète (T150)",    gi:60, cat:"Farine",      ori:["occidentale"]},
+  {n:"Farine de seigle",                 gi:45, cat:"Farine",      ori:["occidentale"]},
+  {n:"Farine d'épeautre",                gi:55, cat:"Farine",      ori:["occidentale"]},
+  {n:"Farine d'avoine",                  gi:55, cat:"Farine",      ori:["occidentale"]},
+  {n:"Farine d'orge",                    gi:35, cat:"Farine",      ori:["occidentale"]},
+  {n:"Farine de riz blanc",              gi:95, cat:"Farine",      ori:["asiatique"],             alt:{asiatique:"Farine de riz brun (IG 65) ou farine de coco (IG 35)", occidentale:"Farine d'orge (IG 35)", orientale:"Farine de pois chiche (IG 35)"}},
+  {n:"Farine de riz brun",               gi:65, cat:"Farine",      ori:["asiatique"]},
+  {n:"Farine de maïs",                   gi:85, cat:"Farine",      ori:["occidentale"],           alt:{occidentale:"Farine d'orge (IG 35) ou farine de sarrasin (IG 40)", asiatique:"Farine de riz brun (IG 65)", orientale:"Farine de pois chiche (IG 35)"}},
+  {n:"Maïzena",                          gi:85, cat:"Farine",      ori:["occidentale"],           alt:{occidentale:"Farine d'orge (IG 35) ou fécule d'arrow-root (IG 65)", asiatique:"Farine de riz brun (IG 65)", orientale:"Farine de pois chiche (IG 35)"}},
+  {n:"Farine de pois chiche",            gi:35, cat:"Farine",      ori:["orientale"]},
+  {n:"Farine de sarrasin",               gi:40, cat:"Farine",      ori:["occidentale"]},
+  {n:"Farine de coco",                   gi:35, cat:"Farine",      ori:["asiatique"]},
+  {n:"Farine d'amande",                  gi:25, cat:"Farine",      ori:["occidentale"]},
+  {n:"Farine de manioc",                 gi:65, cat:"Farine",      ori:["orientale"]},
+  {n:"Farine de teff",                   gi:57, cat:"Farine",      ori:["orientale"]},
+  {n:"Farine de kamut",                  gi:45, cat:"Farine",      ori:["occidentale"]},
+  {n:"Fécule de pomme de terre",         gi:95, cat:"Farine",      ori:["occidentale"],           alt:{occidentale:"Arrow-root (IG 65) ou farine d'orge (IG 35)", asiatique:"Fécule de tapioca (IG 70)", orientale:"Farine de pois chiche (IG 35)"}},
+
+  // Riz & Céréales
+  {n:"Riz blanc cuit",                   gi:72, cat:"Céréale",     ori:["asiatique"],             alt:{asiatique:"Riz brun (IG 50) ou riz basmati complet (IG 45)", occidentale:"Quinoa (IG 53) ou orge mondé (IG 22)", orientale:"Riz basmati blanc (IG 58) ou boulgour (IG 46)"}},
+  {n:"Riz brun cuit",                    gi:50, cat:"Céréale",     ori:["asiatique"]},
+  {n:"Riz basmati blanc cuit",           gi:58, cat:"Céréale",     ori:["orientale"],             alt:{orientale:"Riz basmati complet (IG 45) ou boulgour (IG 46)", asiatique:"Riz brun (IG 50)", occidentale:"Quinoa (IG 53)"}},
+  {n:"Riz basmati complet cuit",         gi:45, cat:"Céréale",     ori:["orientale"]},
+  {n:"Riz sauvage cuit",                 gi:35, cat:"Céréale",     ori:["occidentale"]},
+  {n:"Riz jasmin cuit",                  gi:89, cat:"Céréale",     ori:["asiatique"],             alt:{asiatique:"Riz brun (IG 50) ou riz basmati complet (IG 45)", orientale:"Riz basmati complet (IG 45)", occidentale:"Quinoa (IG 53)"}},
+  {n:"Riz gluant cuit",                  gi:98, cat:"Céréale",     ori:["asiatique"],             alt:{asiatique:"Riz brun (IG 50) — pour le sushi : riz à IG modéré refroidi (IG ~55)", orientale:"Boulgour (IG 46)", occidentale:"Orge mondé (IG 22)"}},
+  {n:"Quinoa cuit",                      gi:53, cat:"Céréale",     ori:["occidentale"]},
+  {n:"Orge perlé cuit",                  gi:28, cat:"Céréale",     ori:["occidentale"]},
+  {n:"Orge mondé cuit",                  gi:22, cat:"Céréale",     ori:["occidentale"]},
+  {n:"Sarrasin cuit",                    gi:40, cat:"Céréale",     ori:["occidentale"]},
+  {n:"Millet cuit",                      gi:71, cat:"Céréale",     ori:["orientale"],             alt:{orientale:"Boulgour (IG 46) ou freekeh (IG 43)", asiatique:"Riz brun (IG 50)", occidentale:"Quinoa (IG 53)"}},
+  {n:"Boulgour cuit",                    gi:46, cat:"Céréale",     ori:["orientale"]},
+  {n:"Couscous cuit",                    gi:65, cat:"Céréale",     ori:["orientale"],             alt:{orientale:"Boulgour (IG 46) ou freekeh (IG 43)", asiatique:"Riz brun (IG 50)", occidentale:"Quinoa (IG 53)"}},
+  {n:"Semoule de blé cuite",             gi:60, cat:"Céréale",     ori:["orientale"],             alt:{orientale:"Boulgour (IG 46)", occidentale:"Quinoa (IG 53)", asiatique:"Riz brun (IG 50)"}},
+  {n:"Flocons d'avoine cuits",           gi:55, cat:"Céréale",     ori:["occidentale"]},
+  {n:"Avoine",                           gi:55, cat:"Céréale",     ori:["occidentale"]},
+  {n:"Épeautre cuit",                    gi:40, cat:"Céréale",     ori:["occidentale"]},
+  {n:"Amarante cuite",                   gi:35, cat:"Céréale",     ori:["occidentale"]},
+  {n:"Freekeh cuit",                     gi:43, cat:"Céréale",     ori:["orientale"]},
+  {n:"Sorgho cuit",                      gi:55, cat:"Céréale",     ori:["orientale"]},
+
+  // Pains
+  {n:"Baguette blanche",                 gi:95, cat:"Pain",        ori:["occidentale"],           alt:{occidentale:"Pain au levain (IG 54) ou pain de seigle intégral (IG 40)", orientale:"Pain pita complet (IG 57)", asiatique:"Riz brun ou nouilles soba (IG 59)"}},
+  {n:"Pain de mie blanc",                gi:85, cat:"Pain",        ori:["occidentale"],           alt:{occidentale:"Pain au levain complet (IG 54) ou pain de seigle (IG 45)", orientale:"Pain pita complet (IG 57)", asiatique:"Riz brun (IG 50)"}},
+  {n:"Pain complet",                     gi:65, cat:"Pain",        ori:["occidentale"],           alt:{occidentale:"Pain au seigle (IG 45) ou pain au levain (IG 54)", orientale:"Pain pita complet (IG 57)", asiatique:"Riz brun (IG 50)"}},
+  {n:"Pain au seigle",                   gi:45, cat:"Pain",        ori:["occidentale"]},
+  {n:"Pain de seigle intégral",          gi:40, cat:"Pain",        ori:["occidentale"]},
+  {n:"Pain au levain",                   gi:54, cat:"Pain",        ori:["occidentale"]},
+  {n:"Pita blanc",                       gi:82, cat:"Pain",        ori:["orientale"],             alt:{orientale:"Pain pita complet (IG 57) ou chapati blé complet (IG 52)", asiatique:"Riz brun (IG 50)", occidentale:"Pain au levain (IG 54)"}},
+  {n:"Pita complet",                     gi:57, cat:"Pain",        ori:["orientale"]},
+  {n:"Naan",                             gi:71, cat:"Pain",        ori:["orientale"],             alt:{orientale:"Chapati blé complet (IG 52) ou roti complet (IG 55)", asiatique:"Riz brun (IG 50)", occidentale:"Pain de seigle (IG 45)"}},
+  {n:"Chapati",                          gi:52, cat:"Pain",        ori:["orientale"]},
+  {n:"Roti",                             gi:62, cat:"Pain",        ori:["orientale"],             alt:{orientale:"Chapati blé complet (IG 52)", asiatique:"Riz brun (IG 50)", occidentale:"Pain de seigle (IG 45)"}},
+  {n:"Injera",                           gi:57, cat:"Pain",        ori:["orientale"]},
+  {n:"Tortilla de maïs",                 gi:52, cat:"Pain",        ori:["occidentale"]},
+  {n:"Tortilla de blé",                  gi:30, cat:"Pain",        ori:["occidentale"]},
+
+  // Pâtes
+  {n:"Pâtes blanches cuites al dente",   gi:45, cat:"Pâtes",      ori:["occidentale"]},
+  {n:"Pâtes blanches cuites",            gi:65, cat:"Pâtes",      ori:["occidentale"],           alt:{occidentale:"Pâtes al dente (IG 45) ou pâtes complètes (IG 37)", orientale:"Boulgour (IG 46)", asiatique:"Nouilles soba (IG 59) ou vermicelles de soja (IG 35)"}},
+  {n:"Pâtes complètes cuites",           gi:37, cat:"Pâtes",      ori:["occidentale"]},
+  {n:"Pâtes",                            gi:65, cat:"Pâtes",      ori:["occidentale"],           alt:{occidentale:"Pâtes complètes (IG 37) ou pâtes de lentilles (IG 30)", orientale:"Boulgour (IG 46)", asiatique:"Nouilles soba (IG 59)"}},
+  {n:"Gnocchis",                         gi:70, cat:"Pâtes",      ori:["occidentale"],           alt:{occidentale:"Pâtes complètes (IG 37) ou patate douce cuite (IG 63)", orientale:"Boulgour (IG 46)", asiatique:"Nouilles soba (IG 59)"}},
+  {n:"Nouilles de riz cuites",           gi:61, cat:"Pâtes",      ori:["asiatique"],             alt:{asiatique:"Nouilles soba (IG 59) ou vermicelles de soja (IG 35)", orientale:"Boulgour (IG 46)", occidentale:"Pâtes complètes (IG 37)"}},
+  {n:"Nouilles soba cuites",             gi:59, cat:"Pâtes",      ori:["asiatique"]},
+  {n:"Soba",                             gi:59, cat:"Pâtes",      ori:["asiatique"]},
+  {n:"Nouilles udon cuites",             gi:55, cat:"Pâtes",      ori:["asiatique"]},
+  {n:"Udon",                             gi:55, cat:"Pâtes",      ori:["asiatique"]},
+  {n:"Vermicelles de soja cuits",        gi:35, cat:"Pâtes",      ori:["asiatique"]},
+  {n:"Nouilles de verre",                gi:39, cat:"Pâtes",      ori:["asiatique"]},
+  {n:"Ramen cuits",                      gi:57, cat:"Pâtes",      ori:["asiatique"]},
+  {n:"Shirataki",                        gi:0,  cat:"Pâtes",      ori:["asiatique"]},
+  {n:"Konjac",                           gi:0,  cat:"Pâtes",      ori:["asiatique"]},
+  {n:"Pâtes de pois chiche",             gi:35, cat:"Pâtes",      ori:["occidentale"]},
+  {n:"Pâtes de lentilles",               gi:30, cat:"Pâtes",      ori:["occidentale"]},
+  {n:"Lasagnes",                         gi:50, cat:"Pâtes",      ori:["occidentale"]},
+
+  // Légumineuses
+  {n:"Lentilles vertes cuites",          gi:30, cat:"Légumineuse", ori:["occidentale","orientale"]},
+  {n:"Lentilles rouges cuites",          gi:26, cat:"Légumineuse", ori:["orientale"]},
+  {n:"Lentilles",                        gi:30, cat:"Légumineuse", ori:["occidentale","orientale"]},
+  {n:"Pois chiches cuits",               gi:28, cat:"Légumineuse", ori:["orientale"]},
+  {n:"Pois chiches",                     gi:28, cat:"Légumineuse", ori:["orientale"]},
+  {n:"Haricots rouges cuits",            gi:24, cat:"Légumineuse", ori:["occidentale"]},
+  {n:"Haricots noirs cuits",             gi:30, cat:"Légumineuse", ori:["occidentale"]},
+  {n:"Haricots blancs cuits",            gi:33, cat:"Légumineuse", ori:["occidentale"]},
+  {n:"Fèves cuites",                     gi:40, cat:"Légumineuse", ori:["orientale"]},
+  {n:"Edamame",                          gi:18, cat:"Légumineuse", ori:["asiatique"]},
+  {n:"Haricots mungo cuits",             gi:25, cat:"Légumineuse", ori:["asiatique"]},
+  {n:"Haricots adzuki cuits",            gi:35, cat:"Légumineuse", ori:["asiatique"]},
+  {n:"Soja cuit",                        gi:18, cat:"Légumineuse", ori:["asiatique"]},
+
+  // Légumes
+  {n:"Pomme de terre vapeur",            gi:65, cat:"Légume",      ori:["occidentale"],           alt:{occidentale:"Patate douce (IG 63) ou topinambour (IG 50)", orientale:"Igname (IG 35)", asiatique:"Taro (IG 56)"}},
+  {n:"Pomme de terre",                   gi:65, cat:"Légume",      ori:["occidentale"],           alt:{occidentale:"Patate douce (IG 63) ou igname (IG 35)", orientale:"Igname (IG 35)", asiatique:"Taro (IG 56)"}},
+  {n:"Pomme de terre au four",           gi:85, cat:"Légume",      ori:["occidentale"],           alt:{occidentale:"Patate douce cuite vapeur (IG 63) ou igname (IG 35)", orientale:"Igname (IG 35)", asiatique:"Taro (IG 56)"}},
+  {n:"Purée de pomme de terre",          gi:80, cat:"Légume",      ori:["occidentale"],           alt:{occidentale:"Purée de patate douce (IG ~63) ou purée de céleri-rave (IG 35)", orientale:"Purée d'igname (IG 35)", asiatique:"Purée de taro (IG 56)"}},
+  {n:"Patate douce cuite",               gi:63, cat:"Légume",      ori:["orientale"]},
+  {n:"Patate douce",                     gi:63, cat:"Légume",      ori:["orientale"]},
+  {n:"Igname cuite",                     gi:35, cat:"Légume",      ori:["orientale"]},
+  {n:"Taro cuit",                        gi:56, cat:"Légume",      ori:["asiatique"]},
+  {n:"Manioc cuit",                      gi:46, cat:"Légume",      ori:["orientale"]},
+  {n:"Courge butternut cuite",           gi:51, cat:"Légume",      ori:["occidentale"]},
+  {n:"Citrouille cuite",                 gi:75, cat:"Légume",      ori:["occidentale"],           alt:{occidentale:"Courge butternut (IG 51) ou courgette (IG 15)", orientale:"Potimarron (IG 65)", asiatique:"Taro (IG 56)"}},
+  {n:"Carotte crue",                     gi:16, cat:"Légume",      ori:["occidentale"]},
+  {n:"Carotte cuite",                    gi:47, cat:"Légume",      ori:["occidentale"]},
+  {n:"Carotte",                          gi:30, cat:"Légume",      ori:["occidentale"]},
+  {n:"Betterave cuite",                  gi:64, cat:"Légume",      ori:["occidentale"],           alt:{occidentale:"Carotte crue (IG 16) ou courgette (IG 15)", orientale:"Aubergine cuite (IG 15)", asiatique:"Daikon cru (IG 15)"}},
+  {n:"Panais cuit",                      gi:97, cat:"Légume",      ori:["occidentale"],           alt:{occidentale:"Céleri-rave (IG 35) ou courgette (IG 15)", orientale:"Igname (IG 35)", asiatique:"Taro (IG 56)"}},
+  {n:"Maïs doux",                        gi:52, cat:"Légume",      ori:["occidentale"]},
+  {n:"Maïs",                             gi:52, cat:"Légume",      ori:["occidentale"]},
+  {n:"Petits pois cuits",                gi:48, cat:"Légume",      ori:["occidentale"]},
+  {n:"Petits pois",                      gi:48, cat:"Légume",      ori:["occidentale"]},
+  {n:"Brocoli",                          gi:15, cat:"Légume",      ori:["occidentale"]},
+  {n:"Chou-fleur",                       gi:15, cat:"Légume",      ori:["occidentale"]},
+  {n:"Chou vert",                        gi:15, cat:"Légume",      ori:["occidentale"]},
+  {n:"Épinards",                         gi:15, cat:"Légume",      ori:["occidentale"]},
+  {n:"Courgette",                        gi:15, cat:"Légume",      ori:["occidentale"]},
+  {n:"Aubergine",                        gi:15, cat:"Légume",      ori:["orientale"]},
+  {n:"Poivron",                          gi:15, cat:"Légume",      ori:["occidentale"]},
+  {n:"Tomate",                           gi:30, cat:"Légume",      ori:["occidentale"]},
+  {n:"Concombre",                        gi:15, cat:"Légume",      ori:["occidentale"]},
+  {n:"Laitue",                           gi:15, cat:"Légume",      ori:["occidentale"]},
+  {n:"Oignon",                           gi:10, cat:"Légume",      ori:["occidentale"]},
+  {n:"Ail",                              gi:30, cat:"Légume",      ori:["orientale"]},
+  {n:"Champignons",                      gi:15, cat:"Légume",      ori:["asiatique"]},
+  {n:"Shiitake",                         gi:15, cat:"Légume",      ori:["asiatique"]},
+  {n:"Pak choi",                         gi:15, cat:"Légume",      ori:["asiatique"]},
+  {n:"Daikon",                           gi:15, cat:"Légume",      ori:["asiatique"]},
+  {n:"Gombo",                            gi:15, cat:"Légume",      ori:["orientale"]},
+  {n:"Artichaut",                        gi:15, cat:"Légume",      ori:["occidentale"]},
+  {n:"Asperge",                          gi:15, cat:"Légume",      ori:["occidentale"]},
+  {n:"Céleri",                           gi:15, cat:"Légume",      ori:["occidentale"]},
+  {n:"Fenouil",                          gi:15, cat:"Légume",      ori:["occidentale"]},
+  {n:"Poireau",                          gi:15, cat:"Légume",      ori:["occidentale"]},
+  {n:"Navet cuit",                       gi:72, cat:"Légume",      ori:["occidentale"],           alt:{occidentale:"Courgette (IG 15) ou céleri-rave (IG 35)", orientale:"Daikon cru (IG 15)", asiatique:"Daikon cru (IG 15)"}},
+
+  // Fruits
+  {n:"Pomme",                            gi:36, cat:"Fruit",       ori:["occidentale"]},
+  {n:"Poire",                            gi:38, cat:"Fruit",       ori:["occidentale"]},
+  {n:"Banane mûre",                      gi:60, cat:"Fruit",       ori:["tropicale"],             alt:{occidentale:"Pomme (IG 36) ou poire (IG 38)", orientale:"Grenade (IG 53)", asiatique:"Kiwi (IG 50) ou mandarine (IG 30)"}},
+  {n:"Banane",                           gi:60, cat:"Fruit",       ori:["tropicale"],             alt:{occidentale:"Pomme (IG 36)", orientale:"Grenade (IG 53)", asiatique:"Kiwi (IG 50)"}},
+  {n:"Orange",                           gi:43, cat:"Fruit",       ori:["orientale"]},
+  {n:"Mandarine",                        gi:30, cat:"Fruit",       ori:["asiatique"]},
+  {n:"Pamplemousse",                     gi:25, cat:"Fruit",       ori:["occidentale"]},
+  {n:"Fraise",                           gi:40, cat:"Fruit",       ori:["occidentale"]},
+  {n:"Framboise",                        gi:25, cat:"Fruit",       ori:["occidentale"]},
+  {n:"Myrtille",                         gi:25, cat:"Fruit",       ori:["occidentale"]},
+  {n:"Cerise",                           gi:22, cat:"Fruit",       ori:["occidentale"]},
+  {n:"Raisin",                           gi:59, cat:"Fruit",       ori:["orientale"],             alt:{occidentale:"Pomme (IG 36) ou cerise (IG 22)", orientale:"Grenade (IG 53)", asiatique:"Mandarine (IG 30)"}},
+  {n:"Pastèque",                         gi:76, cat:"Fruit",       ori:["orientale"],             alt:{orientale:"Grenade (IG 53) ou orange (IG 43)", occidentale:"Fraises (IG 40)", asiatique:"Kiwi (IG 50)"}},
+  {n:"Melon",                            gi:65, cat:"Fruit",       ori:["orientale"],             alt:{orientale:"Orange (IG 43) ou grenade (IG 53)", occidentale:"Pêche (IG 42)", asiatique:"Kiwi (IG 50)"}},
+  {n:"Mangue",                           gi:60, cat:"Fruit",       ori:["asiatique"],             alt:{asiatique:"Kiwi (IG 50) ou mandarine (IG 30)", orientale:"Grenade (IG 53)", occidentale:"Pomme (IG 36)"}},
+  {n:"Papaye",                           gi:56, cat:"Fruit",       ori:["asiatique"]},
+  {n:"Ananas",                           gi:59, cat:"Fruit",       ori:["tropicale"],             alt:{asiatique:"Kiwi (IG 50) ou mandarine (IG 30)", occidentale:"Fraise (IG 40)", orientale:"Grenade (IG 53)"}},
+  {n:"Kiwi",                             gi:50, cat:"Fruit",       ori:["asiatique"]},
+  {n:"Pêche",                            gi:42, cat:"Fruit",       ori:["occidentale"]},
+  {n:"Abricot frais",                    gi:57, cat:"Fruit",       ori:["orientale"]},
+  {n:"Figue fraîche",                    gi:35, cat:"Fruit",       ori:["orientale"]},
+  {n:"Dattes",                           gi:62, cat:"Fruit",       ori:["orientale"],             alt:{orientale:"Figues fraîches (IG 35) ou abricots secs (IG 30)", asiatique:"Litchi (IG 57)", occidentale:"Pruneaux (IG 29)"}},
+  {n:"Grenade",                          gi:53, cat:"Fruit",       ori:["orientale"]},
+  {n:"Litchi",                           gi:57, cat:"Fruit",       ori:["asiatique"]},
+  {n:"Avocat",                           gi:15, cat:"Fruit",       ori:["tropicale"]},
+  {n:"Noix de coco",                     gi:45, cat:"Fruit",       ori:["asiatique"]},
+
+  // Viandes (IG = 0)
+  {n:"Poulet",                           gi:0,  cat:"Viande",      ori:["occidentale","orientale","asiatique"]},
+  {n:"Dinde",                            gi:0,  cat:"Viande",      ori:["occidentale"]},
+  {n:"Bœuf",                             gi:0,  cat:"Viande",      ori:["occidentale","orientale"]},
+  {n:"Veau",                             gi:0,  cat:"Viande",      ori:["occidentale"]},
+  {n:"Agneau",                           gi:0,  cat:"Viande",      ori:["orientale"]},
+  {n:"Porc",                             gi:0,  cat:"Viande",      ori:["asiatique","occidentale"]},
+  {n:"Canard",                           gi:0,  cat:"Viande",      ori:["asiatique"]},
+  {n:"Lapin",                            gi:0,  cat:"Viande",      ori:["occidentale"]},
+  {n:"Jambon",                           gi:0,  cat:"Viande",      ori:["occidentale"]},
+
+  // Poissons & Fruits de mer
+  {n:"Saumon",                           gi:0,  cat:"Poisson",     ori:["occidentale"]},
+  {n:"Thon",                             gi:0,  cat:"Poisson",     ori:["occidentale"]},
+  {n:"Cabillaud",                        gi:0,  cat:"Poisson",     ori:["occidentale"]},
+  {n:"Sardine",                          gi:0,  cat:"Poisson",     ori:["occidentale"]},
+  {n:"Maquereau",                        gi:0,  cat:"Poisson",     ori:["occidentale"]},
+  {n:"Crevettes",                        gi:0,  cat:"Poisson",     ori:["asiatique"]},
+  {n:"Calmar",                           gi:0,  cat:"Poisson",     ori:["asiatique"]},
+  {n:"Moules",                           gi:0,  cat:"Poisson",     ori:["occidentale"]},
+  {n:"Huîtres",                          gi:0,  cat:"Poisson",     ori:["occidentale"]},
+  {n:"Crabe",                            gi:0,  cat:"Poisson",     ori:["asiatique"]},
+  {n:"Homard",                           gi:0,  cat:"Poisson",     ori:["occidentale"]},
+  {n:"Tilapia",                          gi:0,  cat:"Poisson",     ori:["orientale"]},
+  {n:"Bar",                              gi:0,  cat:"Poisson",     ori:["occidentale"]},
+  {n:"Anchois",                          gi:0,  cat:"Poisson",     ori:["orientale"]},
+
+  // Produits laitiers
+  {n:"Lait entier",                      gi:27, cat:"Laitage",     ori:["occidentale"]},
+  {n:"Lait demi-écrémé",                 gi:27, cat:"Laitage",     ori:["occidentale"]},
+  {n:"Lait",                             gi:27, cat:"Laitage",     ori:["occidentale"]},
+  {n:"Lait de soja",                     gi:34, cat:"Laitage",     ori:["asiatique"]},
+  {n:"Lait d'amande",                    gi:25, cat:"Laitage",     ori:["occidentale"]},
+  {n:"Lait de riz",                      gi:86, cat:"Laitage",     ori:["asiatique"],             alt:{asiatique:"Lait de soja non sucré (IG 34)", occidentale:"Lait d'amande (IG 25)", orientale:"Lait de coco (IG 41)"}},
+  {n:"Lait de coco",                     gi:41, cat:"Laitage",     ori:["asiatique"]},
+  {n:"Yaourt nature",                    gi:36, cat:"Laitage",     ori:["occidentale"]},
+  {n:"Yaourt grec",                      gi:11, cat:"Laitage",     ori:["occidentale"]},
+  {n:"Yaourt",                           gi:36, cat:"Laitage",     ori:["occidentale"]},
+  {n:"Fromage blanc",                    gi:30, cat:"Laitage",     ori:["occidentale"]},
+  {n:"Fromage",                          gi:0,  cat:"Laitage",     ori:["occidentale"]},
+  {n:"Crème fraîche",                    gi:0,  cat:"Laitage",     ori:["occidentale"]},
+  {n:"Beurre",                           gi:0,  cat:"Laitage",     ori:["occidentale"]},
+  {n:"Œuf",                              gi:0,  cat:"Laitage",     ori:["occidentale"]},
+  {n:"Œufs",                             gi:0,  cat:"Laitage",     ori:["occidentale"]},
+  {n:"Kéfir",                            gi:36, cat:"Laitage",     ori:["orientale"]},
+
+  // Oléagineux
+  {n:"Amandes",                          gi:15, cat:"Oléagineux",  ori:["orientale"]},
+  {n:"Noix",                             gi:15, cat:"Oléagineux",  ori:["occidentale"]},
+  {n:"Noix de cajou",                    gi:22, cat:"Oléagineux",  ori:["asiatique"]},
+  {n:"Pistaches",                        gi:15, cat:"Oléagineux",  ori:["orientale"]},
+  {n:"Noisettes",                        gi:15, cat:"Oléagineux",  ori:["occidentale"]},
+  {n:"Arachides",                        gi:14, cat:"Oléagineux",  ori:["asiatique"]},
+  {n:"Cacahuètes",                       gi:14, cat:"Oléagineux",  ori:["asiatique"]},
+  {n:"Graines de chia",                  gi:1,  cat:"Oléagineux",  ori:["occidentale"]},
+  {n:"Graines de lin",                   gi:35, cat:"Oléagineux",  ori:["occidentale"]},
+  {n:"Graines de sésame",               gi:35, cat:"Oléagineux",  ori:["orientale"]},
+  {n:"Sésame",                           gi:35, cat:"Oléagineux",  ori:["orientale"]},
+  {n:"Graines de tournesol",             gi:35, cat:"Oléagineux",  ori:["occidentale"]},
+
+  // Sucres & édulcorants
+  {n:"Sucre blanc",                      gi:68, cat:"Sucre",       ori:["occidentale"],           alt:{occidentale:"Sucre de coco (IG 35) ou xylitol (IG 7)", orientale:"Sirop de datte (IG 55) ou miel d'acacia (IG 35)", asiatique:"Sucre de coco (IG 35)"}},
+  {n:"Sucre",                            gi:68, cat:"Sucre",       ori:["occidentale"],           alt:{occidentale:"Sucre de coco (IG 35) ou sirop d'agave (IG 15)", orientale:"Sirop de datte (IG 55)", asiatique:"Sucre de coco (IG 35)"}},
+  {n:"Sucre de canne",                   gi:65, cat:"Sucre",       ori:["occidentale"],           alt:{occidentale:"Sucre de coco (IG 35) ou sirop d'agave (IG 15)", orientale:"Sirop de datte (IG 55)", asiatique:"Sucre de coco (IG 35)"}},
+  {n:"Sucre de coco",                    gi:35, cat:"Sucre",       ori:["asiatique"]},
+  {n:"Miel",                             gi:58, cat:"Sucre",       ori:["occidentale"],           alt:{occidentale:"Miel d'acacia (IG 35) ou sirop d'agave (IG 15)", orientale:"Miel d'acacia (IG 35)", asiatique:"Sucre de coco (IG 35)"}},
+  {n:"Miel d'acacia",                    gi:35, cat:"Sucre",       ori:["occidentale"]},
+  {n:"Sirop d'agave",                    gi:15, cat:"Sucre",       ori:["occidentale"]},
+  {n:"Sirop d'érable",                   gi:54, cat:"Sucre",       ori:["occidentale"]},
+  {n:"Fructose",                         gi:19, cat:"Sucre",       ori:["occidentale"]},
+  {n:"Stévia",                           gi:0,  cat:"Sucre",       ori:["occidentale"]},
+  {n:"Xylitol",                          gi:7,  cat:"Sucre",       ori:["occidentale"]},
+  {n:"Sirop de datte",                   gi:55, cat:"Sucre",       ori:["orientale"]},
+  {n:"Dattes (sucrant)",                 gi:62, cat:"Sucre",       ori:["orientale"],             alt:{orientale:"Sirop de datte (IG 55) ou miel d'acacia (IG 35)", asiatique:"Sucre de coco (IG 35)", occidentale:"Sirop d'agave (IG 15)"}},
+
+  // Condiments & sauces
+  {n:"Sauce soja",                       gi:20, cat:"Condiment",   ori:["asiatique"]},
+  {n:"Tamari",                           gi:20, cat:"Condiment",   ori:["asiatique"]},
+  {n:"Sauce huître",                     gi:50, cat:"Condiment",   ori:["asiatique"]},
+  {n:"Sauce hoisin",                     gi:50, cat:"Condiment",   ori:["asiatique"]},
+  {n:"Miso",                             gi:33, cat:"Condiment",   ori:["asiatique"]},
+  {n:"Ketchup",                          gi:55, cat:"Condiment",   ori:["occidentale"]},
+  {n:"Moutarde",                         gi:35, cat:"Condiment",   ori:["occidentale"]},
+  {n:"Vinaigre balsamique",              gi:57, cat:"Condiment",   ori:["occidentale"]},
+  {n:"Houmous",                          gi:28, cat:"Condiment",   ori:["orientale"]},
+  {n:"Harissa",                          gi:35, cat:"Condiment",   ori:["orientale"]},
+  {n:"Tahini",                           gi:35, cat:"Condiment",   ori:["orientale"]},
+  {n:"Sauce tomate",                     gi:35, cat:"Condiment",   ori:["orientale"]},
+  {n:"Pâte de curry",                    gi:30, cat:"Condiment",   ori:["asiatique"]},
+  {n:"Nuoc-mâm",                         gi:50, cat:"Condiment",   ori:["asiatique"]},
+  {n:"Sauce poisson",                    gi:50, cat:"Condiment",   ori:["asiatique"]},
+
+  // Huiles
+  {n:"Huile d'olive",                    gi:0,  cat:"Huile",       ori:["orientale","occidentale"]},
+  {n:"Huile de coco",                    gi:0,  cat:"Huile",       ori:["asiatique"]},
+  {n:"Huile de sésame",                  gi:0,  cat:"Huile",       ori:["asiatique"]},
+  {n:"Huile de tournesol",               gi:0,  cat:"Huile",       ori:["occidentale"]},
+  {n:"Huile",                            gi:0,  cat:"Huile",       ori:["occidentale"]},
+  {n:"Ghee",                             gi:0,  cat:"Huile",       ori:["orientale"]},
+  {n:"Beurre de cacahuète",              gi:14, cat:"Huile",       ori:["occidentale"]},
+
+  // Produits transformés
+  {n:"Corn flakes",                      gi:81, cat:"Transformé",  ori:["occidentale"],           alt:{occidentale:"Flocons d'avoine (IG 55) ou muesli non sucré (IG 49)", orientale:"Riz brun soufflé (IG 65)", asiatique:"Riz brun soufflé (IG 65)"}},
+  {n:"Flocons d'avoine",                 gi:49, cat:"Transformé",  ori:["occidentale"]},
+  {n:"Muesli",                           gi:49, cat:"Transformé",  ori:["occidentale"]},
+  {n:"Granola",                          gi:65, cat:"Transformé",  ori:["occidentale"],           alt:{occidentale:"Flocons d'avoine (IG 49) ou muesli non sucré (IG 49)", orientale:"Riz brun soufflé (IG 65)", asiatique:"Riz brun soufflé (IG 65)"}},
+  {n:"Galettes de riz soufflé",          gi:85, cat:"Transformé",  ori:["asiatique"],             alt:{asiatique:"Riz brun (IG 50) ou galettes de sarrasin (IG 40)", occidentale:"Crackers de seigle (IG 45)", orientale:"Pain pita complet (IG 57)"}},
+  {n:"Chips",                            gi:54, cat:"Transformé",  ori:["occidentale"]},
+  {n:"Chocolat noir",                    gi:22, cat:"Transformé",  ori:["occidentale"]},
+  {n:"Chocolat au lait",                 gi:43, cat:"Transformé",  ori:["occidentale"]},
+  {n:"Chocolat blanc",                   gi:44, cat:"Transformé",  ori:["occidentale"]},
+  {n:"Tofu",                             gi:15, cat:"Transformé",  ori:["asiatique"]},
+  {n:"Tempeh",                           gi:15, cat:"Transformé",  ori:["asiatique"]},
+  {n:"Seitan",                           gi:0,  cat:"Transformé",  ori:["asiatique"]},
+
+  // Boissons (avec glucides)
+  {n:"Jus d'orange",                     gi:52, cat:"Boisson",     ori:["occidentale"]},
+  {n:"Jus de pomme",                     gi:40, cat:"Boisson",     ori:["occidentale"]},
+  {n:"Lait de riz (boisson)",            gi:86, cat:"Boisson",     ori:["asiatique"],             alt:{asiatique:"Lait de soja (IG 34)", occidentale:"Lait d'amande (IG 25)", orientale:"Lait de coco (IG 41)"}},
+  {n:"Kombucha",                         gi:25, cat:"Boisson",     ori:["asiatique"]},
+  {n:"Lassi",                            gi:30, cat:"Boisson",     ori:["orientale"]},
+];
+
+// Build lookup index (normalized)
+const normalize = s => s.toLowerCase()
+  .normalize("NFD").replace(/[̀-ͯ]/g,"")
+  .replace(/[^a-z0-9 ]/g,"").trim();
+
+const INDEX = DB.map(f => ({ ...f, norm: normalize(f.n) }));
+
+function searchFood(query) {
+  const q = normalize(query);
+  if (q.length < 2) return [];
+  return INDEX.filter(f => f.norm.includes(q)).slice(0, 10);
+}
+
+function findFood(query) {
+  const q = normalize(query);
+  let best = null, bestScore = 0;
+  for (const f of INDEX) {
+    if (f.norm === q) return f;
+    if (f.norm.startsWith(q) && q.length > bestScore) { best = f; bestScore = q.length; }
+    if (f.norm.includes(q) && q.length > bestScore * 0.8) { best = f; bestScore = q.length * 0.8; }
+  }
+  return best;
+}
+
+// ═══════════════════════════════════════════════════════════════
+//  STATE
+// ═══════════════════════════════════════════════════════════════
+let selectedCuisine = 'occidentale';
+let ingredientCount = 0;
+let userStars = 0;
+
+// ═══════════════════════════════════════════════════════════════
+//  UI HELPERS
+// ═══════════════════════════════════════════════════════════════
+function showTab(id) {
+  document.querySelectorAll('.section').forEach(s => s.classList.remove('active'));
+  document.querySelectorAll('nav button').forEach(b => b.classList.remove('active'));
+  document.getElementById(id).classList.add('active');
+  const idx = ['analyser','resultats','conseils','commentaires','apropos'].indexOf(id);
+  document.querySelectorAll('nav button')[idx]?.classList.add('active');
+  if (id === 'commentaires') renderComments();
+}
+
+function selectCuisine(el, c) {
+  document.querySelectorAll('.cuisine-btn').forEach(b => b.classList.remove('selected'));
+  el.classList.add('selected');
+  selectedCuisine = c;
+}
+
+function giBadge(gi) {
+  if (gi === 0) return ['badge-grey','Non glucidique'];
+  if (gi <= 55) return ['badge-green', `IG ${gi} — Faible`];
+  if (gi <= 69) return ['badge-orange', `IG ${gi} — Modéré`];
+  return ['badge-red', `IG ${gi} — Élevé`];
+}
+
+function giColor(gi) {
+  if (gi === 0) return '#95a5a6';
+  if (gi <= 55) return 'var(--green)';
+  if (gi <= 69) return 'var(--orange)';
+  return 'var(--red)';
+}
+
+// ═══════════════════════════════════════════════════════════════
+//  INGREDIENT ROWS
+// ═══════════════════════════════════════════════════════════════
+function addIngredient() {
+  ingredientCount++;
+  const id = ingredientCount;
+  const list = document.getElementById('ingredients-list');
+  const row = document.createElement('div');
+  row.className = 'ingredient-row';
+  row.id = `row-${id}`;
+  row.innerHTML = `
+    <div class="autocomplete-wrap">
+      <input type="text" id="ing-${id}" placeholder="Ex : riz basmati, farine de blé…" oninput="onIngInput(${id})" autocomplete="off">
+      <div class="autocomplete-list" id="ac-${id}" style="display:none"></div>
+    </div>
+    <input type="number" id="qty-${id}" placeholder="g" min="1" max="2000" value="100" style="text-align:center;">
+    <button class="btn-remove" onclick="removeIngredient(${id})" title="Supprimer">✕</button>
+  `;
+  list.appendChild(row);
+  document.getElementById(`ing-${id}`).focus();
+}
+
+function removeIngredient(id) {
+  document.getElementById(`row-${id}`)?.remove();
+}
+
+function onIngInput(id) {
+  const val = document.getElementById(`ing-${id}`).value;
+  const ac = document.getElementById(`ac-${id}`);
+  if (val.length < 2) { ac.style.display = 'none'; return; }
+  const results = searchFood(val);
+  if (!results.length) { ac.style.display = 'none'; return; }
+  ac.innerHTML = results.map(f => {
+    const [cls, lbl] = giBadge(f.gi);
+    return `<div onclick="selectIng(${id},'${f.n.replace(/'/g,"\\'")}')">
+      <span>${f.n}</span>
+      <span class="gi-badge ${cls}">${lbl}</span>
+    </div>`;
+  }).join('');
+  ac.style.display = 'block';
+}
+
+function selectIng(id, name) {
+  document.getElementById(`ing-${id}`).value = name;
+  document.getElementById(`ac-${id}`).style.display = 'none';
+}
+
+document.addEventListener('click', e => {
+  document.querySelectorAll('.autocomplete-list').forEach(ac => {
+    if (!ac.contains(e.target)) ac.style.display = 'none';
+  });
+});
+
+function clearAll() {
+  document.getElementById('ingredients-list').innerHTML = '';
+  document.getElementById('recipe-name').value = '';
+  ingredientCount = 0;
+  addIngredient();
+}
+
+// ═══════════════════════════════════════════════════════════════
+//  ANALYSIS ENGINE
+// ═══════════════════════════════════════════════════════════════
+function analyzeRecipe() {
+  const rows = document.querySelectorAll('[id^="row-"]');
+  if (!rows.length) { alert('Ajoutez au moins un ingrédient.'); return; }
+
+  const items = [];
+  let hasGlucidic = false;
+
+  rows.forEach(row => {
+    const idNum = row.id.replace('row-','');
+    const name = document.getElementById(`ing-${idNum}`)?.value?.trim();
+    const qty  = parseFloat(document.getElementById(`qty-${idNum}`)?.value) || 100;
+    if (!name) return;
+    const food = findFood(name);
+    items.push({ raw: name, food, qty });
+    if (food && food.gi > 0) hasGlucidic = true;
+  });
+
+  if (!items.length) { alert('Aucun ingrédient valide détecté.'); return; }
+
+  // Weighted GI: only glucidic foods count
+  let sumWeighted = 0, totalGlucidicQty = 0;
+  items.forEach(it => {
+    if (it.food && it.food.gi > 0) {
+      sumWeighted += it.food.gi * it.qty;
+      totalGlucidicQty += it.qty;
+    }
+  });
+
+  const recipeGI = totalGlucidicQty > 0 ? Math.round(sumWeighted / totalGlucidicQty) : 0;
+  const recipeName = document.getElementById('recipe-name').value.trim() || 'Votre recette';
+
+  renderResults(items, recipeGI, recipeName, hasGlucidic);
+  document.getElementById('tab-resultats').style.display = '';
+  showTab('resultats');
+}
+
+// ═══════════════════════════════════════════════════════════════
+//  RENDER RESULTS
+// ═══════════════════════════════════════════════════════════════
+function renderResults(items, recipeGI, recipeName, hasGlucidic) {
+  const [scoreCls] = giBadge(recipeGI);
+  const scoreColor = giColor(recipeGI);
+  const barW = Math.min(100, Math.round(recipeGI / 100 * 100));
+  const barColor = recipeGI === 0 ? '#95a5a6' : recipeGI <= 55 ? 'var(--green)' : recipeGI <= 69 ? 'var(--orange)' : 'var(--red)';
+  const giLabel = recipeGI === 0 ? 'Non glucidique' : recipeGI <= 55 ? 'Faible' : recipeGI <= 69 ? 'Modéré' : 'Élevé';
+
+  // Alternatives for high-GI items
+  const highGiItems = items.filter(it => it.food && it.food.gi >= 70 && it.food.alt);
+  const modGiItems  = items.filter(it => it.food && it.food.gi >= 56 && it.food.gi < 70 && it.food.alt);
+
+  let altHTML = '';
+  [...highGiItems, ...modGiItems].forEach(it => {
+    const altText = it.food.alt[selectedCuisine] || it.food.alt['occidentale'] || '';
+    if (!altText) return;
+    const [cls] = giBadge(it.food.gi);
+    altHTML += `
+      <div class="alt-card">
+        <h4>
+          <span class="badge ${cls}" style="margin-right:6px;">IG ${it.food.gi}</span>
+          ${it.food.n}
+          <span class="arrow">→</span>
+          ${altText}
+        </h4>
+        <p>Substitution recommandée pour la cuisine <strong>${selectedCuisine}</strong></p>
+      </div>`;
+  });
+
+  // Smart tips based on recipe
+  const tips = buildSmartTips(items, recipeGI);
+
+  // Not found
+  const notFound = items.filter(it => !it.food);
+
+  const html = `
+    <!-- SCORE GLOBAL -->
+    <div class="card">
+      <h2>📊 Résultats — ${recipeName}</h2>
+      <p style="font-size:.85rem;color:var(--muted);margin-bottom:12px;">
+        Cuisine sélectionnée : <strong>${selectedCuisine.charAt(0).toUpperCase()+selectedCuisine.slice(1)}</strong> ·
+        ${items.filter(it=>it.food).length} aliment(s) reconnu(s)
+      </p>
+      <div style="display:flex;align-items:center;gap:24px;flex-wrap:wrap;">
+        <div style="text-align:center;min-width:100px;">
+          <div class="gi-score" style="color:${scoreColor};">${recipeGI > 0 ? recipeGI : '—'}</div>
+          <div class="gi-label" style="color:${scoreColor};margin-top:4px;">${giLabel}</div>
+          <div style="font-size:.78rem;color:var(--muted);margin-top:2px;">IG moyen pondéré</div>
+        </div>
+        <div style="flex:1;min-width:200px;">
+          <div class="gi-meter">
+            <div class="gi-meter-bar" style="width:${barW}%;background:${barColor};"></div>
+          </div>
+          <div style="display:flex;justify-content:space-between;font-size:.75rem;color:var(--muted);">
+            <span>0</span><span style="color:var(--green);">55</span><span style="color:var(--orange);">69</span><span>100+</span>
+          </div>
+          ${recipeGI >= 70 ? `<div class="alert alert-warn" style="margin-top:10px;">⚠️ Index glycémique élevé — des alternatives sont proposées ci-dessous.</div>` : ''}
+          ${recipeGI >= 56 && recipeGI < 70 ? `<div class="alert alert-warn" style="margin-top:10px;">🟠 Index glycémique modéré — quelques substitutions pourraient améliorer la recette.</div>` : ''}
+          ${recipeGI > 0 && recipeGI <= 55 ? `<div class="alert alert-success" style="margin-top:10px;">✅ Bonne nouvelle ! L'index glycémique global est faible.</div>` : ''}
+          ${recipeGI === 0 ? `<div class="alert alert-info" style="margin-top:10px;">ℹ️ Cette recette ne contient pas de glucides significatifs (IG = 0).</div>` : ''}
+        </div>
+      </div>
+    </div>
+
+    <!-- DÉTAIL PAR ALIMENT -->
+    <div class="card">
+      <h2>🧾 Détail par aliment</h2>
+      ${items.map(it => {
+        if (!it.food) return `
+          <div class="result-row">
+            <div class="result-name" style="color:var(--red);">❓ ${it.raw}</div>
+            <span class="badge badge-grey">Non reconnu</span>
+          </div>`;
+        const [cls, lbl] = giBadge(it.food.gi);
+        return `
+          <div class="result-row">
+            <div>
+              <div class="result-name">${it.food.n}</div>
+              <div style="font-size:.8rem;color:var(--muted);">${it.food.cat} · ${it.qty} g</div>
+            </div>
+            <span class="badge ${cls}">${lbl}</span>
+          </div>`;
+      }).join('')}
+      ${notFound.length ? `<div class="not-found" style="margin-top:8px;">⚠️ Aliments non trouvés dans la base : ${notFound.map(i=>i.raw).join(', ')}. Consultez la section Suggestions pour les signaler.</div>` : ''}
+    </div>
+
+    <!-- ALTERNATIVES -->
+    ${altHTML ? `
+    <div class="card">
+      <h2>🔄 Alternatives recommandées (cuisine ${selectedCuisine})</h2>
+      <p style="font-size:.85rem;color:var(--muted);margin-bottom:14px;">
+        Substitutions pour réduire l'index glycémique tout en restant dans l'esprit de votre cuisine.
+      </p>
+      ${altHTML}
+    </div>` : (recipeGI > 0 && recipeGI <= 55 ? `
+    <div class="card">
+      <h2>✅ Alternatives</h2>
+      <div class="alert alert-success">Votre recette a un IG global faible — aucune substitution majeure nécessaire.</div>
+    </div>` : '')}
+
+    <!-- TIPS PERSONNALISÉS -->
+    <div class="card">
+      <h2>💡 Conseils personnalisés pour cette recette</h2>
+      ${tips.map(t => `
+        <div class="tip-item">
+          <div class="tip-icon">${t.icon}</div>
+          <div class="tip-text">
+            <strong>${t.title}</strong>
+            <span>${t.text}</span>
+          </div>
+        </div>`).join('')}
+    </div>
+
+    <!-- RETOUR -->
+    <div class="btn-row">
+      <button class="btn btn-outline" onclick="showTab('analyser')">← Modifier la recette</button>
+      <button class="btn btn-outline" onclick="showTab('conseils')">📖 Tous les conseils</button>
+    </div>
+  `;
+
+  document.getElementById('results-container').innerHTML = html;
+}
+
+// ═══════════════════════════════════════════════════════════════
+//  SMART TIPS
+// ═══════════════════════════════════════════════════════════════
+function buildSmartTips(items, recipeGI) {
+  const tips = [];
+  const cats = items.map(i => i.food?.cat || '');
+  const has = c => cats.includes(c);
+  const hasName = q => items.some(i => normalize(i.food?.n || '').includes(normalize(q)));
+
+  if (has('Pâtes') || hasName('riz') || hasName('pâtes')) {
+    tips.push({icon:'⏱️', title:'Cuisson al dente', text:"Réduire de 2–3 minutes la cuisson des pâtes ou du riz pour préserver la structure de l'amidon et abaisser l'IG de 15 à 20 points."});
+    tips.push({icon:'❄️', title:'Refroidir avant de servir', text:"Préparer le riz ou les pâtes à l'avance et les refroidir au réfrigérateur transforme l'amidon en amidon résistant. Réchauffer à la vapeur — l'effet se maintient."});
+  }
+  if (has('Farine') || hasName('pain') || hasName('biscuit') || hasName('gâteau')) {
+    tips.push({icon:'🍋', title:'Ajouter du jus de citron', text:"Incorporer 1–2 cuillères à soupe de citron dans la pâte ou la sauce réduit l'activité de l'amylase et ralentit la digestion des glucides."});
+    tips.push({icon:'🌾', title:'Remplacer 30% de la farine blanche', text:"Substituer 30% de farine blanche par de la farine d'orge, de pois chiche ou de sarrasin réduit significativement l'IG sans altérer la texture."});
+  }
+  if (has('Légume') && (hasName('pomme de terre') || hasName('panais') || hasName('betterave'))) {
+    tips.push({icon:'🥔', title:'Cuire à la vapeur, pas au four', text:"La pomme de terre vapeur (IG 65) a un IG bien inférieur à la version au four (IG 85). La consommer froide dans une salade descend encore à IG 58."});
+  }
+  if (has('Sucre')) {
+    tips.push({icon:'🍯', title:'Réduire le sucre de 20%', text:"La plupart des recettes supportent une réduction de 20% du sucre sans impact sur la texture. Remplacer le reste par du sucre de coco ou du sirop d'agave."});
+  }
+  if (recipeGI >= 60) {
+    tips.push({icon:'🥗', title:'Commencer par une salade', text:"Manger une salade verte (sans croûtons) avant ce plat peut réduire le pic glycémique de 30 à 40% grâce aux fibres qui forment un gel intestinal ralentissant l'absorption des glucides."});
+    tips.push({icon:'🫘', title:'Ajouter des légumineuses', text:"Incorporer 2–3 cuillères à soupe de lentilles, pois chiches ou haricots rouges à la recette diminue l'IG global grâce à leurs fibres et protéines."});
+  }
+  if (recipeGI >= 70) {
+    tips.push({icon:'🚶', title:'Marche de 10–15 min après le repas', text:"Une courte marche après ce repas à IG élevé utilise le glucose musculaire et réduit le pic glycémique de 20 à 30%."});
+    tips.push({icon:'🫒', title:'Ajouter un corps gras sain', text:"Un filet d'huile d'olive ou quelques lamelles d'avocat ralentissent la vidange gastrique et atténuent l'impact glycémique du repas."});
+  }
+  tips.push({icon:'🧂', title:'Cannelle et fenugrec', text:"La cannelle (½ cuillère à café par repas) améliore la sensibilité à l'insuline. Le fenugrec ralentit la vidange gastrique. Deux épices faciles à intégrer dans des recettes sucrées ou salées."});
+
+  return tips.slice(0, 6);
+}
+
+// ═══════════════════════════════════════════════════════════════
+//  COMMENTS
+// ═══════════════════════════════════════════════════════════════
+function setStars(n) {
+  userStars = n;
+  document.querySelectorAll('#star-row .star').forEach((s,i) => s.classList.toggle('active', i < n));
+}
+
+function submitComment() {
+  const name = document.getElementById('c-name').value.trim();
+  const theme = document.getElementById('c-theme').value;
+  const text = document.getElementById('c-text').value.trim();
+  const fb = document.getElementById('c-feedback');
+  if (!text || text.length < 10) { fb.innerHTML = '<div class="alert alert-warn">Merci d\'écrire un message d\'au moins 10 caractères.</div>'; return; }
+
+  const comments = JSON.parse(localStorage.getItem('glycochef_comments') || '[]');
+  comments.unshift({
+    name: name || 'Anonyme',
+    theme,
+    text,
+    stars: userStars,
+    date: new Date().toLocaleDateString('fr-FR', {day:'2-digit',month:'long',year:'numeric'})
+  });
+  localStorage.setItem('glycochef_comments', JSON.stringify(comments));
+
+  document.getElementById('c-name').value = '';
+  document.getElementById('c-text').value = '';
+  setStars(0);
+  fb.innerHTML = '<div class="alert alert-success">✅ Merci pour votre suggestion ! Elle a bien été enregistrée.</div>';
+  setTimeout(() => fb.innerHTML = '', 3000);
+  renderComments();
+}
+
+const themeLabels = {
+  aliment: '🥦 Nouvel aliment',
+  cuisine: '🌍 Nouvelle cuisine',
+  recette: '🍽️ Suggestion recette',
+  bug: '🐛 Signalement',
+  autre: '💡 Autre idée'
+};
+
+function renderComments() {
+  const comments = JSON.parse(localStorage.getItem('glycochef_comments') || '[]');
+  const list = document.getElementById('comments-list');
+  const counter = document.getElementById('comment-count');
+  counter.textContent = `(${comments.length})`;
+  if (!comments.length) {
+    list.innerHTML = '<div class="empty"><div class="icon">💬</div><p>Aucune suggestion pour le moment. Soyez le premier !</p></div>';
+    return;
+  }
+  list.innerHTML = comments.map(c => `
+    <div class="comment-card">
+      <h4>${c.name} · <span style="color:var(--muted);font-weight:400;">${themeLabels[c.theme] || c.theme}</span>
+        ${c.stars ? `<span style="color:#f9ca24;margin-left:8px;">${'★'.repeat(c.stars)}${'☆'.repeat(5-c.stars)}</span>` : ''}
+      </h4>
+      <p>${c.text}</p>
+      <div class="comment-meta">${c.date}</div>
+    </div>
+  `).join('');
+}
+
+// ═══════════════════════════════════════════════════════════════
+//  INIT
+// ═══════════════════════════════════════════════════════════════
+addIngredient();
+renderComments();
+</script>
+</body>
+</html>
