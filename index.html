@@ -328,34 +328,32 @@
 
 <!-- ═══════════════════════════════════════════════════════ COMMENTAIRES -->
 <div class="section" id="commentaires">
-  <div class="card">
-    <h2>💬 Laissez votre suggestion</h2>
-    <p style="font-size:.88rem;color:var(--muted);margin-bottom:16px;">
-      Quel aliment aimeriez-vous voir analysé ? Quelle cuisine souhaitez-vous voir davantage couverte ? Votre retour améliore GlycoChef.
-    </p>
+  <div class="card" id="comment-form-card">
+    <h2 id="comment-form-title">💬 Laissez votre suggestion</h2>
+    <p id="comment-form-intro" style="font-size:.88rem;color:var(--muted);margin-bottom:16px;"></p>
     <div class="comment-form">
       <div style="display:grid;grid-template-columns:1fr 1fr;gap:12px;">
         <div>
-          <label>Votre prénom</label>
+          <label id="label-name"></label>
           <input type="text" id="c-name" placeholder="Sophie…">
         </div>
         <div>
-          <label>Thème</label>
+          <label id="label-theme"></label>
           <select id="c-theme">
-            <option value="aliment">🥦 Nouvel aliment à ajouter</option>
-            <option value="cuisine">🌍 Nouvelle cuisine à couvrir</option>
-            <option value="recette">🍽️ Suggestion de recette</option>
-            <option value="bug">🐛 Signaler un problème</option>
-            <option value="autre">💡 Autre idée</option>
+            <option value="aliment" id="opt-aliment"></option>
+            <option value="cuisine" id="opt-cuisine"></option>
+            <option value="recette" id="opt-recette"></option>
+            <option value="bug"     id="opt-bug"></option>
+            <option value="autre"   id="opt-autre"></option>
           </select>
         </div>
       </div>
       <div>
-        <label>Votre message</label>
-        <textarea id="c-text" placeholder="Ex : J'aimerais voir les aliments de la cuisine éthiopienne (injera, berbéré…), ou que vous ajoutiez le teff et le sorgho dans la base…"></textarea>
+        <label id="label-msg"></label>
+        <textarea id="c-text"></textarea>
       </div>
       <div>
-        <label>Votre note pour le site</label>
+        <label id="label-rating"></label>
         <div class="star-row" id="star-row">
           <span class="star" onclick="setStars(1)">★</span>
           <span class="star" onclick="setStars(2)">★</span>
@@ -364,62 +362,22 @@
           <span class="star" onclick="setStars(5)">★</span>
         </div>
       </div>
-      <button class="btn btn-success" onclick="submitComment()" style="align-self:flex-start;">
-        📩 Envoyer ma suggestion
-      </button>
+      <button class="btn btn-success" id="btn-send-comment" onclick="submitComment()" style="align-self:flex-start;"></button>
       <div id="c-feedback"></div>
     </div>
   </div>
-
   <div class="card">
-    <h2>📋 Suggestions reçues <span id="comment-count" style="font-weight:400;color:var(--muted);font-size:.9rem;"></span></h2>
-    <div id="comments-list">
-      <div class="empty"><div class="icon">💬</div><p>Aucune suggestion pour le moment. Soyez le premier !</p></div>
-    </div>
+    <h2 id="comment-list-title">📋 Suggestions reçues <span id="comment-count" style="font-weight:400;color:var(--muted);font-size:.9rem;"></span></h2>
+    <div id="comments-list"></div>
   </div>
 </div>
 
 <!-- ═══════════════════════════════════════════════════════ À PROPOS -->
 <div class="section" id="apropos">
-  <div class="card">
-    <h2>🎯 Objectif de GlycoChef</h2>
-    <p style="line-height:1.7;font-size:.95rem;">
-      GlycoChef vous aide à comprendre l'impact glycémique de vos recettes et à faire des choix alimentaires éclairés.
-      L'outil ne remplace pas un avis médical ou diététique. Il est conçu pour la sensibilisation et l'éducation nutritionnelle.
-    </p>
-    <hr>
-    <div class="about-grid">
-      <div class="summary-box" style="background:var(--green-light);border:1px solid var(--green-border);">
-        <div style="font-size:1.8rem;">🟢</div>
-        <strong>IG Faible ≤ 55</strong>
-        <p style="font-size:.85rem;margin-top:4px;color:var(--muted);">Libération lente du glucose. Idéal pour une glycémie stable.</p>
-      </div>
-      <div class="summary-box" style="background:var(--orange-light);border:1px solid var(--orange-border);">
-        <div style="font-size:1.8rem;">🟠</div>
-        <strong>IG Modéré 56–69</strong>
-        <p style="font-size:.85rem;margin-top:4px;color:var(--muted);">Impact intermédiaire. À consommer avec modération.</p>
-      </div>
-      <div class="summary-box" style="background:var(--red-light);border:1px solid var(--red-border);">
-        <div style="font-size:1.8rem;">🔴</div>
-        <strong>IG Élevé ≥ 70</strong>
-        <p style="font-size:.85rem;margin-top:4px;color:var(--muted);">Pic glycémique rapide. Limiter ou trouver des alternatives.</p>
-      </div>
-    </div>
-    <hr>
-    <h2 style="margin-top:0;">📚 Sources scientifiques</h2>
-    <ul style="font-size:.88rem;line-height:1.8;padding-left:18px;color:var(--muted);">
-      <li>Atkinson FS, Foster-Powell K, Brand-Miller JC. — <em>International Tables of Glycemic Index and Glycemic Load Values: 2008.</em> Diabetes Care.</li>
-      <li>Foster-Powell K, Holt SHA, Brand-Miller JC. — <em>International table of GI and GL values: 2002.</em> Am J Clin Nutr.</li>
-      <li>Base de données nutritionnelles Ciqual — ANSES (France).</li>
-      <li>Harvard T.H. Chan School of Public Health — Glycemic Index and Glycemic Load.</li>
-    </ul>
-    <div class="alert alert-warn" style="margin-top:12px;">
-      <strong>⚠️ Avertissement médical :</strong> Les valeurs d'IG varient selon le mode de cuisson, la maturité, la variété de l'aliment et la combinaison alimentaire. Consultez un professionnel de santé pour des conseils personnalisés, notamment en cas de diabète.
-    </div>
-  </div>
+  <div id="about-content"></div>
 </div>
 
-<footer>GlycoChef · Base de données : 306 aliments · Données issues de tables internationales d'index glycémique · Usage éducatif uniquement</footer>
+<footer id="main-footer"></footer>
 
 <script>
 // ═══════════════════════════════════════════════════════════════
@@ -1055,6 +1013,17 @@ function removeIngredient(id) {
   document.getElementById(`row-${id}`)?.remove();
 }
 
+function getFoodLabel(f, searchVal) {
+  // Si on cherche en français ou que le nom contient la recherche → nom français
+  if (currentLang === 'fr') return f.n;
+  const q = normalize(searchVal);
+  // Si le nom français contient directement la recherche → afficher le nom français
+  if (f.norm.includes(q)) return f.n;
+  // Sinon c'est un alias → afficher "SearchTerm → Nom FR"
+  const display = searchVal.trim().charAt(0).toUpperCase() + searchVal.trim().slice(1).toLowerCase();
+  return `${display} <span style="opacity:.6;font-size:.82em;">→ ${f.n}</span>`;
+}
+
 function onIngInput(id) {
   const val = document.getElementById(`ing-${id}`).value;
   const ac = document.getElementById(`ac-${id}`);
@@ -1064,7 +1033,7 @@ function onIngInput(id) {
   ac.innerHTML = results.map(f => {
     const [cls, lbl] = giBadge(f.gi);
     return `<div onclick="selectIng(${id},'${f.n.replace(/'/g,"\\'")}')">
-      <span>${f.n}</span>
+      <span>${getFoodLabel(f, val)}</span>
       <span class="gi-badge ${cls}">${lbl}</span>
     </div>`;
   }).join('');
@@ -1349,6 +1318,81 @@ function renderComments() {
 // ═══════════════════════════════════════════════════════════════
 //  PDF EXPORT
 // ═══════════════════════════════════════════════════════════════
+function renderCommentsSection() {
+  const t = LANGS[currentLang] || LANGS.fr;
+  // Titles & labels
+  const el = (id, txt) => { const e = document.getElementById(id); if(e) e.textContent = txt; };
+  const elHTML = (id, html) => { const e = document.getElementById(id); if(e) e.innerHTML = html; };
+  el('comment-form-title',   t.comment_form_title);
+  el('comment-form-intro',   t.comment_form_intro);
+  el('label-name',           t.label_name);
+  el('label-theme',          t.label_theme);
+  el('label-msg',            t.label_msg);
+  el('label-rating',         t.label_rating);
+  el('comment-list-title',   t.comment_list_title + ' ');
+  el('btn-send-comment',     t.comment_send);
+  // Placeholder
+  const cn = document.getElementById('c-name');
+  if(cn) cn.placeholder = t.comment_placeholder_name;
+  const ct = document.getElementById('c-text');
+  if(ct) ct.placeholder = t.comment_placeholder_msg;
+  // Select options
+  ['aliment','cuisine','recette','bug','autre'].forEach(v => {
+    const o = document.getElementById('opt-'+v);
+    if(o) o.textContent = t['opt_'+v];
+  });
+  // Restore comment-count span
+  const h2 = document.getElementById('comment-list-title');
+  if(h2 && !document.getElementById('comment-count')) {
+    const span = document.createElement('span');
+    span.id = 'comment-count';
+    span.style.cssText = 'font-weight:400;color:var(--muted);font-size:.9rem;';
+    h2.appendChild(span);
+  }
+}
+
+function renderAboutSection() {
+  const t = LANGS[currentLang] || LANGS.fr;
+  const a = t.gi_abbr || 'GI';
+  const el = document.getElementById('about-content');
+  if (!el) return;
+  el.innerHTML = `
+    <div class="card">
+      <h2>${t.about_goal_title}</h2>
+      <p style="line-height:1.7;font-size:.95rem;">${t.about_goal_text}</p>
+      <hr>
+      <div class="about-grid">
+        <div class="summary-box" style="background:var(--green-light);border:1px solid var(--green-border);">
+          <div style="font-size:1.8rem;">🟢</div>
+          <strong>${t.about_low_title}</strong>
+          <p style="font-size:.85rem;margin-top:4px;color:var(--muted);">${t.about_low_text}</p>
+        </div>
+        <div class="summary-box" style="background:var(--orange-light);border:1px solid var(--orange-border);">
+          <div style="font-size:1.8rem;">🟠</div>
+          <strong>${t.about_mod_title}</strong>
+          <p style="font-size:.85rem;margin-top:4px;color:var(--muted);">${t.about_mod_text}</p>
+        </div>
+        <div class="summary-box" style="background:var(--red-light);border:1px solid var(--red-border);">
+          <div style="font-size:1.8rem;">🔴</div>
+          <strong>${t.about_high_title}</strong>
+          <p style="font-size:.85rem;margin-top:4px;color:var(--muted);">${t.about_high_text}</p>
+        </div>
+      </div>
+      <hr>
+      <h2 style="margin-top:0;">${t.about_sources_title}</h2>
+      <ul style="font-size:.88rem;line-height:1.8;padding-left:18px;color:var(--muted);">
+        <li>Atkinson FS, Foster-Powell K, Brand-Miller JC. — <em>International Tables of Glycemic Index and Glycemic Load Values: 2008.</em> Diabetes Care.</li>
+        <li>Foster-Powell K, Holt SHA, Brand-Miller JC. — <em>International table of GI and GL values: 2002.</em> Am J Clin Nutr.</li>
+        <li>Base de données nutritionnelles Ciqual — ANSES (France).</li>
+        <li>Harvard T.H. Chan School of Public Health — Glycemic Index and Glycemic Load.</li>
+      </ul>
+      <div class="alert alert-warn" style="margin-top:12px;">${t.about_disclaimer}</div>
+    </div>`;
+  // Footer
+  const footer = document.getElementById('main-footer');
+  if (footer) footer.textContent = t.footer_text;
+}
+
 function renderTipsSection() {
   const t = LANGS[currentLang] || LANGS.fr;
   const el = document.getElementById('tips-content');
@@ -1417,6 +1461,22 @@ var LANGS = {
     no_comments:"Aucune suggestion pour le moment. Soyez le premier !",
     theme_aliment:"🥦 Nouvel aliment", theme_cuisine:"🌍 Nouvelle cuisine", theme_recette:"🍽️ Suggestion recette", theme_bug:"🐛 Signalement", theme_autre:"💡 Autre idée",
     pdf_generated:"Généré le",
+    comment_form_title:"💬 Laissez votre suggestion",
+    comment_form_intro:"Quel aliment aimeriez-vous voir analysé ? Quelle cuisine souhaitez-vous voir davantage couverte ? Votre retour améliore GlycoChef.",
+    label_name:"Votre prénom", label_theme:"Thème", label_msg:"Votre message", label_rating:"Votre note pour le site",
+    opt_aliment:"🥦 Nouvel aliment à ajouter", opt_cuisine:"🌍 Nouvelle cuisine à couvrir",
+    opt_recette:"🍽️ Suggestion de recette", opt_bug:"🐛 Signaler un problème", opt_autre:"💡 Autre idée",
+    comment_list_title:"📋 Suggestions reçues",
+    comment_placeholder_name:"Sophie…",
+    comment_placeholder_msg:"Ex : J'aimerais voir les aliments de la cuisine éthiopienne (injera, berbéré…)…",
+    about_goal_title:"🎯 Objectif de GlycoChef",
+    about_goal_text:"GlycoChef vous aide à comprendre l'impact glycémique de vos recettes et à faire des choix alimentaires éclairés. L'outil ne remplace pas un avis médical ou diététique. Il est conçu pour la sensibilisation et l'éducation nutritionnelle.",
+    about_low_title:"IG Faible ≤ 55", about_low_text:"Libération lente du glucose. Idéal pour une glycémie stable.",
+    about_mod_title:"IG Modéré 56–69", about_mod_text:"Impact intermédiaire. À consommer avec modération.",
+    about_high_title:"IG Élevé ≥ 70", about_high_text:"Pic glycémique rapide. Limiter ou trouver des alternatives.",
+    about_sources_title:"📚 Sources scientifiques",
+    about_disclaimer:"<strong>⚠️ Avertissement médical :</strong> Les valeurs d'IG varient selon le mode de cuisson, la maturité, la variété de l'aliment et la combinaison alimentaire. Consultez un professionnel de santé pour des conseils personnalisés, notamment en cas de diabète.",
+    footer_text:"GlycoChef · Base de données : 300+ aliments · Données issues de tables internationales d'index glycémique · Usage éducatif uniquement",
     tips_sections:[
       {title:"🥗 L'ordre de dégustation", items:[
         {icon:"🥗",t:"Commencer par une salade verte",d:"Les fibres de la salade ralentissent l'absorption des glucides qui suivent. Une simple salade avant les pâtes ou le riz réduit le pic glycémique de 30 à 40 %."},
@@ -1512,6 +1572,22 @@ var LANGS = {
     no_comments:"No suggestions yet. Be the first!",
     theme_aliment:"🥦 New food item", theme_cuisine:"🌍 New cuisine", theme_recette:"🍽️ Recipe suggestion", theme_bug:"🐛 Bug report", theme_autre:"💡 Other idea",
     pdf_generated:"Generated on",
+    comment_form_title:"💬 Leave your suggestion",
+    comment_form_intro:"Which food would you like to see analyzed? Which cuisine would you like to see more of? Your feedback improves GlycoChef.",
+    label_name:"Your name", label_theme:"Theme", label_msg:"Your message", label_rating:"Your rating",
+    opt_aliment:"🥦 New food to add", opt_cuisine:"🌍 New cuisine to cover",
+    opt_recette:"🍽️ Recipe suggestion", opt_bug:"🐛 Report an issue", opt_autre:"💡 Other idea",
+    comment_list_title:"📋 Suggestions received",
+    comment_placeholder_name:"Sophie…",
+    comment_placeholder_msg:"E.g.: I'd love to see Ethiopian cuisine foods (injera, berbere…) added…",
+    about_goal_title:"🎯 About GlycoChef",
+    about_goal_text:"GlycoChef helps you understand the glycemic impact of your recipes and make informed food choices. This tool does not replace medical or dietary advice. It is designed for awareness and nutritional education.",
+    about_low_title:"GI Low ≤ 55", about_low_text:"Slow glucose release. Ideal for stable blood sugar.",
+    about_mod_title:"GI Moderate 56–69", about_mod_text:"Intermediate impact. Consume in moderation.",
+    about_high_title:"GI High ≥ 70", about_high_text:"Rapid glycemic spike. Limit or find alternatives.",
+    about_sources_title:"📚 Scientific sources",
+    about_disclaimer:"<strong>⚠️ Medical disclaimer:</strong> GI values vary depending on cooking method, ripeness, variety and food combinations. Consult a healthcare professional for personalized advice, especially if you have diabetes.",
+    footer_text:"GlycoChef · Database: 300+ foods · Data from international glycemic index tables · Educational use only",
     tips_sections:[
       {title:"🥗 Eating order", items:[
         {icon:"🥗",t:"Start with a green salad",d:"Salad fibers slow carbohydrate absorption. A simple salad before pasta or rice reduces the glycemic spike by 30–40%."},
@@ -1607,6 +1683,22 @@ var LANGS = {
     no_comments:"لا توجد اقتراحات حتى الآن. كن الأول!",
     theme_aliment:"🥦 مادة غذائية جديدة", theme_cuisine:"🌍 مطبخ جديد", theme_recette:"🍽️ اقتراح وصفة", theme_bug:"🐛 إبلاغ عن مشكلة", theme_autre:"💡 فكرة أخرى",
     pdf_generated:"تم إنشاؤه في",
+    comment_form_title:"💬 اترك اقتراحك",
+    comment_form_intro:"أي طعام تودّ تحليله؟ أي مطبخ تريد أن نغطيه أكثر؟ ملاحظاتك تحسّن GlycoChef.",
+    label_name:"الاسم", label_theme:"الموضوع", label_msg:"رسالتك", label_rating:"تقييمك للموقع",
+    opt_aliment:"🥦 طعام جديد للإضافة", opt_cuisine:"🌍 مطبخ جديد لتغطيته",
+    opt_recette:"🍽️ اقتراح وصفة", opt_bug:"🐛 الإبلاغ عن مشكلة", opt_autre:"💡 فكرة أخرى",
+    comment_list_title:"📋 الاقتراحات المستلمة",
+    comment_placeholder_name:"سارة…",
+    comment_placeholder_msg:"مثال: أودّ رؤية أطعمة المطبخ المغربي أو الإثيوبي مضافة…",
+    about_goal_title:"🎯 هدف GlycoChef",
+    about_goal_text:"يساعدك GlycoChef على فهم التأثير الجلايسيمي لوصفاتك واتخاذ خيارات غذائية مستنيرة. هذه الأداة لا تحلّ محل الاستشارة الطبية أو الغذائية. إنها مصممة للتوعية والتثقيف الغذائي.",
+    about_low_title:"م.ج منخفض ≤ 55", about_low_text:"إطلاق بطيء للجلوكوز. مثالي لاستقرار سكر الدم.",
+    about_mod_title:"م.ج معتدل 56–69", about_mod_text:"تأثير متوسط. يُستهلك باعتدال.",
+    about_high_title:"م.ج مرتفع ≥ 70", about_high_text:"ارتفاع سريع في سكر الدم. تقليله أو إيجاد بدائل.",
+    about_sources_title:"📚 المصادر العلمية",
+    about_disclaimer:"<strong>⚠️ تنبيه طبي:</strong> تتفاوت قيم المؤشر الجلايسيمي حسب طريقة الطهي والنضج والصنف والتركيبات الغذائية. استشر متخصصاً في الصحة للحصول على نصائح شخصية، خاصةً في حالة السكري.",
+    footer_text:"GlycoChef · قاعدة بيانات: أكثر من 300 مادة غذائية · بيانات من جداول المؤشر الجلايسيمي الدولية · للاستخدام التعليمي فقط",
     tips_sections:[
       {title:"🥗 ترتيب الوجبة", items:[
         {icon:"🥗",t:"البدء بسلطة خضراء",d:"ألياف السلطة تبطئ امتصاص الكربوهيدرات. سلطة بسيطة قبل المعكرونة أو الأرز تقلل ذروة السكر بنسبة 30-40%."},
@@ -1706,6 +1798,8 @@ function setLang(lang) {
   // Re-render dynamic sections
   renderComments();
   renderTipsSection();
+  renderCommentsSection();
+  renderAboutSection();
   if (lastAnalysisData) {
     renderResults(lastAnalysisData.items, lastAnalysisData.recipeGI, lastAnalysisData.recipeName, lastAnalysisData.hasGlucidic);
   }
@@ -1717,6 +1811,8 @@ function setLang(lang) {
 addIngredient();
 renderComments();
 renderTipsSection();
+renderCommentsSection();
+renderAboutSection();
 </script>
 </body>
 </html>
