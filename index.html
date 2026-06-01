@@ -1816,6 +1816,95 @@ function renderAboutSection() {
   const el = document.getElementById('about-content');
   if (!el) return;
   el.innerHTML = `
+
+    <!-- ENCART INDEX GLYCÉMIQUE -->
+    <div class="card">
+      <h2>${t.about_gi_title}</h2>
+      <p style="line-height:1.7;font-size:.95rem;margin-bottom:16px;">${t.about_gi_text}</p>
+
+      <!-- SCHÉMA SVG COURBE GLYCÉMIQUE -->
+      <div style="background:#f8fbff;border:1px solid #d0e4f7;border-radius:12px;padding:16px;margin-bottom:16px;">
+        <svg viewBox="0 0 400 200" style="width:100%;max-width:500px;display:block;margin:0 auto;" aria-label="${t.about_gi_title}">
+          <!-- Grille -->
+          <defs>
+            <marker id="arrowX" markerWidth="6" markerHeight="6" refX="5" refY="3" orient="auto">
+              <path d="M0,0 L6,3 L0,6 Z" fill="#aaa"/>
+            </marker>
+            <marker id="arrowY" markerWidth="6" markerHeight="6" refX="3" refY="5" orient="auto">
+              <path d="M0,6 L3,0 L6,6 Z" fill="#aaa"/>
+            </marker>
+          </defs>
+          <!-- Lignes de grille -->
+          <line x1="50" y1="20" x2="50" y2="160" stroke="#ddd" stroke-width="1"/>
+          <line x1="50" y1="160" x2="380" y2="160" stroke="#ddd" stroke-width="1"/>
+          <line x1="50" y1="60" x2="375" y2="60" stroke="#eee" stroke-width="1" stroke-dasharray="4,4"/>
+          <line x1="50" y1="100" x2="375" y2="100" stroke="#eee" stroke-width="1" stroke-dasharray="4,4"/>
+          <line x1="50" y1="130" x2="375" y2="130" stroke="#eee" stroke-width="1" stroke-dasharray="4,4"/>
+          <!-- Axes -->
+          <line x1="50" y1="20" x2="50" y2="165" stroke="#aaa" stroke-width="1.5" marker-end="url(#arrowY)"/>
+          <line x1="45" y1="160" x2="385" y2="160" stroke="#aaa" stroke-width="1.5" marker-end="url(#arrowX)"/>
+          <!-- Label axes -->
+          <text x="200" y="185" text-anchor="middle" font-size="11" fill="#888">${t.about_curve_x}</text>
+          <text x="14" y="95" text-anchor="middle" font-size="11" fill="#888" transform="rotate(-90,14,95)">${t.about_curve_y}</text>
+          <!-- Marqueurs temps -->
+          <text x="50"  y="175" text-anchor="middle" font-size="10" fill="#aaa">0</text>
+          <text x="130" y="175" text-anchor="middle" font-size="10" fill="#aaa">0.5</text>
+          <text x="210" y="175" text-anchor="middle" font-size="10" fill="#aaa">1h</text>
+          <text x="290" y="175" text-anchor="middle" font-size="10" fill="#aaa">1.5</text>
+          <text x="370" y="175" text-anchor="middle" font-size="10" fill="#aaa">2h</text>
+          <!-- Ligne baseline -->
+          <line x1="50" y1="130" x2="380" y2="130" stroke="#ccc" stroke-width="1" stroke-dasharray="3,3"/>
+          <!-- COURBE IG ÉLEVÉ (rouge) — pic rapide et chute -->
+          <path d="M50,130 C80,130 100,30 140,28 C170,26 190,80 220,115 C250,140 280,145 370,132"
+                fill="none" stroke="#e74c3c" stroke-width="2.5" stroke-linecap="round"/>
+          <circle cx="140" cy="28" r="4" fill="#e74c3c"/>
+          <!-- COURBE IG BAS (vert) — montée douce et descente lente -->
+          <path d="M50,130 C90,128 120,90 160,75 C200,62 240,70 280,95 C310,112 340,122 370,128"
+                fill="none" stroke="#27ae60" stroke-width="2.5" stroke-linecap="round"/>
+          <circle cx="200" cy="63" r="4" fill="#27ae60"/>
+          <!-- Labels courbes -->
+          <rect x="255" y="32" width="118" height="18" rx="4" fill="#fdf2f2"/>
+          <text x="314" y="44" text-anchor="middle" font-size="10" fill="#e74c3c" font-weight="600">▲ ${t.about_curve_high}</text>
+          <rect x="255" y="54" width="118" height="18" rx="4" fill="#eafaf1"/>
+          <text x="314" y="66" text-anchor="middle" font-size="10" fill="#27ae60" font-weight="600">▲ ${t.about_curve_low}</text>
+          <!-- Annotation pic -->
+          <line x1="140" y1="28" x2="155" y2="15" stroke="#e74c3c" stroke-width="1" stroke-dasharray="2,2"/>
+          <text x="158" y="13" font-size="9" fill="#e74c3c">${t.about_curve_peak}</text>
+          <!-- Annotation stable -->
+          <text x="155" y="58" font-size="9" fill="#27ae60">${t.about_curve_stable}</text>
+        </svg>
+      </div>
+
+      <!-- Légende IG -->
+      <div style="display:flex;flex-wrap:wrap;gap:10px;margin-bottom:12px;">
+        <div style="flex:1;min-width:140px;padding:12px;background:var(--green-light);border:1px solid var(--green-border);border-radius:10px;text-align:center;">
+          <div style="font-weight:700;color:var(--green);font-size:1rem;">🟢 ${t.about_gi_low_label}</div>
+          <div style="font-size:.82rem;color:var(--muted);margin-top:4px;">${t.about_gi_low_desc}</div>
+        </div>
+        <div style="flex:1;min-width:140px;padding:12px;background:var(--red-light);border:1px solid var(--red-border);border-radius:10px;text-align:center;">
+          <div style="font-weight:700;color:var(--red);font-size:1rem;">🔴 ${t.about_gi_high_label}</div>
+          <div style="font-size:.82rem;color:var(--muted);margin-top:4px;">${t.about_gi_high_desc}</div>
+        </div>
+      </div>
+      <div class="alert alert-info" style="font-size:.88rem;">${t.about_gi_examples}</div>
+    </div>
+
+    <!-- ENCART CHARGE GLYCÉMIQUE -->
+    <div class="card">
+      <h2>${t.about_gl_title}</h2>
+      <p style="line-height:1.7;font-size:.95rem;margin-bottom:14px;">${t.about_gl_text}</p>
+      <div style="background:#f4f7fa;border-radius:10px;padding:14px;text-align:center;margin-bottom:14px;">
+        <div style="font-size:1.1rem;font-weight:700;color:var(--navy);font-family:monospace;">${t.about_gl_formula}</div>
+      </div>
+      <div style="display:flex;flex-wrap:wrap;gap:8px;margin-bottom:12px;">
+        <div style="flex:1;min-width:100px;padding:10px;background:var(--green-light);border-radius:8px;text-align:center;font-size:.85rem;font-weight:600;color:var(--green);">CG ≤ 10<br><span style="font-weight:400;color:var(--muted);">${t.about_low_text.split('.')[0]}</span></div>
+        <div style="flex:1;min-width:100px;padding:10px;background:var(--orange-light);border-radius:8px;text-align:center;font-size:.85rem;font-weight:600;color:var(--orange);">CG 11–19<br><span style="font-weight:400;color:var(--muted);">${t.about_mod_text.split('.')[0]}</span></div>
+        <div style="flex:1;min-width:100px;padding:10px;background:var(--red-light);border-radius:8px;text-align:center;font-size:.85rem;font-weight:600;color:var(--red);">CG ≥ 20<br><span style="font-weight:400;color:var(--muted);">${t.about_high_text.split('.')[0]}</span></div>
+      </div>
+      <div class="alert alert-info" style="font-size:.88rem;">${t.about_gl_example}</div>
+    </div>
+
+    <!-- CLASSIFICATION IG -->
     <div class="card">
       <h2>${t.about_goal_title}</h2>
       <p style="line-height:1.7;font-size:.95rem;">${t.about_goal_text}</p>
@@ -1928,6 +2017,24 @@ var LANGS = {
     comment_list_title:"📋 Suggestions reçues",
     comment_placeholder_name:"Sophie…",
     comment_placeholder_msg:"Ex : J'aimerais voir les aliments de la cuisine éthiopienne (injera, berbéré…)…",
+    about_gi_title:"📈 Qu'est-ce que l'index glycémique ?",
+    about_gi_text:"L'index glycémique (IG) mesure la vitesse à laquelle un aliment fait monter la glycémie (taux de sucre dans le sang) après ingestion, comparé au glucose pur (référence = 100). Plus l'IG est élevé, plus le pic de sucre est rapide et important.",
+    about_gi_low_label:"IG bas (≤55)",
+    about_gi_low_desc:"Libération lente et progressive du glucose. Énergie stable, pas de pic.",
+    about_gi_high_label:"IG élevé (≥70)",
+    about_gi_high_desc:"Pic glycémique rapide. Chute d'énergie, fringales, stockage des graisses.",
+    about_gi_examples:"Exemples : Pain blanc IG 95 · Riz blanc IG 72 · Lentilles IG 30 · Pomme IG 36",
+    about_gl_title:"⚖️ Qu'est-ce que la charge glycémique ?",
+    about_gl_text:"La charge glycémique (CG) va plus loin que l'IG en tenant compte de la <strong>quantité</strong> de glucides dans une portion réelle. Un aliment peut avoir un IG élevé mais une CG faible s'il contient peu de glucides.",
+    about_gl_formula:"CG = (IG × glucides en grammes) ÷ 100",
+    about_gl_scale:"CG ≤ 10 : faible · CG 11–19 : modérée · CG ≥ 20 : élevée",
+    about_gl_example:"Exemple : La pastèque a un IG élevé (76) mais une CG faible (7) car elle contient peu de glucides pour 200g.",
+    about_curve_low:"Courbe IG bas",
+    about_curve_high:"Courbe IG élevé",
+    about_curve_x:"Temps (heures)",
+    about_curve_y:"Glycémie",
+    about_curve_peak:"Pic glycémique",
+    about_curve_stable:"Énergie stable",
     about_goal_title:"🎯 Objectif de GlycoChef",
     about_goal_text:"GlycoChef vous aide à comprendre l'impact glycémique de vos recettes et à faire des choix alimentaires éclairés. L'outil ne remplace pas un avis médical ou diététique. Il est conçu pour la sensibilisation et l'éducation nutritionnelle.",
     about_low_title:"IG Faible ≤ 55", about_low_text:"Libération lente du glucose. Idéal pour une glycémie stable.",
@@ -2039,6 +2146,24 @@ var LANGS = {
     comment_list_title:"📋 Suggestions received",
     comment_placeholder_name:"Sophie…",
     comment_placeholder_msg:"E.g.: I'd love to see Ethiopian cuisine foods (injera, berbere…) added…",
+    about_gi_title:"📈 What is the glycemic index?",
+    about_gi_text:"The glycemic index (GI) measures how quickly a food raises blood sugar levels after eating, compared to pure glucose (reference = 100). The higher the GI, the faster and larger the blood sugar spike.",
+    about_gi_low_label:"Low GI (≤55)",
+    about_gi_low_desc:"Slow and steady glucose release. Stable energy, no spike.",
+    about_gi_high_label:"High GI (≥70)",
+    about_gi_high_desc:"Rapid blood sugar spike. Energy crash, cravings, fat storage.",
+    about_gi_examples:"Examples: White bread GI 95 · White rice GI 72 · Lentils GI 30 · Apple GI 36",
+    about_gl_title:"⚖️ What is the glycemic load?",
+    about_gl_text:"The glycemic load (GL) goes further than GI by accounting for the <strong>quantity</strong> of carbohydrates in a real portion. A food can have a high GI but a low GL if it contains few carbohydrates.",
+    about_gl_formula:"GL = (GI × grams of carbohydrates) ÷ 100",
+    about_gl_scale:"GL ≤ 10: low · GL 11–19: moderate · GL ≥ 20: high",
+    about_gl_example:"Example: Watermelon has a high GI (76) but a low GL (7) because it contains few carbs per 200g.",
+    about_curve_low:"Low GI curve",
+    about_curve_high:"High GI curve",
+    about_curve_x:"Time (hours)",
+    about_curve_y:"Blood sugar",
+    about_curve_peak:"Glycemic peak",
+    about_curve_stable:"Stable energy",
     about_goal_title:"🎯 About GlycoChef",
     about_goal_text:"GlycoChef helps you understand the glycemic impact of your recipes and make informed food choices. This tool does not replace medical or dietary advice. It is designed for awareness and nutritional education.",
     about_low_title:"GI Low ≤ 55", about_low_text:"Slow glucose release. Ideal for stable blood sugar.",
@@ -2150,6 +2275,24 @@ var LANGS = {
     comment_list_title:"📋 الاقتراحات المستلمة",
     comment_placeholder_name:"سارة…",
     comment_placeholder_msg:"مثال: أودّ رؤية أطعمة المطبخ المغربي أو الإثيوبي مضافة…",
+    about_gi_title:"📈 ما هو المؤشر الجلايسيمي؟",
+    about_gi_text:"المؤشر الجلايسيمي (م.ج) يقيس سرعة رفع الغذاء لمستوى سكر الدم بعد تناوله، مقارنةً بالغلوكوز النقي (مرجع = 100). كلما ارتفع المؤشر، كان ارتفاع السكر أسرع وأكبر.",
+    about_gi_low_label:"م.ج منخفض (≤55)",
+    about_gi_low_desc:"إطلاق تدريجي وبطيء للجلوكوز. طاقة مستقرة بدون ذروة.",
+    about_gi_high_label:"م.ج مرتفع (≥70)",
+    about_gi_high_desc:"ارتفاع سريع في سكر الدم. انهيار طاقة، نوبات جوع، تخزين الدهون.",
+    about_gi_examples:"أمثلة: خبز أبيض م.ج 95 · أرز أبيض 72 · عدس 30 · تفاحة 36",
+    about_gl_title:"⚖️ ما هي الحمل الجلايسيمي؟",
+    about_gl_text:"الحمل الجلايسيمي (ح.ج) يتجاوز المؤشر بمراعاة <strong>كمية</strong> الكربوهيدرات في الحصة الفعلية. قد يكون للغذاء مؤشر مرتفع لكن حمل منخفض إذا كان يحتوي على كربوهيدرات قليلة.",
+    about_gl_formula:"ح.ج = (م.ج × غرامات الكربوهيدرات) ÷ 100",
+    about_gl_scale:"ح.ج ≤ 10: منخفض · 11–19: معتدل · ≥ 20: مرتفع",
+    about_gl_example:"مثال: البطيخ له مؤشر مرتفع (76) لكن حمل منخفض (7) لأنه يحتوي على كربوهيدرات قليلة لكل 200غ.",
+    about_curve_low:"منحنى م.ج منخفض",
+    about_curve_high:"منحنى م.ج مرتفع",
+    about_curve_x:"الوقت (ساعات)",
+    about_curve_y:"سكر الدم",
+    about_curve_peak:"ذروة السكر",
+    about_curve_stable:"طاقة مستقرة",
     about_goal_title:"🎯 هدف GlycoChef",
     about_goal_text:"يساعدك GlycoChef على فهم التأثير الجلايسيمي لوصفاتك واتخاذ خيارات غذائية مستنيرة. هذه الأداة لا تحلّ محل الاستشارة الطبية أو الغذائية. إنها مصممة للتوعية والتثقيف الغذائي.",
     about_low_title:"م.ج منخفض ≤ 55", about_low_text:"إطلاق بطيء للجلوكوز. مثالي لاستقرار سكر الدم.",
