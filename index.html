@@ -569,6 +569,10 @@
 // ═══════════════════════════════════════════════════════════════
 //  DATABASE  (aliment, IG, catégorie, origine, alternatives par cuisine)
 // ═══════════════════════════════════════════════════════════════
+// Current language — must be declared before any function that uses it
+let currentLang = 'fr';
+let lastAnalysisData = null;
+
 const DB = [
   // Farines & Céréales
   {n:"Farine de blé blanche (T55)",      gi:85, cat:"Farine",      ori:["occidentale"],           alt:{occidentale:"Farine d'orge (IG 35) ou farine de sarrasin (IG 40)", orientale:"Farine de pois chiche (IG 35) ou farine de teff (IG 57)", asiatique:"Farine de riz brun (IG 65) ou farine de coco (IG 35)"}},
@@ -858,6 +862,95 @@ const DB = [
   {n:"Lait de riz (boisson)",            gi:86, cat:"Boisson",     ori:["asiatique"],             alt:{asiatique:"Lait de soja (IG 34)", occidentale:"Lait d'amande (IG 25)", orientale:"Lait de coco (IG 41)"}},
   {n:"Kombucha",                         gi:25, cat:"Boisson",     ori:["asiatique"]},
   {n:"Lassi",                            gi:30, cat:"Boisson",     ori:["orientale"]},
+
+  // ── PROTÉINES (IG = 0 — ajoutés pour que tous les ingrédients soient trouvables) ──
+  // Viandes
+  {n:"Poulet rôti",                      gi:0,  cat:"Protéine",    ori:["occidentale","orientale","asiatique"]},
+  {n:"Poulet grillé",                    gi:0,  cat:"Protéine",    ori:["occidentale","orientale","asiatique"]},
+  {n:"Poulet sauté",                     gi:0,  cat:"Protéine",    ori:["asiatique"]},
+  {n:"Escalope de dinde",                gi:0,  cat:"Protéine",    ori:["occidentale"]},
+  {n:"Blanc de dinde",                   gi:0,  cat:"Protéine",    ori:["occidentale"]},
+  {n:"Steak de bœuf",                    gi:0,  cat:"Protéine",    ori:["occidentale"]},
+  {n:"Bœuf braisé",                      gi:0,  cat:"Protéine",    ori:["occidentale","orientale"]},
+  {n:"Viande hachée",                    gi:0,  cat:"Protéine",    ori:["occidentale"]},
+  {n:"Côte de veau",                     gi:0,  cat:"Protéine",    ori:["occidentale"]},
+  {n:"Gigot d'agneau",                   gi:0,  cat:"Protéine",    ori:["orientale"]},
+  {n:"Côtelette d'agneau",               gi:0,  cat:"Protéine",    ori:["orientale"]},
+  {n:"Kefta",                            gi:0,  cat:"Protéine",    ori:["orientale"]},
+  {n:"Merguez",                          gi:0,  cat:"Protéine",    ori:["orientale"]},
+  {n:"Filet de porc",                    gi:0,  cat:"Protéine",    ori:["occidentale","asiatique"]},
+  {n:"Côte de porc",                     gi:0,  cat:"Protéine",    ori:["occidentale"]},
+  {n:"Lardons",                          gi:0,  cat:"Protéine",    ori:["occidentale"]},
+  {n:"Bacon",                            gi:0,  cat:"Protéine",    ori:["occidentale"]},
+  {n:"Magret de canard",                 gi:0,  cat:"Protéine",    ori:["asiatique","occidentale"]},
+  {n:"Canard laqué",                     gi:0,  cat:"Protéine",    ori:["asiatique"]},
+  {n:"Lapin à la moutarde",              gi:0,  cat:"Protéine",    ori:["occidentale"]},
+  {n:"Chevreau",                         gi:0,  cat:"Protéine",    ori:["orientale"]},
+  {n:"Veau",                             gi:0,  cat:"Protéine",    ori:["occidentale"]},
+  // Charcuterie
+  {n:"Jambon cuit",                      gi:0,  cat:"Protéine",    ori:["occidentale"]},
+  {n:"Jambon cru",                       gi:0,  cat:"Protéine",    ori:["occidentale"]},
+  {n:"Jambon de Bayonne",                gi:0,  cat:"Protéine",    ori:["occidentale"]},
+  {n:"Prosciutto",                       gi:0,  cat:"Protéine",    ori:["occidentale"]},
+  {n:"Chorizo",                          gi:0,  cat:"Protéine",    ori:["occidentale"]},
+  {n:"Saucisse",                         gi:0,  cat:"Protéine",    ori:["occidentale"]},
+  {n:"Saucisson",                        gi:0,  cat:"Protéine",    ori:["occidentale"]},
+  {n:"Salami",                           gi:0,  cat:"Protéine",    ori:["occidentale"]},
+  {n:"Mortadelle",                       gi:0,  cat:"Protéine",    ori:["occidentale"]},
+  {n:"Andouillette",                     gi:0,  cat:"Protéine",    ori:["occidentale"]},
+  // Poissons & fruits de mer (complément)
+  {n:"Filet de saumon",                  gi:0,  cat:"Protéine",    ori:["occidentale"]},
+  {n:"Saumon fumé",                      gi:0,  cat:"Protéine",    ori:["occidentale"]},
+  {n:"Pavé de saumon",                   gi:0,  cat:"Protéine",    ori:["occidentale"]},
+  {n:"Thon à la plancha",                gi:0,  cat:"Protéine",    ori:["occidentale","orientale"]},
+  {n:"Filet de cabillaud",               gi:0,  cat:"Protéine",    ori:["occidentale"]},
+  {n:"Filet de sole",                    gi:0,  cat:"Protéine",    ori:["occidentale"]},
+  {n:"Dorade grillée",                   gi:0,  cat:"Protéine",    ori:["orientale"]},
+  {n:"Loup de mer grillé",               gi:0,  cat:"Protéine",    ori:["orientale","occidentale"]},
+  {n:"Truite fumée",                     gi:0,  cat:"Protéine",    ori:["occidentale"]},
+  {n:"Hareng fumé",                      gi:0,  cat:"Protéine",    ori:["occidentale"]},
+  {n:"Crevettes sautées",                gi:0,  cat:"Protéine",    ori:["asiatique"]},
+  {n:"Gambas grillées",                  gi:0,  cat:"Protéine",    ori:["orientale","occidentale"]},
+  {n:"Calamar sauté",                    gi:0,  cat:"Protéine",    ori:["asiatique","orientale"]},
+  {n:"Poulpe grillé",                    gi:0,  cat:"Protéine",    ori:["orientale"]},
+  {n:"Moules marinières",                gi:0,  cat:"Protéine",    ori:["occidentale"]},
+  {n:"Saint-Jacques",                    gi:0,  cat:"Protéine",    ori:["occidentale"]},
+  {n:"Palourdes",                        gi:0,  cat:"Protéine",    ori:["orientale","asiatique"]},
+  // Œufs
+  {n:"Œuf à la coque",                   gi:0,  cat:"Protéine",    ori:["occidentale"]},
+  {n:"Œuf dur",                          gi:0,  cat:"Protéine",    ori:["occidentale"]},
+  {n:"Œuf mollet",                       gi:0,  cat:"Protéine",    ori:["occidentale"]},
+  {n:"Œuf au plat",                      gi:0,  cat:"Protéine",    ori:["occidentale"]},
+  {n:"Œuf poché",                        gi:0,  cat:"Protéine",    ori:["occidentale"]},
+  {n:"Omelette nature",                  gi:0,  cat:"Protéine",    ori:["occidentale"]},
+  {n:"Œufs brouillés",                   gi:0,  cat:"Protéine",    ori:["occidentale"]},
+  {n:"Œuf de caille",                    gi:0,  cat:"Protéine",    ori:["asiatique"]},
+  // Fromages & produits laitiers protéinés
+  {n:"Emmental",                         gi:0,  cat:"Protéine",    ori:["occidentale"]},
+  {n:"Parmesan",                         gi:0,  cat:"Protéine",    ori:["occidentale"]},
+  {n:"Camembert",                        gi:0,  cat:"Protéine",    ori:["occidentale"]},
+  {n:"Brie",                             gi:0,  cat:"Protéine",    ori:["occidentale"]},
+  {n:"Comté",                            gi:0,  cat:"Protéine",    ori:["occidentale"]},
+  {n:"Mozzarella",                       gi:0,  cat:"Protéine",    ori:["occidentale"]},
+  {n:"Ricotta",                          gi:0,  cat:"Protéine",    ori:["occidentale"]},
+  {n:"Feta",                             gi:0,  cat:"Protéine",    ori:["orientale"]},
+  {n:"Halloumi",                         gi:0,  cat:"Protéine",    ori:["orientale"]},
+  {n:"Chèvre frais",                     gi:0,  cat:"Protéine",    ori:["occidentale"]},
+  {n:"Roquefort",                        gi:0,  cat:"Protéine",    ori:["occidentale"]},
+  {n:"Cottage cheese",                   gi:0,  cat:"Protéine",    ori:["occidentale"]},
+  {n:"Mascarpone",                       gi:0,  cat:"Protéine",    ori:["occidentale"]},
+  // Protéines végétales
+  {n:"Tofu ferme",                       gi:15, cat:"Protéine",    ori:["asiatique"]},
+  {n:"Tofu soyeux",                      gi:15, cat:"Protéine",    ori:["asiatique"]},
+  {n:"Tofu grillé",                      gi:15, cat:"Protéine",    ori:["asiatique"]},
+  {n:"Tempeh",                           gi:15, cat:"Protéine",    ori:["asiatique"]},
+  {n:"Seitan",                           gi:0,  cat:"Protéine",    ori:["asiatique"]},
+  {n:"Edamame",                          gi:18, cat:"Protéine",    ori:["asiatique"]},
+  {n:"Protéines de soja texturé",        gi:15, cat:"Protéine",    ori:["occidentale"]},
+  {n:"Quorn",                            gi:0,  cat:"Protéine",    ori:["occidentale"]},
+  {n:"Skyr",                             gi:11, cat:"Protéine",    ori:["occidentale"]},
+  {n:"Fromage blanc 0%",                 gi:30, cat:"Protéine",    ori:["occidentale"]},
+  {n:"Proteines de pois",                gi:0,  cat:"Protéine",    ori:["occidentale"]},
 ];
 
 // Build lookup index (normalized)
@@ -910,10 +1003,16 @@ function selectCuisine(el, c) {
 }
 
 function giBadge(gi) {
-  if (gi === 0) return ['badge-grey','Non glucidique'];
-  if (gi <= 55) return ['badge-green', `IG ${gi} — Faible`];
-  if (gi <= 69) return ['badge-orange', `IG ${gi} — Modéré`];
-  return ['badge-red', `IG ${gi} — Élevé`];
+  const t = (typeof LANGS !== 'undefined' && LANGS[currentLang]) ? LANGS[currentLang] : {};
+  const a    = t.gi_abbr    || 'IG';
+  const none = t.gi_none    || 'Non glucidique';
+  const low  = t.gi_low     || 'Faible';
+  const mod  = t.gi_moderate|| 'Modéré';
+  const high = t.gi_high    || 'Élevé';
+  if (gi === 0) return ['badge-grey',   none];
+  if (gi <= 55) return ['badge-green',  `${a} ${gi} — ${low}`];
+  if (gi <= 69) return ['badge-orange', `${a} ${gi} — ${mod}`];
+  return ['badge-red',  `${a} ${gi} — ${high}`];
 }
 
 function giColor(gi) {
@@ -988,7 +1087,7 @@ function clearAll() {
 // ═══════════════════════════════════════════════════════════════
 function analyzeRecipe() {
   const rows = document.querySelectorAll('[id^="row-"]');
-  if (!rows.length) { alert('Ajoutez au moins un ingrédient.'); return; }
+  if (!rows.length) { alert(LANGS[currentLang].alert_add_ing); return; }
 
   const items = [];
   let hasGlucidic = false;
@@ -1003,7 +1102,7 @@ function analyzeRecipe() {
     if (food && food.gi > 0) hasGlucidic = true;
   });
 
-  if (!items.length) { alert('Aucun ingrédient valide détecté.'); return; }
+  if (!items.length) { alert(LANGS[currentLang].alert_no_valid); return; }
 
   // Weighted GI: only glucidic foods count
   let sumWeighted = 0, totalGlucidicQty = 0;
@@ -1015,8 +1114,9 @@ function analyzeRecipe() {
   });
 
   const recipeGI = totalGlucidicQty > 0 ? Math.round(sumWeighted / totalGlucidicQty) : 0;
-  const recipeName = document.getElementById('recipe-name').value.trim() || 'Votre recette';
+  const recipeName = document.getElementById('recipe-name').value.trim() || LANGS[currentLang].your_recipe;
 
+  lastAnalysisData = { items, recipeGI, recipeName, hasGlucidic };
   renderResults(items, recipeGI, recipeName, hasGlucidic);
   document.getElementById('tab-resultats').style.display = '';
   showTab('resultats');
@@ -1027,16 +1127,19 @@ function analyzeRecipe() {
 //  RENDER RESULTS
 // ═══════════════════════════════════════════════════════════════
 function renderResults(items, recipeGI, recipeName, hasGlucidic) {
+  const t = (typeof LANGS !== 'undefined' && LANGS[currentLang]) ? LANGS[currentLang] : LANGS && LANGS.fr ? LANGS.fr : {};
+  const a = t.gi_abbr || 'GI';
   const [scoreCls] = giBadge(recipeGI);
   const scoreColor = giColor(recipeGI);
   const barW = Math.min(100, Math.round(recipeGI / 100 * 100));
   const barColor = recipeGI === 0 ? '#95a5a6' : recipeGI <= 55 ? 'var(--green)' : recipeGI <= 69 ? 'var(--orange)' : 'var(--red)';
-  const giLabel = recipeGI === 0 ? 'Non glucidique' : recipeGI <= 55 ? 'Faible' : recipeGI <= 69 ? 'Modéré' : 'Élevé';
+  const giLabel = recipeGI === 0 ? t.gi_none : recipeGI <= 55 ? t.gi_low : recipeGI <= 69 ? t.gi_moderate : t.gi_high;
 
-  // Alternatives for high-GI items
+  const cuisineLabel = {occidentale: t.cuisine_west, orientale: t.cuisine_east, asiatique: t.cuisine_asian}[selectedCuisine] || selectedCuisine;
+
+  // Alternatives
   const highGiItems = items.filter(it => it.food && it.food.gi >= 70 && it.food.alt);
   const modGiItems  = items.filter(it => it.food && it.food.gi >= 56 && it.food.gi < 70 && it.food.alt);
-
   let altHTML = '';
   [...highGiItems, ...modGiItems].forEach(it => {
     const altText = it.food.alt[selectedCuisine] || it.food.alt['occidentale'] || '';
@@ -1045,34 +1148,30 @@ function renderResults(items, recipeGI, recipeName, hasGlucidic) {
     altHTML += `
       <div class="alt-card">
         <h4>
-          <span class="badge ${cls}" style="margin-right:6px;">IG ${it.food.gi}</span>
+          <span class="badge ${cls}" style="margin-right:6px;">${a} ${it.food.gi}</span>
           ${it.food.n}
           <span class="arrow">→</span>
           ${altText}
         </h4>
-        <p>Substitution recommandée pour la cuisine <strong>${selectedCuisine}</strong></p>
+        <p>${t.res_alt_subst} <strong>${cuisineLabel}</strong></p>
       </div>`;
   });
 
-  // Smart tips based on recipe
   const tips = buildSmartTips(items, recipeGI);
-
-  // Not found
   const notFound = items.filter(it => !it.food);
 
   const html = `
-    <!-- SCORE GLOBAL -->
     <div class="card">
-      <h2>📊 Résultats — ${recipeName}</h2>
+      <h2>${t.res_title} — ${recipeName}</h2>
       <p style="font-size:.85rem;color:var(--muted);margin-bottom:12px;">
-        Cuisine sélectionnée : <strong>${selectedCuisine.charAt(0).toUpperCase()+selectedCuisine.slice(1)}</strong> ·
-        ${items.filter(it=>it.food).length} aliment(s) reconnu(s)
+        ${t.res_cuisine} : <strong>${cuisineLabel}</strong> ·
+        ${items.filter(it=>it.food).length} ${t.res_recognized}
       </p>
       <div style="display:flex;align-items:center;gap:24px;flex-wrap:wrap;">
         <div style="text-align:center;min-width:100px;">
           <div class="gi-score" style="color:${scoreColor};">${recipeGI > 0 ? recipeGI : '—'}</div>
           <div class="gi-label" style="color:${scoreColor};margin-top:4px;">${giLabel}</div>
-          <div style="font-size:.78rem;color:var(--muted);margin-top:2px;">IG moyen pondéré</div>
+          <div style="font-size:.78rem;color:var(--muted);margin-top:2px;">${t.res_gi_avg}</div>
         </div>
         <div style="flex:1;min-width:200px;">
           <div class="gi-meter">
@@ -1081,68 +1180,63 @@ function renderResults(items, recipeGI, recipeName, hasGlucidic) {
           <div style="display:flex;justify-content:space-between;font-size:.75rem;color:var(--muted);">
             <span>0</span><span style="color:var(--green);">55</span><span style="color:var(--orange);">69</span><span>100+</span>
           </div>
-          ${recipeGI >= 70 ? `<div class="alert alert-warn" style="margin-top:10px;">⚠️ Index glycémique élevé — des alternatives sont proposées ci-dessous.</div>` : ''}
-          ${recipeGI >= 56 && recipeGI < 70 ? `<div class="alert alert-warn" style="margin-top:10px;">🟠 Index glycémique modéré — quelques substitutions pourraient améliorer la recette.</div>` : ''}
-          ${recipeGI > 0 && recipeGI <= 55 ? `<div class="alert alert-success" style="margin-top:10px;">✅ Bonne nouvelle ! L'index glycémique global est faible.</div>` : ''}
-          ${recipeGI === 0 ? `<div class="alert alert-info" style="margin-top:10px;">ℹ️ Cette recette ne contient pas de glucides significatifs (IG = 0).</div>` : ''}
+          ${recipeGI >= 70 ? `<div class="alert alert-warn" style="margin-top:10px;">${t.res_alert_high}</div>` : ''}
+          ${recipeGI >= 56 && recipeGI < 70 ? `<div class="alert alert-warn" style="margin-top:10px;">${t.res_alert_mod}</div>` : ''}
+          ${recipeGI > 0 && recipeGI <= 55 ? `<div class="alert alert-success" style="margin-top:10px;">${t.res_alert_low}</div>` : ''}
+          ${recipeGI === 0 ? `<div class="alert alert-info" style="margin-top:10px;">${t.res_alert_none}</div>` : ''}
         </div>
       </div>
     </div>
 
-    <!-- DÉTAIL PAR ALIMENT -->
     <div class="card">
-      <h2>🧾 Détail par aliment</h2>
+      <h2>${t.res_detail}</h2>
       ${items.map(it => {
         if (!it.food) return `
           <div class="result-row">
             <div class="result-name" style="color:var(--red);">❓ ${it.raw}</div>
-            <span class="badge badge-grey">Non reconnu</span>
+            <span class="badge badge-grey">${t.res_not_recognized}</span>
           </div>`;
         const [cls, lbl] = giBadge(it.food.gi);
+        const catLabel = t['cat_' + it.food.cat] || it.food.cat;
         return `
           <div class="result-row">
             <div>
               <div class="result-name">${it.food.n}</div>
-              <div style="font-size:.8rem;color:var(--muted);">${it.food.cat} · ${it.qty} g</div>
+              <div style="font-size:.8rem;color:var(--muted);">${catLabel} · ${it.qty} g</div>
             </div>
             <span class="badge ${cls}">${lbl}</span>
           </div>`;
       }).join('')}
-      ${notFound.length ? `<div class="not-found" style="margin-top:8px;">⚠️ Aliments non trouvés dans la base : ${notFound.map(i=>i.raw).join(', ')}. Consultez la section Suggestions pour les signaler.</div>` : ''}
+      ${notFound.length ? `<div class="not-found" style="margin-top:8px;">${t.res_not_found_pre} ${notFound.map(i=>i.raw).join(', ')}. ${t.res_not_found_suf}</div>` : ''}
     </div>
 
-    <!-- ALTERNATIVES -->
     ${altHTML ? `
     <div class="card">
-      <h2>🔄 Alternatives recommandées (cuisine ${selectedCuisine})</h2>
-      <p style="font-size:.85rem;color:var(--muted);margin-bottom:14px;">
-        Substitutions pour réduire l'index glycémique tout en restant dans l'esprit de votre cuisine.
-      </p>
+      <h2>${t.res_alt_title} (${t.res_alt_cuisine} ${cuisineLabel})</h2>
+      <p style="font-size:.85rem;color:var(--muted);margin-bottom:14px;">${t.res_alt_hint}</p>
       ${altHTML}
     </div>` : (recipeGI > 0 && recipeGI <= 55 ? `
     <div class="card">
-      <h2>✅ Alternatives</h2>
-      <div class="alert alert-success">Votre recette a un IG global faible — aucune substitution majeure nécessaire.</div>
+      <h2>${t.res_alt_ok_title}</h2>
+      <div class="alert alert-success">${t.res_alt_ok_msg}</div>
     </div>` : '')}
 
-    <!-- TIPS PERSONNALISÉS -->
     <div class="card">
-      <h2>💡 Conseils personnalisés pour cette recette</h2>
-      ${tips.map(t => `
+      <h2>${t.res_tips_title}</h2>
+      ${tips.map(tp => `
         <div class="tip-item">
-          <div class="tip-icon">${t.icon}</div>
+          <div class="tip-icon">${tp.icon}</div>
           <div class="tip-text">
-            <strong>${t.title}</strong>
-            <span>${t.text}</span>
+            <strong>${tp.title}</strong>
+            <span>${tp.text}</span>
           </div>
         </div>`).join('')}
     </div>
 
-    <!-- RETOUR -->
     <div class="btn-row">
-      <button class="btn btn-outline" onclick="showTab('analyser')">← Modifier la recette</button>
-      <button class="btn btn-outline" onclick="showTab('conseils')">📖 Tous les conseils</button>
-      <button class="btn-pdf" onclick="exportPDF()">📄 Exporter en PDF</button>
+      <button class="btn btn-outline" onclick="showTab('analyser')">${t.res_back}</button>
+      <button class="btn btn-outline" onclick="showTab('conseils')">${t.res_all_tips}</button>
+      <button class="btn-pdf" onclick="exportPDF()">${t.res_pdf}</button>
     </div>
   `;
 
@@ -1153,35 +1247,35 @@ function renderResults(items, recipeGI, recipeName, hasGlucidic) {
 //  SMART TIPS
 // ═══════════════════════════════════════════════════════════════
 function buildSmartTips(items, recipeGI) {
+  const t = (typeof LANGS !== 'undefined' && LANGS[currentLang]) ? LANGS[currentLang] : LANGS && LANGS.fr ? LANGS.fr : {};
   const tips = [];
   const cats = items.map(i => i.food?.cat || '');
   const has = c => cats.includes(c);
   const hasName = q => items.some(i => normalize(i.food?.n || '').includes(normalize(q)));
 
-  if (has('Pâtes') || hasName('riz') || hasName('pâtes')) {
-    tips.push({icon:'⏱️', title:'Cuisson al dente', text:"Réduire de 2–3 minutes la cuisson des pâtes ou du riz pour préserver la structure de l'amidon et abaisser l'IG de 15 à 20 points."});
-    tips.push({icon:'❄️', title:'Refroidir avant de servir', text:"Préparer le riz ou les pâtes à l'avance et les refroidir au réfrigérateur transforme l'amidon en amidon résistant. Réchauffer à la vapeur — l'effet se maintient."});
+  if (has('Pâtes') || hasName('riz') || hasName('pates')) {
+    tips.push({icon:'⏱️', title: t.tip_al_dente_t, text: t.tip_al_dente_d});
+    tips.push({icon:'❄️',  title: t.tip_cool_t,    text: t.tip_cool_d});
   }
-  if (has('Farine') || hasName('pain') || hasName('biscuit') || hasName('gâteau')) {
-    tips.push({icon:'🍋', title:'Ajouter du jus de citron', text:"Incorporer 1–2 cuillères à soupe de citron dans la pâte ou la sauce réduit l'activité de l'amylase et ralentit la digestion des glucides."});
-    tips.push({icon:'🌾', title:'Remplacer 30% de la farine blanche', text:"Substituer 30% de farine blanche par de la farine d'orge, de pois chiche ou de sarrasin réduit significativement l'IG sans altérer la texture."});
+  if (has('Farine') || hasName('pain') || hasName('biscuit') || hasName('gateau')) {
+    tips.push({icon:'🍋', title: t.tip_lemon_t, text: t.tip_lemon_d});
+    tips.push({icon:'🌾', title: t.tip_flour_t, text: t.tip_flour_d});
   }
   if (has('Légume') && (hasName('pomme de terre') || hasName('panais') || hasName('betterave'))) {
-    tips.push({icon:'🥔', title:'Cuire à la vapeur, pas au four', text:"La pomme de terre vapeur (IG 65) a un IG bien inférieur à la version au four (IG 85). La consommer froide dans une salade descend encore à IG 58."});
+    tips.push({icon:'🥔', title: t.tip_potato_t, text: t.tip_potato_d});
   }
   if (has('Sucre')) {
-    tips.push({icon:'🍯', title:'Réduire le sucre de 20%', text:"La plupart des recettes supportent une réduction de 20% du sucre sans impact sur la texture. Remplacer le reste par du sucre de coco ou du sirop d'agave."});
+    tips.push({icon:'🍯', title: t.tip_sugar_t, text: t.tip_sugar_d});
   }
   if (recipeGI >= 60) {
-    tips.push({icon:'🥗', title:'Commencer par une salade', text:"Manger une salade verte (sans croûtons) avant ce plat peut réduire le pic glycémique de 30 à 40% grâce aux fibres qui forment un gel intestinal ralentissant l'absorption des glucides."});
-    tips.push({icon:'🫘', title:'Ajouter des légumineuses', text:"Incorporer 2–3 cuillères à soupe de lentilles, pois chiches ou haricots rouges à la recette diminue l'IG global grâce à leurs fibres et protéines."});
+    tips.push({icon:'🥗', title: t.tip_salad_t,   text: t.tip_salad_d});
+    tips.push({icon:'🫘', title: t.tip_legumes_t, text: t.tip_legumes_d});
   }
   if (recipeGI >= 70) {
-    tips.push({icon:'🚶', title:'Marche de 10–15 min après le repas', text:"Une courte marche après ce repas à IG élevé utilise le glucose musculaire et réduit le pic glycémique de 20 à 30%."});
-    tips.push({icon:'🫒', title:'Ajouter un corps gras sain', text:"Un filet d'huile d'olive ou quelques lamelles d'avocat ralentissent la vidange gastrique et atténuent l'impact glycémique du repas."});
+    tips.push({icon:'🚶', title: t.tip_walk_t, text: t.tip_walk_d});
+    tips.push({icon:'🫒', title: t.tip_fat_t,  text: t.tip_fat_d});
   }
-  tips.push({icon:'🧂', title:'Cannelle et fenugrec', text:"La cannelle (½ cuillère à café par repas) améliore la sensibilité à l'insuline. Le fenugrec ralentit la vidange gastrique. Deux épices faciles à intégrer dans des recettes sucrées ou salées."});
-
+  tips.push({icon:'🧂', title: t.tip_spice_t, text: t.tip_spice_d});
   return tips.slice(0, 6);
 }
 
@@ -1198,7 +1292,8 @@ function submitComment() {
   const theme = document.getElementById('c-theme').value;
   const text = document.getElementById('c-text').value.trim();
   const fb = document.getElementById('c-feedback');
-  if (!text || text.length < 10) { fb.innerHTML = '<div class="alert alert-warn">Merci d\'écrire un message d\'au moins 10 caractères.</div>'; return; }
+  const t = LANGS[currentLang] || LANGS.fr;
+  if (!text || text.length < 10) { fb.innerHTML = `<div class="alert alert-warn">${t.comment_min_chars}</div>`; return; }
 
   const comments = JSON.parse(localStorage.getItem('glycochef_comments') || '[]');
   comments.unshift({
@@ -1213,31 +1308,29 @@ function submitComment() {
   document.getElementById('c-name').value = '';
   document.getElementById('c-text').value = '';
   setStars(0);
-  fb.innerHTML = '<div class="alert alert-success">✅ Merci pour votre suggestion ! Elle a bien été enregistrée.</div>';
+  fb.innerHTML = `<div class="alert alert-success">${(LANGS[currentLang]||LANGS.fr).comment_success}</div>`;
   setTimeout(() => fb.innerHTML = '', 3000);
   renderComments();
 }
 
-const themeLabels = {
-  aliment: '🥦 Nouvel aliment',
-  cuisine: '🌍 Nouvelle cuisine',
-  recette: '🍽️ Suggestion recette',
-  bug: '🐛 Signalement',
-  autre: '💡 Autre idée'
-};
+function getThemeLabel(theme) {
+  const t = LANGS[currentLang] || LANGS.fr;
+  return {aliment: t.theme_aliment, cuisine: t.theme_cuisine, recette: t.theme_recette, bug: t.theme_bug, autre: t.theme_autre}[theme] || theme;
+}
 
 function renderComments() {
+  const t = LANGS[currentLang] || LANGS.fr;
   const comments = JSON.parse(localStorage.getItem('glycochef_comments') || '[]');
   const list = document.getElementById('comments-list');
   const counter = document.getElementById('comment-count');
   counter.textContent = `(${comments.length})`;
   if (!comments.length) {
-    list.innerHTML = '<div class="empty"><div class="icon">💬</div><p>Aucune suggestion pour le moment. Soyez le premier !</p></div>';
+    list.innerHTML = `<div class="empty"><div class="icon">💬</div><p>${t.no_comments}</p></div>`;
     return;
   }
   list.innerHTML = comments.map(c => `
     <div class="comment-card">
-      <h4>${c.name} · <span style="color:var(--muted);font-weight:400;">${themeLabels[c.theme] || c.theme}</span>
+      <h4>${c.name} · <span style="color:var(--muted);font-weight:400;">${getThemeLabel(c.theme)}</span>
         ${c.stars ? `<span style="color:#f9ca24;margin-left:8px;">${'★'.repeat(c.stars)}${'☆'.repeat(5-c.stars)}</span>` : ''}
       </h4>
       <p>${c.text}</p>
@@ -1247,26 +1340,58 @@ function renderComments() {
 }
 
 // ═══════════════════════════════════════════════════════════════
-//  INIT
-// ═══════════════════════════════════════════════════════════════
-addIngredient();
-renderComments();
-
-// ═══════════════════════════════════════════════════════════════
 //  PDF EXPORT
 // ═══════════════════════════════════════════════════════════════
 function exportPDF() {
-  // Met la date dans l'en-tête d'impression
-  const d = new Date().toLocaleDateString('fr-FR', {weekday:'long', day:'numeric', month:'long', year:'numeric'});
-  document.getElementById('print-date').textContent = 'Généré le ' + d;
+  const t = LANGS[currentLang] || LANGS.fr;
+  const locale = {fr:'fr-FR', en:'en-GB', ar:'ar-SA'}[currentLang] || 'fr-FR';
+  const d = new Date().toLocaleDateString(locale, {weekday:'long', day:'numeric', month:'long', year:'numeric'});
+  document.getElementById('print-date').textContent = t.pdf_generated + ' ' + d;
   window.print();
 }
 
 // ═══════════════════════════════════════════════════════════════
 //  TRANSLATIONS
 // ═══════════════════════════════════════════════════════════════
-const LANGS = {
+var LANGS = {
   fr: {
+    gi_abbr:"IG", your_recipe:"Votre recette",
+    gi_none:"Non glucidique", gi_low:"Faible", gi_moderate:"Modéré", gi_high:"Élevé",
+    cat_Farine:"Farine", cat_Céréale:"Céréale", cat_Pain:"Pain", "cat_Pâtes":"Pâtes",
+    "cat_Légumineuse":"Légumineuse", "cat_Légume":"Légume", cat_Fruit:"Fruit",
+    cat_Viande:"Viande", cat_Poisson:"Poisson", cat_Laitage:"Laitage",
+    "cat_Oléagineux":"Oléagineux", cat_Sucre:"Sucre", cat_Condiment:"Condiment",
+    cat_Huile:"Huile", "cat_Transformé":"Transformé", cat_Boisson:"Boisson", "cat_Protéine":"Protéine",
+    res_title:"📊 Résultats", res_cuisine:"Cuisine sélectionnée", res_recognized:"aliment(s) reconnu(s)",
+    res_gi_avg:"IG moyen pondéré",
+    res_alert_high:"⚠️ Index glycémique élevé — des alternatives sont proposées ci-dessous.",
+    res_alert_mod:"🟠 Index glycémique modéré — quelques substitutions pourraient améliorer la recette.",
+    res_alert_low:"✅ Bonne nouvelle ! L'index glycémique global est faible.",
+    res_alert_none:"ℹ️ Cette recette ne contient pas de glucides significatifs (IG = 0).",
+    res_detail:"🧾 Détail par aliment", res_not_recognized:"Non reconnu",
+    res_not_found_pre:"⚠️ Aliments non trouvés dans la base :", res_not_found_suf:"Consultez la section Suggestions pour les signaler.",
+    res_alt_title:"🔄 Alternatives recommandées", res_alt_cuisine:"cuisine",
+    res_alt_hint:"Substitutions pour réduire l'index glycémique tout en restant dans l'esprit de votre cuisine.",
+    res_alt_subst:"Substitution recommandée pour la cuisine",
+    res_alt_ok_title:"✅ Alternatives", res_alt_ok_msg:"Votre recette a un IG global faible — aucune substitution majeure nécessaire.",
+    res_tips_title:"💡 Conseils personnalisés pour cette recette",
+    res_back:"← Modifier la recette", res_all_tips:"📖 Tous les conseils", res_pdf:"📄 Exporter en PDF",
+    alert_add_ing:"Ajoutez au moins un ingrédient.", alert_no_valid:"Aucun ingrédient valide détecté.",
+    tip_al_dente_t:"Cuisson al dente", tip_al_dente_d:"Réduire de 2–3 minutes la cuisson des pâtes ou du riz pour préserver la structure de l'amidon et abaisser l'IG de 15 à 20 points.",
+    tip_cool_t:"Refroidir avant de servir", tip_cool_d:"Préparer le riz ou les pâtes à l'avance et les refroidir au réfrigérateur transforme l'amidon en amidon résistant. Réchauffer à la vapeur — l'effet se maintient.",
+    tip_lemon_t:"Ajouter du jus de citron", tip_lemon_d:"Incorporer 1–2 cuillères à soupe de citron dans la pâte ou la sauce réduit l'activité de l'amylase et ralentit la digestion des glucides.",
+    tip_flour_t:"Remplacer 30% de la farine blanche", tip_flour_d:"Substituer 30% de farine blanche par de la farine d'orge, de pois chiche ou de sarrasin réduit significativement l'IG sans altérer la texture.",
+    tip_potato_t:"Cuire à la vapeur, pas au four", tip_potato_d:"La pomme de terre vapeur (IG 65) a un IG bien inférieur à la version au four (IG 85). La consommer froide dans une salade descend encore à IG 58.",
+    tip_sugar_t:"Réduire le sucre de 20%", tip_sugar_d:"La plupart des recettes supportent une réduction de 20% du sucre sans impact sur la texture. Remplacer le reste par du sucre de coco ou du sirop d'agave.",
+    tip_salad_t:"Commencer par une salade", tip_salad_d:"Manger une salade verte (sans croûtons) avant ce plat peut réduire le pic glycémique de 30 à 40% grâce aux fibres qui forment un gel intestinal ralentissant l'absorption des glucides.",
+    tip_legumes_t:"Ajouter des légumineuses", tip_legumes_d:"Incorporer 2–3 cuillères à soupe de lentilles, pois chiches ou haricots rouges à la recette diminue l'IG global grâce à leurs fibres et protéines.",
+    tip_walk_t:"Marche de 10–15 min après le repas", tip_walk_d:"Une courte marche après ce repas à IG élevé utilise le glucose musculaire et réduit le pic glycémique de 20 à 30%.",
+    tip_fat_t:"Ajouter un corps gras sain", tip_fat_d:"Un filet d'huile d'olive ou quelques lamelles d'avocat ralentissent la vidange gastrique et atténuent l'impact glycémique du repas.",
+    tip_spice_t:"Cannelle et fenugrec", tip_spice_d:"La cannelle (½ cuillère à café par repas) améliore la sensibilité à l'insuline. Le fenugrec ralentit la vidange gastrique. Deux épices faciles à intégrer dans des recettes sucrées ou salées.",
+    comment_min_chars:"Merci d'écrire un message d'au moins 10 caractères.", comment_success:"✅ Merci pour votre suggestion ! Elle a bien été enregistrée.",
+    no_comments:"Aucune suggestion pour le moment. Soyez le premier !",
+    theme_aliment:"🥦 Nouvel aliment", theme_cuisine:"🌍 Nouvelle cuisine", theme_recette:"🍽️ Suggestion recette", theme_bug:"🐛 Signalement", theme_autre:"💡 Autre idée",
+    pdf_generated:"Généré le",
     subtitle: "Analysez l'index glycémique de vos recettes et découvrez des alternatives plus saines",
     nav_analyse: "🔍 Analyser une recette",
     nav_results: "📊 Résultats",
@@ -1295,6 +1420,43 @@ const LANGS = {
     no_comments: "Aucune suggestion pour le moment. Soyez le premier !",
   },
   en: {
+    gi_abbr:"GI", your_recipe:"Your recipe",
+    gi_none:"Non-glycemic", gi_low:"Low", gi_moderate:"Moderate", gi_high:"High",
+    cat_Farine:"Flour", cat_Céréale:"Grain", cat_Pain:"Bread", "cat_Pâtes":"Pasta",
+    "cat_Légumineuse":"Legume", "cat_Légume":"Vegetable", cat_Fruit:"Fruit",
+    cat_Viande:"Meat", cat_Poisson:"Fish & Seafood", cat_Laitage:"Dairy",
+    "cat_Oléagineux":"Nuts & Seeds", cat_Sucre:"Sugar", cat_Condiment:"Condiment",
+    cat_Huile:"Oil", "cat_Transformé":"Processed", cat_Boisson:"Drink", "cat_Protéine":"Protein",
+    res_title:"📊 Results", res_cuisine:"Selected cuisine", res_recognized:"ingredient(s) recognized",
+    res_gi_avg:"Weighted average GI",
+    res_alert_high:"⚠️ High glycemic index — alternatives are suggested below.",
+    res_alert_mod:"🟠 Moderate glycemic index — a few substitutions could improve the recipe.",
+    res_alert_low:"✅ Great news! The overall glycemic index is low.",
+    res_alert_none:"ℹ️ This recipe contains no significant carbohydrates (GI = 0).",
+    res_detail:"🧾 Ingredient breakdown", res_not_recognized:"Not recognized",
+    res_not_found_pre:"⚠️ Ingredients not found in database:", res_not_found_suf:"Visit the Suggestions section to report them.",
+    res_alt_title:"🔄 Recommended alternatives", res_alt_cuisine:"cuisine",
+    res_alt_hint:"Substitutions to reduce the glycemic index while staying in the spirit of your cuisine.",
+    res_alt_subst:"Recommended substitution for",
+    res_alt_ok_title:"✅ Alternatives", res_alt_ok_msg:"Your recipe has a low overall GI — no major substitution needed.",
+    res_tips_title:"💡 Personalized tips for this recipe",
+    res_back:"← Edit recipe", res_all_tips:"📖 All tips", res_pdf:"📄 Export to PDF",
+    alert_add_ing:"Please add at least one ingredient.", alert_no_valid:"No valid ingredient detected.",
+    tip_al_dente_t:"Cook al dente", tip_al_dente_d:"Reduce pasta or rice cooking time by 2–3 minutes to preserve starch structure and lower GI by 15 to 20 points.",
+    tip_cool_t:"Cool before serving", tip_cool_d:"Preparing rice or pasta in advance and refrigerating it turns starch into resistant starch. Reheating by steaming maintains this effect.",
+    tip_lemon_t:"Add lemon juice", tip_lemon_d:"Adding 1–2 tablespoons of lemon juice to the dough or sauce reduces amylase activity and slows carbohydrate digestion.",
+    tip_flour_t:"Replace 30% of white flour", tip_flour_d:"Substituting 30% of white flour with barley, chickpea or buckwheat flour significantly lowers GI without altering texture.",
+    tip_potato_t:"Steam, don't bake", tip_potato_d:"Steamed potato (GI 65) has a much lower GI than baked (GI 85). Eating it cold in a salad brings it further down to GI 58.",
+    tip_sugar_t:"Reduce sugar by 20%", tip_sugar_d:"Most recipes tolerate a 20% sugar reduction without affecting texture. Replace the rest with coconut sugar or agave syrup.",
+    tip_salad_t:"Start with a green salad", tip_salad_d:"Eating a green salad (no croutons) before this dish can reduce the glycemic spike by 30–40% thanks to fibers that slow carb absorption.",
+    tip_legumes_t:"Add legumes", tip_legumes_d:"Adding 2–3 tablespoons of lentils, chickpeas or kidney beans lowers the overall GI through fiber and protein content.",
+    tip_walk_t:"10–15 min walk after eating", tip_walk_d:"A short walk after this high-GI meal uses muscle glucose and reduces the glycemic spike by 20–30%.",
+    tip_fat_t:"Add a healthy fat", tip_fat_d:"A drizzle of olive oil or a few slices of avocado slows gastric emptying and softens the meal's glycemic impact.",
+    tip_spice_t:"Cinnamon & fenugreek", tip_spice_d:"Cinnamon (½ tsp per meal) improves insulin sensitivity. Fenugreek slows gastric emptying. Easy spices to add to sweet or savory recipes.",
+    comment_min_chars:"Please write a message of at least 10 characters.", comment_success:"✅ Thank you for your suggestion! It has been saved.",
+    no_comments:"No suggestions yet. Be the first!",
+    theme_aliment:"🥦 New food item", theme_cuisine:"🌍 New cuisine", theme_recette:"🍽️ Recipe suggestion", theme_bug:"🐛 Bug report", theme_autre:"💡 Other idea",
+    pdf_generated:"Generated on",
     subtitle: "Analyze the glycemic index of your recipes and discover healthier alternatives",
     nav_analyse: "🔍 Analyze a recipe",
     nav_results: "📊 Results",
@@ -1323,6 +1485,43 @@ const LANGS = {
     no_comments: "No suggestions yet. Be the first!",
   },
   ar: {
+    gi_abbr:"م.ج", your_recipe:"وصفتك",
+    gi_none:"غير نشوي", gi_low:"منخفض", gi_moderate:"معتدل", gi_high:"مرتفع",
+    cat_Farine:"دقيق", cat_Céréale:"حبوب", cat_Pain:"خبز", "cat_Pâtes":"معكرونة",
+    "cat_Légumineuse":"بقوليات", "cat_Légume":"خضروات", cat_Fruit:"فاكهة",
+    cat_Viande:"لحوم", cat_Poisson:"أسماك", cat_Laitage:"ألبان",
+    "cat_Oléagineux":"مكسرات", cat_Sucre:"سكر", cat_Condiment:"توابل",
+    cat_Huile:"زيوت", "cat_Transformé":"منتجات مصنعة", cat_Boisson:"مشروبات", "cat_Protéine":"بروتين",
+    res_title:"📊 النتائج", res_cuisine:"المطبخ المختار", res_recognized:"مكوّن(ات) معرّف(ة)",
+    res_gi_avg:"المؤشر الجلايسيمي المرجّح",
+    res_alert_high:"⚠️ مؤشر جلايسيمي مرتفع — راجع البدائل المقترحة أدناه.",
+    res_alert_mod:"🟠 مؤشر جلايسيمي معتدل — بعض التعديلات قد تُحسّن الوصفة.",
+    res_alert_low:"✅ رائع! المؤشر الجلايسيمي الإجمالي منخفض.",
+    res_alert_none:"ℹ️ هذه الوصفة لا تحتوي على كربوهيدرات معتبرة (المؤشر = 0).",
+    res_detail:"🧾 تفصيل المكونات", res_not_recognized:"غير معرّف",
+    res_not_found_pre:"⚠️ مكونات غير موجودة في القاعدة:", res_not_found_suf:"راجع قسم الاقتراحات للإبلاغ عنها.",
+    res_alt_title:"🔄 بدائل مقترحة", res_alt_cuisine:"مطبخ",
+    res_alt_hint:"تعديلات لتخفيض المؤشر الجلايسيمي مع الحفاظ على روح مطبخك.",
+    res_alt_subst:"بديل مقترح للمطبخ",
+    res_alt_ok_title:"✅ البدائل", res_alt_ok_msg:"وصفتك لها مؤشر جلايسيمي منخفض — لا حاجة لتعديلات كبيرة.",
+    res_tips_title:"💡 نصائح مخصصة لهذه الوصفة",
+    res_back:"← تعديل الوصفة", res_all_tips:"📖 جميع النصائح", res_pdf:"📄 تصدير PDF",
+    alert_add_ing:"يرجى إضافة مكوّن واحد على الأقل.", alert_no_valid:"لم يتم اكتشاف أي مكوّن صالح.",
+    tip_al_dente_t:"طهي متوسط النضج", tip_al_dente_d:"تقليل وقت طهي المعكرونة أو الأرز بمقدار 2-3 دقائق للحفاظ على بنية النشاء وخفض المؤشر بـ 15 إلى 20 نقطة.",
+    tip_cool_t:"التبريد قبل التقديم", tip_cool_d:"تحضير الأرز أو المعكرونة مسبقاً وتبريدها في الثلاجة يحوّل النشاء إلى نشاء مقاوم. إعادة التسخين بالبخار تحافظ على هذا التأثير.",
+    tip_lemon_t:"إضافة عصير الليمون", tip_lemon_d:"إضافة 1-2 ملعقة كبيرة من الليمون يقلل نشاط الأميليز ويبطئ هضم الكربوهيدرات.",
+    tip_flour_t:"استبدال 30% من الدقيق الأبيض", tip_flour_d:"استبدال 30% من الدقيق الأبيض بدقيق الشعير أو الحمص أو الحنطة السوداء يخفض المؤشر بشكل ملحوظ دون التأثير على الملمس.",
+    tip_potato_t:"الطهي بالبخار لا بالفرن", tip_potato_d:"البطاطا المطهوة بالبخار (م.ج 65) لها مؤشر أقل بكثير من المشوية في الفرن (م.ج 85). تناولها بارداً في السلطة يخفضها إلى 58.",
+    tip_sugar_t:"تقليل السكر بنسبة 20%", tip_sugar_d:"معظم الوصفات تتحمل تقليل السكر بنسبة 20% دون التأثير على الملمس. استبدال الباقي بسكر جوز الهند أو شراب الأغاف.",
+    tip_salad_t:"البدء بسلطة خضراء", tip_salad_d:"تناول سلطة خضراء قبل الطبق يمكن أن يقلل ذروة السكر بنسبة 30-40% بفضل الألياف.",
+    tip_legumes_t:"إضافة البقوليات", tip_legumes_d:"إضافة 2-3 ملاعق كبيرة من العدس أو الحمص أو الفاصوليا يخفض المؤشر الإجمالي بفضل الألياف والبروتين.",
+    tip_walk_t:"المشي 10-15 دقيقة بعد الوجبة", tip_walk_d:"المشي القصير بعد هذه الوجبة يستهلك الجلوكوز العضلي ويقلل ذروة السكر بنسبة 20-30%.",
+    tip_fat_t:"إضافة دهن صحي", tip_fat_d:"رذاذ من زيت الزيتون أو بعض شرائح الأفوكادو يبطئ إفراغ المعدة ويخفف التأثير الجلايسيمي للوجبة.",
+    tip_spice_t:"القرفة والحلبة", tip_spice_d:"القرفة (½ ملعقة صغيرة) تحسّن حساسية الأنسولين. الحلبة تبطئ إفراغ المعدة. توابل سهلة الدمج في أي وصفة.",
+    comment_min_chars:"يرجى كتابة رسالة لا تقل عن 10 أحرف.", comment_success:"✅ شكراً على اقتراحك! تم حفظه.",
+    no_comments:"لا توجد اقتراحات حتى الآن. كن الأول!",
+    theme_aliment:"🥦 مادة غذائية جديدة", theme_cuisine:"🌍 مطبخ جديد", theme_recette:"🍽️ اقتراح وصفة", theme_bug:"🐛 إبلاغ عن مشكلة", theme_autre:"💡 فكرة أخرى",
+    pdf_generated:"تم إنشاؤه في",
     subtitle: "حلّل المؤشر الجلايسيمي لوصفاتك واكتشف بدائل أكثر صحة",
     nav_analyse: "🔍 تحليل وصفة",
     nav_results: "📊 النتائج",
@@ -1351,8 +1550,6 @@ const LANGS = {
     no_comments: "لا توجد اقتراحات حتى الآن. كن الأول!",
   }
 };
-
-let currentLang = 'fr';
 
 function setLang(lang) {
   currentLang = lang;
@@ -1390,7 +1587,19 @@ function setLang(lang) {
   document.querySelectorAll('[id^="ing-"]').forEach(el => {
     el.placeholder = t.ing_placeholder;
   });
+
+  // Re-render comments and results if visible
+  renderComments();
+  if (lastAnalysisData) {
+    renderResults(lastAnalysisData.items, lastAnalysisData.recipeGI, lastAnalysisData.recipeName, lastAnalysisData.hasGlucidic);
+  }
 }
+
+// ═══════════════════════════════════════════════════════════════
+//  INIT — après LANGS pour éviter les erreurs de référence
+// ═══════════════════════════════════════════════════════════════
+addIngredient();
+renderComments();
 </script>
 </body>
 </html>
