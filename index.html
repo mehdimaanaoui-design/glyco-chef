@@ -302,6 +302,9 @@
       <div class="cuisine-btn" onclick="selectCuisine(this,'asiatique')">
         <span class="icon">🍜</span><span data-i18n="cuisine_asian">Asiatique</span>
       </div>
+      <div class="cuisine-btn" onclick="selectCuisine(this,'africaine')">
+        <span class="icon">🌍</span><span data-i18n="cuisine_african">Africaine</span>
+      </div>
     </div>
   </div>
 
@@ -456,6 +459,18 @@ const DB = [
   {n:"Amarante cuite",                   gi:35, cat:"Céréale",     ori:["occidentale"]},
   {n:"Freekeh cuit",                     gi:43, cat:"Céréale",     ori:["orientale"]},
   {n:"Sorgho cuit",                      gi:55, cat:"Céréale",     ori:["orientale"]},
+  // ── CÉRÉALES & FÉCULENTS AFRICAINS ──
+  {n:"Fonio cuit",                       gi:40, cat:"Céréale",     ori:["africaine"]},
+  {n:"Attiéké",                          gi:65, cat:"Céréale",     ori:["africaine"],             alt:{africaine:"Fonio cuit (IG 40) ou manioc refroidi (IG ~35)", occidentale:"Couscous de blé complet (IG 50)", orientale:"Boulgour (IG 46)"}},
+  {n:"Fufu de manioc",                   gi:70, cat:"Céréale",     ori:["africaine"],             alt:{africaine:"Fufu d'igname (IG 35) ou fonio (IG 40)", occidentale:"Purée de patate douce (IG 63)", orientale:"Igname pilée (IG 35)"}},
+  {n:"Fufu d'igname",                    gi:45, cat:"Céréale",     ori:["africaine"]},
+  {n:"Gari / Eba",                       gi:85, cat:"Céréale",     ori:["africaine"],             alt:{africaine:"Attiéké (IG 65) ou fonio (IG 40)", occidentale:"Semoule de blé complète (IG 50)", orientale:"Boulgour (IG 46)"}},
+  {n:"Ugali (maïs)",                     gi:70, cat:"Céréale",     ori:["africaine"],             alt:{africaine:"Ugali de sorgho (IG 55) ou fonio (IG 40)", occidentale:"Polenta complète (IG 60)", orientale:"Boulgour (IG 46)"}},
+  {n:"Ugali de sorgho",                  gi:55, cat:"Céréale",     ori:["africaine"]},
+  {n:"Tô (bouillie de mil)",             gi:70, cat:"Céréale",     ori:["africaine"],             alt:{africaine:"Fonio cuit (IG 40) ou sorgho cuit (IG 55)", occidentale:"Quinoa (IG 53)", orientale:"Boulgour (IG 46)"}},
+  {n:"Pap (bouillie de maïs)",           gi:70, cat:"Céréale",     ori:["africaine"],             alt:{africaine:"Sorgho cuit (IG 55) ou fonio (IG 40)", occidentale:"Quinoa (IG 53)", orientale:"Boulgour (IG 46)"}},
+  {n:"Msemen / Meloui",                  gi:70, cat:"Pain",        ori:["africaine"],             alt:{africaine:"Chapati complet (IG 52) ou injera (IG 57)", orientale:"Pain pita complet (IG 57)", occidentale:"Pain au levain (IG 54)"}},
+  {n:"Chapati d'Afrique de l'Est",       gi:52, cat:"Pain",        ori:["africaine"]},
 
   // Pains
   {n:"Baguette blanche",                 gi:95, cat:"Pain",        ori:["occidentale"],           alt:{occidentale:"Pain au levain (IG 54) ou pain de seigle intégral (IG 40)", orientale:"Pain pita complet (IG 57)", asiatique:"Riz brun ou nouilles soba (IG 59)"}},
@@ -623,6 +638,27 @@ const DB = [
   {n:"Carambole",                        gi:25, cat:"Fruit",       ori:["asiatique"]},
   {n:"Coing",                            gi:35, cat:"Fruit",       ori:["orientale"]},
   {n:"Banane plantain cuite",            gi:40, cat:"Fruit",       ori:["tropicale"]},
+  // ── LÉGUMINEUSES AFRICAINES ──
+  {n:"Niébé / haricots à œil noir",     gi:30, cat:"Légumineuse", ori:["africaine"]},
+  {n:"Pois bambara",                     gi:30, cat:"Légumineuse", ori:["africaine"]},
+  // ── LÉGUMES & PLANTES AFRICAINES ──
+  {n:"Feuilles de moringa",             gi:15, cat:"Légume",      ori:["africaine"]},
+  {n:"Feuilles de baobab",              gi:15, cat:"Légume",      ori:["africaine"]},
+  {n:"Egusi (graines de courge)",        gi:25, cat:"Oléagineux",  ori:["africaine"]},
+  {n:"Graine de néré",                  gi:20, cat:"Oléagineux",  ori:["africaine"]},
+  // ── FRUITS AFRICAINS ──
+  {n:"Baobab (pulpe fraîche)",           gi:20, cat:"Fruit",       ori:["africaine"]},
+  {n:"Baobab (poudre)",                  gi:20, cat:"Fruit",       ori:["africaine"]},
+  {n:"Datte de palmier",                 gi:55, cat:"Fruit",       ori:["africaine"]},
+  {n:"Maracuja / fruit de la passion",   gi:30, cat:"Fruit",       ori:["africaine"]},
+  {n:"Anone / corossol",                 gi:35, cat:"Fruit",       ori:["africaine"]},
+  {n:"Jujube frais",                     gi:35, cat:"Fruit",       ori:["africaine"]},
+  // ── VIANDES & PROTÉINES AFRICAINES ──
+  {n:"Biltong (viande séchée)",          gi:0,  cat:"Protéine",    ori:["africaine"]},
+  {n:"Boerewors (saucisse sud-africaine)",gi:0, cat:"Protéine",    ori:["africaine"]},
+  {n:"Poulet yassa",                     gi:0,  cat:"Protéine",    ori:["africaine"]},
+  {n:"Capitaine (poisson)",              gi:0,  cat:"Protéine",    ori:["africaine"]},
+  {n:"Thiof / Mérou",                    gi:0,  cat:"Protéine",    ori:["africaine"]},
   {n:"Fruit du dragon",                  gi:25, cat:"Fruit",       ori:["asiatique"]},
   {n:"Ramboutan",                        gi:49, cat:"Fruit",       ori:["asiatique"]},
   {n:"Tamarin",                          gi:35, cat:"Fruit",       ori:["orientale"]},
@@ -998,6 +1034,35 @@ const FOOD_NAMES = {
 "Fenouil":{en:"Fennel",ar:"شمر"},
 "Poireau":{en:"Leek",ar:"كراث"},
 "Navet cuit":{en:"Cooked turnip",ar:"لفت مطبوخ"},
+// Africains
+"Fonio cuit":{en:"Cooked fonio",ar:"فونيو مطبوخ"},
+"Attiéké":{en:"Attiéké (fermented cassava couscous)",ar:"أتيكي"},
+"Fufu de manioc":{en:"Cassava fufu",ar:"فوفو مانيوك"},
+"Fufu d'igname":{en:"Yam fufu",ar:"فوفو يام"},
+"Gari / Eba":{en:"Gari / Eba (fermented cassava semolina)",ar:"غاري / إيبا"},
+"Ugali (maïs)":{en:"Ugali (cornmeal porridge)",ar:"أوغالي"},
+"Ugali de sorgho":{en:"Sorghum ugali",ar:"أوغالي الذرة البيضاء"},
+"Tô (bouillie de mil)":{en:"Tô (millet porridge)",ar:"تو (عصيدة الدخن)"},
+"Pap (bouillie de maïs)":{en:"Pap (cornmeal porridge)",ar:"باب (عصيدة الذرة)"},
+"Msemen / Meloui":{en:"Msemen / Meloui (Moroccan flatbread)",ar:"مسمن / ملوي"},
+"Chapati d'Afrique de l'Est":{en:"East African chapati",ar:"شباتي شرق أفريقيا"},
+"Niébé / haricots à œil noir":{en:"Black-eyed peas",ar:"لوبيا"},
+"Pois bambara":{en:"Bambara groundnut",ar:"فول بامبارا"},
+"Feuilles de moringa":{en:"Moringa leaves",ar:"أوراق المورينغا"},
+"Feuilles de baobab":{en:"Baobab leaves",ar:"أوراق شجرة البوباب"},
+"Egusi (graines de courge)":{en:"Egusi (melon seeds)",ar:"بذور الإيغوسي"},
+"Graine de néré":{en:"Locust bean (néré)",ar:"حبة النيري"},
+"Baobab (pulpe fraîche)":{en:"Baobab (fresh pulp)",ar:"بوباب (لب طازج)"},
+"Baobab (poudre)":{en:"Baobab powder",ar:"مسحوق البوباب"},
+"Datte de palmier":{en:"Palm date",ar:"بلح نخيل"},
+"Maracuja / fruit de la passion":{en:"Maracuja / passion fruit",ar:"ماراكويا"},
+"Anone / corossol":{en:"Soursop (graviola)",ar:"قشطة / كورسول"},
+"Jujube frais":{en:"Fresh jujube",ar:"عناب طازج"},
+"Biltong (viande séchée)":{en:"Biltong (dried meat)",ar:"بيلتونغ (لحم مجفف)"},
+"Boerewors (saucisse sud-africaine)":{en:"Boerewors (South African sausage)",ar:"بورفورس (نقانق جنوب أفريقية)"},
+"Poulet yassa":{en:"Yassa chicken",ar:"دجاج ياسا"},
+"Capitaine (poisson)":{en:"Capitaine (Nile perch)",ar:"سمك الكابيتان"},
+"Thiof / Mérou":{en:"Thiof / Grouper fish",ar:"سمك الثيوف / الهامور"},
 "Endive":{en:"Endive (chicory)",ar:"هندباء"},
 "Chou rouge":{en:"Red cabbage",ar:"كرنب أحمر"},
 "Chou de Bruxelles":{en:"Brussels sprouts",ar:"كرنب بروكسل"},
@@ -1463,6 +1528,14 @@ const ALIASES = {
   'أرز':'riz blanc cuit','خبز':'pain','بيض':'oeuf','دجاج':'poulet',
   'لحم':'boeuf','سمك':'saumon','حليب':'lait','زبدة':'beurre',
   'سكر':'sucre blanc','زيت زيتون':'huile dolive','طماطم':'tomate',
+  // Africains
+  fonio:'fonio cuit',attieke:'attieke','eba':'gari eba',gari:'gari eba',
+  ugali:'ugali mais',fufu:'fufu de manioc','black-eyed peas':'niebe haricots a oeil noir',
+  'cowpeas':'niebe haricots a oeil noir',moringa:'feuilles de moringa',
+  baobab:'baobab poudre',egusi:'egusi graines de courge',
+  biltong:'biltong viande sechee',boerewors:'boerewors saucisse sud-africaine',
+  msemen:'msemen meloui',meloui:'msemen meloui',
+  'niebe':'niebe haricots a oeil noir',
   'بصل':'oignon','ثوم':'ail','جزر':'carotte','خيار':'concombre',
   'فلفل':'poivron','باذنجان':'aubergine','بطاطا':'pomme de terre',
   'بطاطا حلوة':'patate douce','عدس':'lentilles vertes cuites',
@@ -1685,7 +1758,7 @@ function renderResults(items, recipeGI, recipeName, hasGlucidic) {
   const barColor = recipeGI === 0 ? '#95a5a6' : recipeGI <= 55 ? 'var(--green)' : recipeGI <= 69 ? 'var(--orange)' : 'var(--red)';
   const giLabel = recipeGI === 0 ? t.gi_none : recipeGI <= 55 ? t.gi_low : recipeGI <= 69 ? t.gi_moderate : t.gi_high;
 
-  const cuisineLabel = {occidentale: t.cuisine_west, orientale: t.cuisine_east, asiatique: t.cuisine_asian}[selectedCuisine] || selectedCuisine;
+  const cuisineLabel = {occidentale: t.cuisine_west, orientale: t.cuisine_east, asiatique: t.cuisine_asian, africaine: t.cuisine_african}[selectedCuisine] || selectedCuisine;
 
   // Alternatives
   const highGiItems = items.filter(it => it.food && it.food.gi >= 70 && it.food.alt);
@@ -2198,6 +2271,7 @@ var LANGS = {
     cuisine_west: "Occidentale",
     cuisine_east: "Orientale",
     cuisine_asian: "Asiatique",
+    cuisine_african: "Africaine",
     ing_title: "📝 Ingrédients de la recette",
     ing_hint: "Tapez le nom d'un aliment et saisissez la quantité en grammes. L'autocomplétion vous guide.",
     ing_add: "+ Ajouter un aliment",
@@ -2327,6 +2401,7 @@ var LANGS = {
     cuisine_west: "Western",
     cuisine_east: "Eastern",
     cuisine_asian: "Asian",
+    cuisine_african: "African",
     ing_title: "📝 Recipe ingredients",
     ing_hint: "Type a food name and enter the quantity in grams. Autocomplete will guide you.",
     ing_add: "+ Add an ingredient",
@@ -2456,6 +2531,7 @@ var LANGS = {
     cuisine_west: "غربي",
     cuisine_east: "شرقي",
     cuisine_asian: "آسيوي",
+    cuisine_african: "أفريقي",
     ing_title: "📝 مكونات الوصفة",
     ing_hint: "اكتب اسم المادة الغذائية وأدخل الكمية بالغرام. الإكمال التلقائي سيرشدك.",
     ing_add: "+ إضافة مكوّن",
