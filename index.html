@@ -4,7 +4,7 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>GlycoChef — Analyseur d'Index Glycémique de vos Recettes</title>
-<meta name="description" content="Analysez l'index glycémique de vos recettes en quelques secondes. Découvrez des alternatives plus saines et des conseils pour réduire l'IG de vos plats. Base de données de 350+ aliments.">
+<meta name="description" content="Analysez l'index glycémique de vos recettes. Alternatives saines, conseils personnalisés. Base de 350+ aliments FR/EN/AR.">
 <meta name="keywords" content="index glycémique, charge glycémique, recette IG bas, alimentation saine, diabète, glycémie, aliments IG, calculateur glycémique">
 <meta name="author" content="GlycoChef">
 <meta name="robots" content="index, follow">
@@ -53,6 +53,7 @@
     box-shadow: 0 4px 20px rgba(26,58,92,.3);
   }
   header h1 { font-size: 2rem; letter-spacing: 1px; }
+  .site-title { display: inline; }
   header h1 span { color: #f9ca24; }
   header p { margin-top: 6px; opacity: .85; font-size: .95rem; }
 
@@ -274,7 +275,7 @@
     <button class="lang-btn" onclick="setLang('en')">EN</button>
     <button class="lang-btn" onclick="setLang('ar')">ع</button>
   </div>
-  <h1>🥗 Glyco<span>Chef</span></h1>
+  <h1 class="site-title">🥗 Glyco<span>Chef</span></h1>
   <p data-i18n="subtitle">Analysez l'index glycémique de vos recettes et découvrez des alternatives plus saines</p>
 </header>
 
@@ -336,7 +337,7 @@
 
   <!-- En-tête visible uniquement à l'impression -->
   <div class="print-header" style="text-align:center;margin-bottom:20px;padding-bottom:12px;border-bottom:2px solid #1a3a5c;">
-    <h1 style="color:#1a3a5c;font-size:1.6rem;">🥗 GlycoChef</h1>
+    <h2 style="color:#1a3a5c;font-size:1.6rem;">🥗 GlycoChef</h2>
     <p style="color:#7f8c8d;font-size:.9rem;">Rapport d'analyse glycémique · glycochef.netlify.app</p>
     <p style="color:#7f8c8d;font-size:.85rem;" id="print-date"></p>
   </div>
