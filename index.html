@@ -282,6 +282,7 @@
 <nav>
   <button class="active" onclick="showTab('analyser')" data-i18n="nav_analyse">🔍 Analyser une recette</button>
   <button onclick="showTab('resultats')" id="tab-resultats" style="display:none" data-i18n="nav_results">📊 Résultats</button>
+  <button onclick="showTab('feculents')" data-i18n="nav_starch">🌾 Guide féculents</button>
   <button onclick="showTab('conseils')" data-i18n="nav_tips">💡 Conseils généraux</button>
   <button onclick="showTab('commentaires')" data-i18n="nav_comments">💬 Vos suggestions</button>
   <button onclick="showTab('apropos')" data-i18n="nav_about">ℹ️ À propos</button>
@@ -353,6 +354,11 @@
 <!-- ═══════════════════════════════════════════════════════ CONSEILS -->
 <div class="section" id="conseils">
   <div id="tips-content"></div>
+</div>
+
+<!-- ═══════════════════════════════════════════════════════ GUIDE FÉCULENTS -->
+<div class="section" id="feculents">
+  <div id="feculents-content"></div>
 </div>
 
 <!-- ═══════════════════════════════════════════════════════ COMMENTAIRES -->
@@ -472,6 +478,28 @@ const DB = [
   {n:"Msemen / Meloui",                  gi:70, cat:"Pain",        ori:["africaine"],             alt:{africaine:"Chapati complet (IG 52) ou injera (IG 57)", orientale:"Pain pita complet (IG 57)", occidentale:"Pain au levain (IG 54)"}},
   {n:"Chapati d'Afrique de l'Est",       gi:52, cat:"Pain",        ori:["africaine"]},
 
+  // ── CÉRÉALES COMPLÉMENTAIRES ──
+  {n:"Ébly (blé étuvé) cuit",            gi:45, cat:"Céréale",     ori:["occidentale"]},
+  {n:"Blé en grains cuit",               gi:40, cat:"Céréale",     ori:["occidentale"]},
+  {n:"Petit épeautre cuit",              gi:35, cat:"Céréale",     ori:["occidentale"]},
+  {n:"Perles de blé cuites",             gi:45, cat:"Céréale",     ori:["occidentale"]},
+  {n:"Polenta chaude",                   gi:70, cat:"Céréale",     ori:["occidentale"],           alt:{occidentale:"Polenta froide (IG 40) ou quinoa (IG 53)", orientale:"Boulgour (IG 46)", africaine:"Ugali de sorgho (IG 55)"}},
+  {n:"Polenta froide / grillée",         gi:40, cat:"Céréale",     ori:["occidentale"]},
+  {n:"Tapioca cuit",                     gi:85, cat:"Céréale",     ori:["asiatique"],             alt:{asiatique:"Vermicelles de soja (IG 35) ou nouilles soba (IG 59)", occidentale:"Perles de blé (IG 45)", orientale:"Boulgour (IG 46)"}},
+  {n:"Orzo cuit",                        gi:55, cat:"Pâtes",       ori:["occidentale"]},
+  {n:"Vermicelles de blé cuits",         gi:55, cat:"Pâtes",       ori:["orientale"]},
+  {n:"Spätzle cuits",                    gi:60, cat:"Pâtes",       ori:["occidentale"],           alt:{occidentale:"Pâtes complètes (IG 37) ou orzo (IG 55)", orientale:"Boulgour (IG 46)", asiatique:"Nouilles soba (IG 59)"}},
+  {n:"Gnocchis de patate douce",         gi:55, cat:"Pâtes",       ori:["occidentale"]},
+  {n:"Riz soufflé (non sucré)",          gi:85, cat:"Céréale",     ori:["asiatique"],             alt:{asiatique:"Riz brun (IG 50)", occidentale:"Flocons d'avoine (IG 55)", orientale:"Boulgour (IG 46)"}},
+  {n:"Riz à sushi refroidi",             gi:55, cat:"Céréale",     ori:["asiatique"]},
+  {n:"Mochi",                            gi:90, cat:"Transformé",  ori:["asiatique"],             alt:{asiatique:"Riz brun (IG 50) ou riz à sushi refroidi (IG 55)", occidentale:"Quinoa (IG 53)", orientale:"Boulgour (IG 46)"}},
+  // Céréales petit-déjeuner
+  {n:"Porridge",                         gi:55, cat:"Céréale",     ori:["occidentale"]},
+  {n:"All-Bran",                         gi:45, cat:"Transformé",  ori:["occidentale"]},
+  {n:"Muesli suisse (non sucré)",        gi:49, cat:"Transformé",  ori:["occidentale"]},
+  {n:"Pétales de blé complet (Weetabix)",gi:67, cat:"Transformé",  ori:["occidentale"],           alt:{occidentale:"All-Bran (IG 45) ou flocons d'avoine (IG 55)", orientale:"Boulgour (IG 46)", asiatique:"Riz brun (IG 50)"}},
+  {n:"Riz soufflé sucré (Rice Krispies)",gi:85, cat:"Transformé",  ori:["occidentale"],           alt:{occidentale:"All-Bran (IG 45) ou flocons d'avoine (IG 55)", orientale:"Boulgour (IG 46)", asiatique:"Riz brun (IG 50)"}},
+
   // Pains
   {n:"Baguette blanche",                 gi:95, cat:"Pain",        ori:["occidentale"],           alt:{occidentale:"Pain au levain (IG 54) ou pain de seigle intégral (IG 40)", orientale:"Pain pita complet (IG 57)", asiatique:"Riz brun ou nouilles soba (IG 59)"}},
   {n:"Pain de mie blanc",                gi:85, cat:"Pain",        ori:["occidentale"],           alt:{occidentale:"Pain au levain complet (IG 54) ou pain de seigle (IG 45)", orientale:"Pain pita complet (IG 57)", asiatique:"Riz brun (IG 50)"}},
@@ -487,6 +515,20 @@ const DB = [
   {n:"Injera",                           gi:57, cat:"Pain",        ori:["orientale"]},
   {n:"Tortilla de maïs",                 gi:52, cat:"Pain",        ori:["occidentale"]},
   {n:"Tortilla de blé",                  gi:30, cat:"Pain",        ori:["occidentale"]},
+  // Pains & Crackers supplémentaires
+  {n:"Biscottes classiques",             gi:70, cat:"Pain",        ori:["occidentale"],           alt:{occidentale:"Biscottes complètes (IG 50) ou pain de seigle (IG 45)", orientale:"Pain pita complet (IG 57)", asiatique:"Galettes de riz brun (IG 65)"}},
+  {n:"Biscottes complètes",              gi:50, cat:"Pain",        ori:["occidentale"]},
+  {n:"Pain nordique / Knäckebröd",       gi:45, cat:"Pain",        ori:["occidentale"]},
+  {n:"Crackers de seigle",               gi:45, cat:"Pain",        ori:["occidentale"]},
+  {n:"Bretzel",                          gi:72, cat:"Pain",        ori:["occidentale"],           alt:{occidentale:"Crackers de seigle (IG 45) ou pain nordique (IG 45)", orientale:"Pain pita complet (IG 57)", asiatique:"Galettes de riz brun (IG 65)"}},
+  {n:"Bagel",                            gi:72, cat:"Pain",        ori:["occidentale"],           alt:{occidentale:"Pain au levain (IG 54) ou pain nordique (IG 45)", orientale:"Pain pita complet (IG 57)", asiatique:"Riz brun (IG 50)"}},
+  {n:"Wrap complet",                     gi:40, cat:"Pain",        ori:["occidentale"]},
+  {n:"Pain aux céréales",                gi:55, cat:"Pain",        ori:["occidentale"]},
+  {n:"Croissant",                        gi:67, cat:"Pain",        ori:["occidentale"],           alt:{occidentale:"Pain au levain (IG 54) ou pain nordique (IG 45)", orientale:"Chapati (IG 52)", asiatique:"Pain de mie complet (IG 65)"}},
+  {n:"Pain au lait",                     gi:63, cat:"Pain",        ori:["occidentale"],           alt:{occidentale:"Pain au levain (IG 54) ou pain complet (IG 65)", orientale:"Chapati (IG 52)", asiatique:"Pain de mie complet (IG 65)"}},
+  // Crozets
+  {n:"Crozets de sarrasin cuits",        gi:40, cat:"Pâtes",       ori:["occidentale"]},
+  {n:"Crozets de blé cuits",             gi:55, cat:"Pâtes",       ori:["occidentale"]},
 
   // Pâtes
   {n:"Pâtes blanches cuites al dente",   gi:45, cat:"Pâtes",      ori:["occidentale"]},
@@ -697,13 +739,18 @@ const DB = [
   {n:"Anchois",                          gi:0,  cat:"Poisson",     ori:["orientale"]},
 
   // Produits laitiers
-  {n:"Lait entier",                      gi:27, cat:"Laitage",     ori:["occidentale"]},
-  {n:"Lait demi-écrémé",                 gi:27, cat:"Laitage",     ori:["occidentale"]},
-  {n:"Lait",                             gi:27, cat:"Laitage",     ori:["occidentale"]},
-  {n:"Lait de soja",                     gi:34, cat:"Laitage",     ori:["asiatique"]},
-  {n:"Lait d'amande",                    gi:25, cat:"Laitage",     ori:["occidentale"]},
-  {n:"Lait de riz",                      gi:86, cat:"Laitage",     ori:["asiatique"],             alt:{asiatique:"Lait de soja non sucré (IG 34)", occidentale:"Lait d'amande (IG 25)", orientale:"Lait de coco (IG 41)"}},
-  {n:"Lait de coco",                     gi:41, cat:"Laitage",     ori:["asiatique"]},
+  {n:"Lait de vache entier",             gi:27, cat:"Laitage",     ori:["occidentale"]},
+  {n:"Lait de vache demi-écrémé",        gi:27, cat:"Laitage",     ori:["occidentale"]},
+  {n:"Lait de vache écrémé",             gi:32, cat:"Laitage",     ori:["occidentale"]},
+  {n:"Lait de vache",                    gi:27, cat:"Laitage",     ori:["occidentale"]},
+  {n:"Boisson au soja (non sucrée)",     gi:34, cat:"Laitage",     ori:["asiatique"]},
+  {n:"Boisson à l'amande (non sucrée)",  gi:25, cat:"Laitage",     ori:["occidentale"]},
+  {n:"Boisson à l'avoine (non sucrée)",  gi:69, cat:"Laitage",     ori:["occidentale"],           alt:{occidentale:"Boisson à l'amande (IG 25) ou boisson au soja (IG 34)", asiatique:"Boisson au soja (IG 34)", orientale:"Boisson à la coco (IG 41)"}},
+  {n:"Boisson à l'avoine (sucrée)",      gi:75, cat:"Laitage",     ori:["occidentale"],           alt:{occidentale:"Boisson à l'amande non sucrée (IG 25) ou boisson au soja (IG 34)", asiatique:"Boisson au soja (IG 34)", orientale:"Boisson à la coco (IG 41)"}},
+  {n:"Boisson au riz",                   gi:86, cat:"Laitage",     ori:["asiatique"],             alt:{asiatique:"Boisson au soja (IG 34)", occidentale:"Boisson à l'amande (IG 25)", orientale:"Boisson à la coco (IG 41)"}},
+  {n:"Boisson à la coco",                gi:41, cat:"Laitage",     ori:["asiatique"]},
+  {n:"Boisson au chanvre",               gi:30, cat:"Laitage",     ori:["occidentale"]},
+  {n:"Boisson à la noisette",            gi:25, cat:"Laitage",     ori:["occidentale"]},
   {n:"Yaourt nature",                    gi:36, cat:"Laitage",     ori:["occidentale"]},
   {n:"Yaourt grec",                      gi:11, cat:"Laitage",     ori:["occidentale"]},
   {n:"Yaourt",                           gi:36, cat:"Laitage",     ori:["occidentale"]},
@@ -787,7 +834,7 @@ const DB = [
   // Boissons (avec glucides)
   {n:"Jus d'orange",                     gi:52, cat:"Boisson",     ori:["occidentale"]},
   {n:"Jus de pomme",                     gi:40, cat:"Boisson",     ori:["occidentale"]},
-  {n:"Lait de riz (boisson)",            gi:86, cat:"Boisson",     ori:["asiatique"],             alt:{asiatique:"Lait de soja (IG 34)", occidentale:"Lait d'amande (IG 25)", orientale:"Lait de coco (IG 41)"}},
+  {n:"Boisson au riz (sucrée)",           gi:86, cat:"Boisson",     ori:["asiatique"],             alt:{asiatique:"Boisson au soja (IG 34)", occidentale:"Boisson à l'amande (IG 25)", orientale:"Boisson à la coco (IG 41)"}},
   {n:"Kombucha",                         gi:25, cat:"Boisson",     ori:["asiatique"]},
   {n:"Lassi",                            gi:30, cat:"Boisson",     ori:["orientale"]},
 
@@ -1603,7 +1650,7 @@ function showTab(id) {
   document.querySelectorAll('.section').forEach(s => s.classList.remove('active'));
   document.querySelectorAll('nav button').forEach(b => b.classList.remove('active'));
   document.getElementById(id).classList.add('active');
-  const idx = ['analyser','resultats','conseils','commentaires','apropos'].indexOf(id);
+  const idx = ['analyser','resultats','feculents','conseils','commentaires','apropos'].indexOf(id);
   document.querySelectorAll('nav button')[idx]?.classList.add('active');
   if (id === 'commentaires') renderComments();
 }
@@ -1965,6 +2012,107 @@ function renderComments() {
 // ═══════════════════════════════════════════════════════════════
 //  PDF EXPORT
 // ═══════════════════════════════════════════════════════════════
+function renderStarchGuide() {
+  const t = LANGS[currentLang] || LANGS.fr;
+  const el = document.getElementById('feculents-content');
+  if (!el) return;
+
+  const starchData = [
+    {name:'Pâtes (spaghetti)', raw:'—', aldente:45, normal:65, overcook:80, cold:35},
+    {name:'Riz blanc',         raw:'—', aldente:64, normal:72, overcook:85, cold:55},
+    {name:'Riz basmati',       raw:'—', aldente:50, normal:58, overcook:70, cold:45},
+    {name:'Riz brun',          raw:'—', aldente:45, normal:50, overcook:60, cold:40},
+    {name:'Pomme de terre',    raw:'—', aldente:55, normal:65, overcook:85, cold:58},
+    {name:'Quinoa',            raw:'—', aldente:50, normal:53, overcook:60, cold:45},
+    {name:'Orge',              raw:'—', aldente:22, normal:28, overcook:40, cold:20},
+    {name:'Boulgour',          raw:'—', aldente:40, normal:46, overcook:55, cold:38},
+    {name:'Couscous',          raw:'—', aldente:55, normal:65, overcook:75, cold:50},
+    {name:'Polenta',           raw:'—', aldente:55, normal:70, overcook:85, cold:40},
+    {name:'Lentilles',         raw:'—', aldente:25, normal:30, overcook:40, cold:22},
+    {name:'Flocons d\'avoine', raw:'—', aldente:45, normal:55, overcook:65, cold:40},
+    {name:'Ébly (blé étuvé)',  raw:'—', aldente:40, normal:45, overcook:55, cold:38},
+  ];
+
+  const giColor = v => v === '—' ? '#aaa' : v <= 55 ? 'var(--green)' : v <= 69 ? 'var(--orange)' : 'var(--red)';
+  const giBg   = v => v === '—' ? '#f0f0f0' : v <= 55 ? 'var(--green-light)' : v <= 69 ? 'var(--orange-light)' : 'var(--red-light)';
+
+  el.innerHTML = `
+    <div class="card">
+      <h2>${t.starch_title}</h2>
+      <p style="font-size:.9rem;color:var(--muted);line-height:1.6;">${t.starch_intro}</p>
+    </div>
+
+    <div class="card">
+      <h2>${t.starch_temp_title}</h2>
+      <p style="font-size:.9rem;line-height:1.6;margin-bottom:14px;">${t.starch_temp_text}</p>
+      <div style="display:flex;flex-wrap:wrap;gap:10px;">
+        <div style="flex:1;min-width:130px;padding:12px;background:var(--red-light);border-radius:10px;text-align:center;">
+          <div style="font-size:1.4rem;">🔥</div>
+          <strong style="color:var(--red);font-size:.9rem;">Chaud</strong>
+          <div style="font-size:.82rem;color:var(--muted);margin-top:4px;">IG le plus élevé</div>
+        </div>
+        <div style="flex:1;min-width:130px;padding:12px;background:var(--orange-light);border-radius:10px;text-align:center;">
+          <div style="font-size:1.4rem;">😐</div>
+          <strong style="color:var(--orange);font-size:.9rem;">Tiède</strong>
+          <div style="font-size:.82rem;color:var(--muted);margin-top:4px;">IG intermédiaire</div>
+        </div>
+        <div style="flex:1;min-width:130px;padding:12px;background:var(--green-light);border-radius:10px;text-align:center;">
+          <div style="font-size:1.4rem;">❄️</div>
+          <strong style="color:var(--green);font-size:.9rem;">Froid / refroidi</strong>
+          <div style="font-size:.82rem;color:var(--muted);margin-top:4px;">IG le plus bas</div>
+        </div>
+      </div>
+    </div>
+
+    <div class="card">
+      <h2>${t.starch_table_title}</h2>
+      <div style="overflow-x:auto;">
+        <table style="width:100%;border-collapse:collapse;font-size:.82rem;">
+          <thead>
+            <tr style="background:var(--navy);color:#fff;">
+              <th style="padding:10px 8px;text-align:left;border-radius:8px 0 0 0;">${t.starch_food}</th>
+              <th style="padding:10px 6px;text-align:center;">${t.starch_aldente}</th>
+              <th style="padding:10px 6px;text-align:center;">${t.starch_normal}</th>
+              <th style="padding:10px 6px;text-align:center;">${t.starch_overcook}</th>
+              <th style="padding:10px 6px;text-align:center;border-radius:0 8px 0 0;">${t.starch_cold}</th>
+            </tr>
+          </thead>
+          <tbody>
+            ${starchData.map((r,i) => `
+              <tr style="background:${i%2===0?'#fff':'#f8fbff'};">
+                <td style="padding:9px 8px;font-weight:600;color:var(--navy);">${r.name}</td>
+                ${[r.aldente, r.normal, r.overcook, r.cold].map(v => `
+                  <td style="padding:9px 6px;text-align:center;">
+                    <span style="background:${giBg(v)};color:${giColor(v)};padding:3px 8px;border-radius:20px;font-weight:700;">${v}</span>
+                  </td>`).join('')}
+              </tr>`).join('')}
+          </tbody>
+        </table>
+      </div>
+      <div style="display:flex;gap:12px;margin-top:10px;flex-wrap:wrap;font-size:.8rem;">
+        <span><span style="background:var(--green-light);color:var(--green);padding:2px 8px;border-radius:10px;font-weight:700;">≤55</span> Faible</span>
+        <span><span style="background:var(--orange-light);color:var(--orange);padding:2px 8px;border-radius:10px;font-weight:700;">56–69</span> Modéré</span>
+        <span><span style="background:var(--red-light);color:var(--red);padding:2px 8px;border-radius:10px;font-weight:700;">≥70</span> Élevé</span>
+      </div>
+    </div>
+
+    <div class="card">
+      <h2>${t.starch_cooking_title}</h2>
+      <div class="tip-item">
+        <div class="tip-icon">⏱️</div>
+        <div class="tip-text"><strong>${t.starch_tip1_title}</strong><span>${t.starch_tip1_text}</span></div>
+      </div>
+      <div class="tip-item">
+        <div class="tip-icon">❄️</div>
+        <div class="tip-text"><strong>${t.starch_tip2_title}</strong><span>${t.starch_tip2_text}</span></div>
+      </div>
+      <div class="tip-item">
+        <div class="tip-icon">🫘</div>
+        <div class="tip-text"><strong>${t.starch_tip3_title}</strong><span>${t.starch_tip3_text}</span></div>
+      </div>
+    </div>`;
+}
+
 function renderCommentsSection() {
   const t = LANGS[currentLang] || LANGS.fr;
   // Titles & labels
@@ -2264,7 +2412,21 @@ var LANGS = {
     subtitle: "Analysez l'index glycémique de vos recettes et découvrez des alternatives plus saines",
     nav_analyse: "🔍 Analyser une recette",
     nav_results: "📊 Résultats",
+    nav_starch: "🌾 Guide féculents",
     nav_tips: "💡 Conseils généraux",
+    starch_title: "🌾 Guide des féculents & Index Glycémique",
+    starch_intro: "L'index glycémique d'un féculent varie considérablement selon le mode de cuisson, le temps de cuisson et la température de service. Ce guide vous aide à optimiser vos choix.",
+    starch_cooking_title: "⏱️ Impact de la cuisson sur l'IG",
+    starch_temp_title: "🌡️ Température de service",
+    starch_temp_text: "Refroidir un féculent après cuisson convertit l'amidon en amidon résistant (non digestible), ce qui réduit significativement l'IG. Réchauffer à la vapeur préserve cet effet.",
+    starch_table_title: "📊 Tableau comparatif par féculent",
+    starch_food: "Féculent", starch_raw: "IG cru/sec", starch_aldente: "Al dente / court", starch_normal: "Cuisson normale", starch_overcook: "Trop cuit", starch_cold: "Refroidi",
+    starch_tip1_title: "Règle d'or : al dente",
+    starch_tip1_text: "Réduire le temps de cuisson de 2-3 minutes peut abaisser l'IG de 15 à 20 points. Testez la texture : le féculent doit résister légèrement sous la dent.",
+    starch_tip2_title: "Cuire à l'avance et refroidir",
+    starch_tip2_text: "Préparer riz, pâtes ou pommes de terre la veille et les conserver au réfrigérateur. L'IG peut chuter de 20 à 30 points. Réchauffez à la vapeur pour préserver l'effet.",
+    starch_tip3_title: "Associer avec fibres et protéines",
+    starch_tip3_text: "Ajouter des légumineuses, des légumes ou une source de protéines au même repas ralentit l'absorption du féculent et réduit l'impact glycémique global.",
     nav_comments: "💬 Vos suggestions",
     nav_about: "ℹ️ À propos",
     cuisine_title: "🍽️ Type de cuisine",
@@ -2394,7 +2556,21 @@ var LANGS = {
     subtitle: "Analyze the glycemic index of your recipes and discover healthier alternatives",
     nav_analyse: "🔍 Analyze a recipe",
     nav_results: "📊 Results",
+    nav_starch: "🌾 Starch guide",
     nav_tips: "💡 General tips",
+    starch_title: "🌾 Starch Guide & Glycemic Index",
+    starch_intro: "The glycemic index of a starch varies considerably depending on cooking method, cooking time and serving temperature. This guide helps you make better choices.",
+    starch_cooking_title: "⏱️ Impact of cooking on GI",
+    starch_temp_title: "🌡️ Serving temperature",
+    starch_temp_text: "Cooling a starch after cooking converts starch into resistant starch (indigestible), significantly lowering the GI. Reheating by steam preserves this effect.",
+    starch_table_title: "📊 Comparison table by starch",
+    starch_food: "Starch", starch_raw: "Raw/dry GI", starch_aldente: "Al dente / short", starch_normal: "Normal cooking", starch_overcook: "Overcooked", starch_cold: "Cooled",
+    starch_tip1_title: "Golden rule: al dente",
+    starch_tip1_text: "Reducing cooking time by 2-3 minutes can lower the GI by 15-20 points. Test the texture: the starch should slightly resist when bitten.",
+    starch_tip2_title: "Cook ahead and cool",
+    starch_tip2_text: "Prepare rice, pasta or potatoes the day before and refrigerate. GI can drop by 20-30 points. Reheat by steaming to preserve the effect.",
+    starch_tip3_title: "Combine with fiber and protein",
+    starch_tip3_text: "Adding legumes, vegetables or a protein source to the same meal slows starch absorption and reduces overall glycemic impact.",
     nav_comments: "💬 Your suggestions",
     nav_about: "ℹ️ About",
     cuisine_title: "🍽️ Cuisine type",
@@ -2524,7 +2700,21 @@ var LANGS = {
     subtitle: "حلّل المؤشر الجلايسيمي لوصفاتك واكتشف بدائل أكثر صحة",
     nav_analyse: "🔍 تحليل وصفة",
     nav_results: "📊 النتائج",
+    nav_starch: "🌾 دليل النشويات",
     nav_tips: "💡 نصائح عامة",
+    starch_title: "🌾 دليل النشويات والمؤشر الجلايسيمي",
+    starch_intro: "يتفاوت المؤشر الجلايسيمي للنشويات بشكل كبير حسب طريقة الطهي ومدته ودرجة حرارة التقديم. يساعدك هذا الدليل على اختياراتك.",
+    starch_cooking_title: "⏱️ تأثير الطهي على المؤشر",
+    starch_temp_title: "🌡️ درجة حرارة التقديم",
+    starch_temp_text: "تبريد النشا بعد الطهي يحوّله إلى نشا مقاوم (غير قابل للهضم)، مما يخفض المؤشر بشكل ملحوظ. إعادة التسخين بالبخار تحافظ على هذا التأثير.",
+    starch_table_title: "📊 جدول مقارنة النشويات",
+    starch_food: "النشا", starch_raw: "م.ج نيء/جاف", starch_aldente: "نضج متوسط", starch_normal: "طهي عادي", starch_overcook: "طهي زائد", starch_cold: "مبرد",
+    starch_tip1_title: "القاعدة الذهبية: طهي متوسط",
+    starch_tip1_text: "تقليل وقت الطهي بـ 2-3 دقائق يخفض المؤشر بـ 15-20 نقطة. اختبر القوام: يجب أن يقاوم النشا قليلاً عند العض.",
+    starch_tip2_title: "الطهي المسبق والتبريد",
+    starch_tip2_text: "حضّر الأرز والمعكرونة أو البطاطا يوم السابق واحفظها في الثلاجة. يمكن أن ينخفض المؤشر بـ 20-30 نقطة. أعد التسخين بالبخار للحفاظ على التأثير.",
+    starch_tip3_title: "الجمع مع الألياف والبروتين",
+    starch_tip3_text: "إضافة البقوليات أو الخضار أو مصدر بروتين في نفس الوجبة يبطئ امتصاص النشا ويقلل التأثير الجلايسيمي الإجمالي.",
     nav_comments: "💬 اقتراحاتكم",
     nav_about: "ℹ️ حول الموقع",
     cuisine_title: "🍽️ نوع المطبخ",
@@ -2590,6 +2780,7 @@ function setLang(lang) {
 
   // Re-render dynamic sections
   renderComments();
+  renderStarchGuide();
   renderTipsSection();
   renderCommentsSection();
   renderAboutSection();
@@ -2603,6 +2794,7 @@ function setLang(lang) {
 // ═══════════════════════════════════════════════════════════════
 addIngredient();
 renderComments();
+renderStarchGuide();
 renderTipsSection();
 renderCommentsSection();
 renderAboutSection();
