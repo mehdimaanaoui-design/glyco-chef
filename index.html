@@ -286,6 +286,7 @@
   <button onclick="showTab('conseils')" data-i18n="nav_tips">💡 Conseils généraux</button>
   <button onclick="showTab('commentaires')" data-i18n="nav_comments">💬 Vos suggestions</button>
   <button onclick="showTab('apropos')" data-i18n="nav_about">ℹ️ À propos</button>
+  <button onclick="showTab('legal')" data-i18n="nav_legal">⚖️ Mentions légales</button>
 </nav>
 
 <!-- ═══════════════════════════════════════════════════════ ANALYSER -->
@@ -410,6 +411,11 @@
 <!-- ═══════════════════════════════════════════════════════ À PROPOS -->
 <div class="section" id="apropos">
   <div id="about-content"></div>
+</div>
+
+<!-- ═══════════════════════════════════════════════════════ MENTIONS LÉGALES -->
+<div class="section" id="legal">
+  <div id="legal-content"></div>
 </div>
 
 <footer id="main-footer"></footer>
@@ -1650,7 +1656,7 @@ function showTab(id) {
   document.querySelectorAll('.section').forEach(s => s.classList.remove('active'));
   document.querySelectorAll('nav button').forEach(b => b.classList.remove('active'));
   document.getElementById(id).classList.add('active');
-  const idx = ['analyser','resultats','feculents','conseils','commentaires','apropos'].indexOf(id);
+  const idx = ['analyser','resultats','feculents','conseils','commentaires','apropos','legal'].indexOf(id);
   document.querySelectorAll('nav button')[idx]?.classList.add('active');
   if (id === 'commentaires') renderComments();
 }
@@ -2012,6 +2018,146 @@ function renderComments() {
 // ═══════════════════════════════════════════════════════════════
 //  PDF EXPORT
 // ═══════════════════════════════════════════════════════════════
+function renderLegalSection() {
+  const el = document.getElementById('legal-content');
+  if (!el) return;
+  const today = new Date().toLocaleDateString('fr-FR', {day:'numeric', month:'long', year:'numeric'});
+  el.innerHTML = `
+    <!-- MENTIONS LÉGALES -->
+    <div class="card">
+      <h2>⚖️ Mentions légales</h2>
+      <p style="font-size:.82rem;color:var(--muted);margin-bottom:16px;">Dernière mise à jour : ${today}</p>
+
+      <h3 style="color:var(--navy);margin:16px 0 8px;">1. Éditeur du site</h3>
+      <p style="font-size:.9rem;line-height:1.7;">
+        Le site <strong>GlycoChef</strong> (accessible à l'adresse <strong>https://glycochef.netlify.app</strong>) est édité à titre personnel par son créateur.<br>
+        <strong>Contact :</strong> <a href="mailto:contact.glycochef@gmail.com" style="color:var(--blue);">contact.glycochef@gmail.com</a>
+      </p>
+
+      <h3 style="color:var(--navy);margin:16px 0 8px;">2. Hébergement</h3>
+      <p style="font-size:.9rem;line-height:1.7;">
+        Ce site est hébergé par <strong>Netlify, Inc.</strong><br>
+        44 Montgomery Street, Suite 300, San Francisco, CA 94104, États-Unis.<br>
+        Site : <a href="https://www.netlify.com" style="color:var(--blue);" target="_blank">www.netlify.com</a>
+      </p>
+
+      <h3 style="color:var(--navy);margin:16px 0 8px;">3. Propriété intellectuelle</h3>
+      <p style="font-size:.9rem;line-height:1.7;">
+        L'ensemble du contenu de ce site (textes, données, interface, code source) est la propriété exclusive de son éditeur. Toute reproduction, même partielle, est interdite sans autorisation préalable écrite.
+      </p>
+
+      <h3 style="color:var(--navy);margin:16px 0 8px;">4. Avertissement médical</h3>
+      <div class="alert alert-warn" style="font-size:.88rem;">
+        <strong>⚠️ Important :</strong> Les informations fournies par GlycoChef sont à titre <strong>éducatif et informatif uniquement</strong>. Elles ne constituent en aucun cas un avis médical, diététique ou nutritionnel personnalisé. Consultez un professionnel de santé qualifié (médecin, diététicien) avant tout changement de régime alimentaire, particulièrement en cas de diabète, grossesse ou pathologie chronique.
+      </div>
+    </div>
+
+    <!-- POLITIQUE DE CONFIDENTIALITÉ -->
+    <div class="card">
+      <h2>🔒 Politique de confidentialité</h2>
+
+      <h3 style="color:var(--navy);margin:16px 0 8px;">1. Données collectées</h3>
+      <p style="font-size:.9rem;line-height:1.7;">
+        GlycoChef ne collecte <strong>aucune donnée personnelle identifiante</strong> directement (pas de compte utilisateur, pas d'inscription).<br><br>
+        Les seules données collectées sont :
+      </p>
+      <ul style="font-size:.9rem;line-height:1.8;padding-left:18px;margin-bottom:12px;">
+        <li><strong>Données de navigation anonymes</strong> via Google Analytics 4 (pages visitées, durée, pays, appareil)</li>
+        <li><strong>Suggestions laissées volontairement</strong> dans la section commentaires (stockées localement dans votre navigateur, non transmises à un serveur)</li>
+      </ul>
+
+      <h3 style="color:var(--navy);margin:16px 0 8px;">2. Google Analytics 4</h3>
+      <p style="font-size:.9rem;line-height:1.7;">
+        Ce site utilise <strong>Google Analytics 4</strong> (Google LLC, 1600 Amphitheatre Parkway, Mountain View, CA 94043, USA) pour mesurer l'audience.<br><br>
+        Google Analytics collecte de manière anonyme :
+      </p>
+      <ul style="font-size:.9rem;line-height:1.8;padding-left:18px;margin-bottom:12px;">
+        <li>Pages visitées et durée de visite</li>
+        <li>Pays et langue du navigateur</li>
+        <li>Type d'appareil (mobile, desktop, tablette)</li>
+        <li>Source du trafic (Google, direct, réseaux sociaux)</li>
+      </ul>
+      <p style="font-size:.9rem;line-height:1.7;">
+        Ces données sont <strong>anonymisées</strong> — aucune adresse IP complète n'est stockée. Google peut transférer ces données aux États-Unis conformément aux clauses contractuelles types de l'UE.<br><br>
+        <strong>Désactivation :</strong> Vous pouvez désactiver Google Analytics via l'extension officielle :
+        <a href="https://tools.google.com/dlpage/gaoptout" target="_blank" style="color:var(--blue);">tools.google.com/dlpage/gaoptout</a>
+      </p>
+
+      <h3 style="color:var(--navy);margin:16px 0 8px;">3. Cookies</h3>
+      <p style="font-size:.9rem;line-height:1.7;">
+        Ce site utilise uniquement des <strong>cookies analytiques</strong> (Google Analytics) et des <strong>cookies fonctionnels</strong> (mémorisation de la langue choisie, suggestions enregistrées en local).<br><br>
+        <strong>Aucun cookie publicitaire</strong> n'est utilisé à ce jour. Si une régie publicitaire est intégrée à l'avenir (Google AdSense), cette politique sera mise à jour.
+      </p>
+
+      <h3 style="color:var(--navy);margin:16px 0 8px;">4. Base légale du traitement (RGPD)</h3>
+      <p style="font-size:.9rem;line-height:1.7;">
+        Conformément au Règlement Général sur la Protection des Données (RGPD — UE 2016/679), le traitement des données analytiques repose sur l'<strong>intérêt légitime</strong> de l'éditeur à comprendre l'utilisation du site afin de l'améliorer.
+      </p>
+
+      <h3 style="color:var(--navy);margin:16px 0 8px;">5. Vos droits</h3>
+      <p style="font-size:.9rem;line-height:1.7;">Conformément au RGPD, vous disposez des droits suivants :</p>
+      <ul style="font-size:.9rem;line-height:1.8;padding-left:18px;margin-bottom:12px;">
+        <li><strong>Droit d'accès</strong> à vos données personnelles</li>
+        <li><strong>Droit de rectification</strong> des données inexactes</li>
+        <li><strong>Droit à l'effacement</strong> ("droit à l'oubli")</li>
+        <li><strong>Droit d'opposition</strong> au traitement de vos données</li>
+        <li><strong>Droit à la portabilité</strong> de vos données</li>
+        <li><strong>Droit de réclamation</strong> auprès de la CNIL (Commission Nationale de l'Informatique et des Libertés)</li>
+      </ul>
+      <p style="font-size:.9rem;">Pour exercer ces droits : <a href="mailto:contact.glycochef@gmail.com" style="color:var(--blue);">contact.glycochef@gmail.com</a></p>
+      <p style="font-size:.9rem;margin-top:6px;">CNIL : <a href="https://www.cnil.fr" target="_blank" style="color:var(--blue);">www.cnil.fr</a></p>
+    </div>
+
+    <!-- CONDITIONS D'UTILISATION -->
+    <div class="card">
+      <h2>📋 Conditions d'utilisation</h2>
+
+      <h3 style="color:var(--navy);margin:16px 0 8px;">1. Accès au service</h3>
+      <p style="font-size:.9rem;line-height:1.7;">
+        GlycoChef est un service gratuit et librement accessible. L'éditeur se réserve le droit de modifier, suspendre ou interrompre le service à tout moment sans préavis.
+      </p>
+
+      <h3 style="color:var(--navy);margin:16px 0 8px;">2. Exactitude des données</h3>
+      <p style="font-size:.9rem;line-height:1.7;">
+        Les valeurs d'index glycémique présentées sont issues de tables scientifiques internationales reconnues. Elles sont données à titre indicatif et peuvent varier selon :
+      </p>
+      <ul style="font-size:.9rem;line-height:1.8;padding-left:18px;margin-bottom:12px;">
+        <li>Le mode et temps de cuisson</li>
+        <li>La variété et maturité de l'aliment</li>
+        <li>La combinaison avec d'autres aliments</li>
+        <li>Les différences individuelles métaboliques</li>
+      </ul>
+
+      <h3 style="color:var(--navy);margin:16px 0 8px;">3. Liens externes</h3>
+      <p style="font-size:.9rem;line-height:1.7;">
+        GlycoChef peut contenir des liens vers des sites tiers. L'éditeur n'est pas responsable du contenu de ces sites et ne peut garantir leur disponibilité.
+      </p>
+
+      <h3 style="color:var(--navy);margin:16px 0 8px;">4. Responsabilité</h3>
+      <p style="font-size:.9rem;line-height:1.7;">
+        L'éditeur ne saurait être tenu responsable des dommages directs ou indirects résultant de l'utilisation du site ou de l'application des informations fournies. L'utilisation de GlycoChef se fait sous la seule responsabilité de l'utilisateur.
+      </p>
+
+      <h3 style="color:var(--navy);margin:16px 0 8px;">5. Droit applicable</h3>
+      <p style="font-size:.9rem;line-height:1.7;">
+        Le présent site est soumis au droit français. Tout litige relatif à son utilisation sera soumis aux tribunaux compétents français.
+      </p>
+    </div>
+
+    <!-- CONTACT -->
+    <div class="card">
+      <h2>📬 Contact</h2>
+      <p style="font-size:.9rem;line-height:1.7;">
+        Pour toute question relative aux mentions légales, à la politique de confidentialité, ou pour exercer vos droits RGPD :<br><br>
+        <strong>Email :</strong> <a href="mailto:contact.glycochef@gmail.com" style="color:var(--blue);">contact.glycochef@gmail.com</a><br>
+        <strong>Délai de réponse :</strong> sous 30 jours maximum conformément au RGPD.
+      </p>
+      <div class="alert alert-info" style="margin-top:12px;font-size:.85rem;">
+        ℹ️ Ce site est exploité à titre non commercial. Aucune donnée personnelle n'est vendue à des tiers.
+      </div>
+    </div>`;
+}
+
 function renderStarchGuide() {
   const t = LANGS[currentLang] || LANGS.fr;
   const el = document.getElementById('feculents-content');
@@ -2414,6 +2560,7 @@ var LANGS = {
     nav_results: "📊 Résultats",
     nav_starch: "🌾 Guide féculents",
     nav_tips: "💡 Conseils généraux",
+    nav_legal: "⚖️ Mentions légales",
     starch_title: "🌾 Guide des féculents & Index Glycémique",
     starch_intro: "L'index glycémique d'un féculent varie considérablement selon le mode de cuisson, le temps de cuisson et la température de service. Ce guide vous aide à optimiser vos choix.",
     starch_cooking_title: "⏱️ Impact de la cuisson sur l'IG",
@@ -2558,6 +2705,7 @@ var LANGS = {
     nav_results: "📊 Results",
     nav_starch: "🌾 Starch guide",
     nav_tips: "💡 General tips",
+    nav_legal: "⚖️ Legal notice",
     starch_title: "🌾 Starch Guide & Glycemic Index",
     starch_intro: "The glycemic index of a starch varies considerably depending on cooking method, cooking time and serving temperature. This guide helps you make better choices.",
     starch_cooking_title: "⏱️ Impact of cooking on GI",
@@ -2702,6 +2850,7 @@ var LANGS = {
     nav_results: "📊 النتائج",
     nav_starch: "🌾 دليل النشويات",
     nav_tips: "💡 نصائح عامة",
+    nav_legal: "⚖️ الإشعار القانوني",
     starch_title: "🌾 دليل النشويات والمؤشر الجلايسيمي",
     starch_intro: "يتفاوت المؤشر الجلايسيمي للنشويات بشكل كبير حسب طريقة الطهي ومدته ودرجة حرارة التقديم. يساعدك هذا الدليل على اختياراتك.",
     starch_cooking_title: "⏱️ تأثير الطهي على المؤشر",
@@ -2784,6 +2933,7 @@ function setLang(lang) {
   renderTipsSection();
   renderCommentsSection();
   renderAboutSection();
+  renderLegalSection();
   if (lastAnalysisData) {
     renderResults(lastAnalysisData.items, lastAnalysisData.recipeGI, lastAnalysisData.recipeName, lastAnalysisData.hasGlucidic);
   }
@@ -2798,6 +2948,7 @@ renderStarchGuide();
 renderTipsSection();
 renderCommentsSection();
 renderAboutSection();
+renderLegalSection();
 </script>
 </body>
 </html>
