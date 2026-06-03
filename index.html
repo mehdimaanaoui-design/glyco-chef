@@ -1964,29 +1964,62 @@ function setStars(n) {
 }
 
 function submitComment() {
-  const name = document.getElementById('c-name').value.trim();
+  const name  = document.getElementById('c-name').value.trim();
   const theme = document.getElementById('c-theme').value;
-  const text = document.getElementById('c-text').value.trim();
-  const fb = document.getElementById('c-feedback');
-  const t = LANGS[currentLang] || LANGS.fr;
-  if (!text || text.length < 10) { fb.innerHTML = `<div class="alert alert-warn">${t.comment_min_chars}</div>`; return; }
+  const text  = document.getElementById('c-text').value.trim();
+  const fb    = document.getElementById('c-feedback');
+  const t     = LANGS[currentLang] || LANGS.fr;
+  const btn   = document.getElementById('btn-send-comment');
 
-  const comments = JSON.parse(localStorage.getItem('glycochef_comments') || '[]');
-  comments.unshift({
-    name: name || 'Anonyme',
-    theme,
-    text,
-    stars: userStars,
-    date: new Date().toLocaleDateString('fr-FR', {day:'2-digit',month:'long',year:'numeric'})
+  if (!text || text.length < 10) {
+    fb.innerHTML = `<div class="alert alert-warn">${t.comment_min_chars}</div>`;
+    return;
+  }
+
+  // Désactiver le bouton pendant l'envoi
+  if (btn) { btn.disabled = true; btn.style.opacity = '.6'; }
+  fb.innerHTML = `<div class="alert alert-info">⏳ Envoi en cours…</div>`;
+
+  // Envoi via Formspree
+  fetch('https://formspree.io/f/mlgkegry', {
+    method: 'POST',
+    headers: { 'Content-Type': 'application/json', 'Accept': 'application/json' },
+    body: JSON.stringify({
+      name:    name || 'Anonyme',
+      theme:   getThemeLabel(theme),
+      message: text,
+      stars:   userStars + ' / 5',
+      lang:    currentLang,
+      _subject: `GlycoChef – ${getThemeLabel(theme)} de ${name || 'Anonyme'}`
+    })
+  })
+  .then(res => res.json())
+  .then(data => {
+    if (data.ok) {
+      // Sauvegarde locale pour affichage
+      const comments = JSON.parse(localStorage.getItem('glycochef_comments') || '[]');
+      comments.unshift({
+        name: name || 'Anonyme', theme, text, stars: userStars,
+        date: new Date().toLocaleDateString('fr-FR', {day:'2-digit', month:'long', year:'numeric'})
+      });
+      localStorage.setItem('glycochef_comments', JSON.stringify(comments));
+
+      document.getElementById('c-name').value = '';
+      document.getElementById('c-text').value = '';
+      setStars(0);
+      fb.innerHTML = `<div class="alert alert-success">${t.comment_success}</div>`;
+      setTimeout(() => fb.innerHTML = '', 4000);
+      renderComments();
+    } else {
+      fb.innerHTML = `<div class="alert alert-warn">❌ Erreur d'envoi. Réessayez ou écrivez à contact.glycochef@gmail.com</div>`;
+    }
+  })
+  .catch(() => {
+    fb.innerHTML = `<div class="alert alert-warn">❌ Pas de connexion. Réessayez ou écrivez à contact.glycochef@gmail.com</div>`;
+  })
+  .finally(() => {
+    if (btn) { btn.disabled = false; btn.style.opacity = '1'; }
   });
-  localStorage.setItem('glycochef_comments', JSON.stringify(comments));
-
-  document.getElementById('c-name').value = '';
-  document.getElementById('c-text').value = '';
-  setStars(0);
-  fb.innerHTML = `<div class="alert alert-success">${(LANGS[currentLang]||LANGS.fr).comment_success}</div>`;
-  setTimeout(() => fb.innerHTML = '', 3000);
-  renderComments();
 }
 
 function getThemeLabel(theme) {
