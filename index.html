@@ -2266,6 +2266,17 @@ function renderCommentsSection() {
   const elHTML = (id, html) => { const e = document.getElementById(id); if(e) e.innerHTML = html; };
   el('comment-form-title',   t.comment_form_title);
   el('comment-form-intro',   t.comment_form_intro);
+  // Note visibilité
+  let noteEl = document.getElementById('comment-visibility-note');
+  if (!noteEl) {
+    noteEl = document.createElement('div');
+    noteEl.id = 'comment-visibility-note';
+    noteEl.className = 'alert alert-info';
+    noteEl.style.cssText = 'font-size:.85rem;margin-bottom:12px;';
+    const intro = document.getElementById('comment-form-intro');
+    if (intro) intro.insertAdjacentElement('afterend', noteEl);
+  }
+  noteEl.textContent = t.comment_visibility_note;
   el('label-name',           t.label_name);
   el('label-theme',          t.label_theme);
   el('label-msg',            t.label_msg);
@@ -2493,6 +2504,7 @@ var LANGS = {
     pdf_generated:"Généré le",
     comment_form_title:"💬 Laissez votre suggestion",
     comment_form_intro:"Quel aliment aimeriez-vous voir analysé ? Quelle cuisine souhaitez-vous voir davantage couverte ? Votre retour améliore GlycoChef.",
+    comment_visibility_note:"💡 Votre suggestion sera envoyée directement à l'équipe GlycoChef par email. Elle n'est visible que par vous sur cet écran.",
     label_name:"Votre prénom", label_theme:"Thème", label_msg:"Votre message", label_rating:"Votre note pour le site",
     opt_aliment:"🥦 Nouvel aliment à ajouter", opt_cuisine:"🌍 Nouvelle cuisine à couvrir",
     opt_recette:"🍽️ Suggestion de recette", opt_bug:"🐛 Signaler un problème", opt_autre:"💡 Autre idée",
@@ -2638,6 +2650,7 @@ var LANGS = {
     pdf_generated:"Generated on",
     comment_form_title:"💬 Leave your suggestion",
     comment_form_intro:"Which food would you like to see analyzed? Which cuisine would you like to see more of? Your feedback improves GlycoChef.",
+    comment_visibility_note:"💡 Your suggestion will be sent directly to the GlycoChef team by email. It is only visible to you on this screen.",
     label_name:"Your name", label_theme:"Theme", label_msg:"Your message", label_rating:"Your rating",
     opt_aliment:"🥦 New food to add", opt_cuisine:"🌍 New cuisine to cover",
     opt_recette:"🍽️ Recipe suggestion", opt_bug:"🐛 Report an issue", opt_autre:"💡 Other idea",
@@ -2783,6 +2796,7 @@ var LANGS = {
     pdf_generated:"تم إنشاؤه في",
     comment_form_title:"💬 اترك اقتراحك",
     comment_form_intro:"أي طعام تودّ تحليله؟ أي مطبخ تريد أن نغطيه أكثر؟ ملاحظاتك تحسّن GlycoChef.",
+    comment_visibility_note:"💡 سيتم إرسال اقتراحك مباشرة إلى فريق GlycoChef عبر البريد الإلكتروني. لا يراه إلا أنت على هذه الشاشة.",
     label_name:"الاسم", label_theme:"الموضوع", label_msg:"رسالتك", label_rating:"تقييمك للموقع",
     opt_aliment:"🥦 طعام جديد للإضافة", opt_cuisine:"🌍 مطبخ جديد لتغطيته",
     opt_recette:"🍽️ اقتراح وصفة", opt_bug:"🐛 الإبلاغ عن مشكلة", opt_autre:"💡 فكرة أخرى",
