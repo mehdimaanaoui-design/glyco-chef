@@ -235,6 +235,13 @@
   /* Footer */
   footer { text-align: center; padding: 20px; font-size: .82rem; color: var(--muted); background: #fff; border-top: 1px solid #eee; }
 
+  /* COOKIE BANNER */
+  @media(max-width:600px) {
+    #cookie-banner { padding:14px 16px; }
+    #cookie-banner p { font-size:.82rem; }
+  }
+  @media print { #cookie-banner { display:none !important; } }
+
   /* PDF EXPORT BUTTON */
   .btn-pdf {
     background: linear-gradient(135deg, #c0392b, #e74c3c);
@@ -278,6 +285,18 @@
   <h1 class="site-title">🥗 Glyco<span>Chef</span></h1>
   <p data-i18n="subtitle">Analysez l'index glycémique de vos recettes et découvrez des alternatives plus saines</p>
 </header>
+
+<!-- ═══════════════════════════════════════════════════════ BANDEAU COOKIES -->
+<div id="cookie-banner" style="display:none;position:fixed;bottom:0;left:0;right:0;z-index:9999;background:#1a3a5c;color:#fff;padding:16px 20px;box-shadow:0 -4px 20px rgba(0,0,0,.3);">
+  <div style="max-width:860px;margin:0 auto;">
+    <p id="cookie-text" style="font-size:.88rem;line-height:1.6;margin-bottom:12px;"></p>
+    <div style="display:flex;gap:10px;flex-wrap:wrap;">
+      <button id="cookie-accept" onclick="acceptCookies()" style="background:#27ae60;color:#fff;border:none;padding:9px 20px;border-radius:8px;cursor:pointer;font-weight:700;font-size:.9rem;"></button>
+      <button id="cookie-refuse" onclick="refuseCookies()" style="background:transparent;color:#fff;border:2px solid rgba(255,255,255,.5);padding:9px 20px;border-radius:8px;cursor:pointer;font-weight:600;font-size:.9rem;"></button>
+      <button id="cookie-customize" onclick="showTab('legal');hideCookieBanner();" style="background:transparent;color:rgba(255,255,255,.7);border:none;padding:9px 12px;cursor:pointer;font-size:.82rem;text-decoration:underline;"></button>
+    </div>
+  </div>
+</div>
 
 <nav>
   <button class="active" onclick="showTab('analyser')" data-i18n="nav_analyse">🔍 Analyser une recette</button>
@@ -1087,6 +1106,66 @@ const FOOD_NAMES = {
 "Fenouil":{en:"Fennel",ar:"شمر"},
 "Poireau":{en:"Leek",ar:"كراث"},
 "Navet cuit":{en:"Cooked turnip",ar:"لفت مطبوخ"},
+// ── Nouvelles traductions manquantes ──
+// Laits & Boissons végétales
+"Lait de vache":{en:"Cow's milk",ar:"حليب البقر"},
+"Lait de vache entier":{en:"Whole cow's milk",ar:"حليب بقر كامل الدسم"},
+"Lait de vache demi-écrémé":{en:"Semi-skimmed cow's milk",ar:"حليب بقر نصف دسم"},
+"Lait de vache écrémé":{en:"Skimmed cow's milk",ar:"حليب بقر خالي الدسم"},
+"Boisson au soja (non sucrée)":{en:"Unsweetened soy drink",ar:"مشروب الصويا غير محلى"},
+"Boisson à l'amande (non sucrée)":{en:"Unsweetened almond drink",ar:"مشروب اللوز غير محلى"},
+"Boisson à l'avoine (non sucrée)":{en:"Unsweetened oat drink",ar:"مشروب الشوفان غير محلى"},
+"Boisson à l'avoine (sucrée)":{en:"Sweetened oat drink",ar:"مشروب الشوفان المحلى"},
+"Boisson au riz":{en:"Rice drink",ar:"مشروب الأرز"},
+"Boisson au riz (sucrée)":{en:"Sweetened rice drink",ar:"مشروب الأرز المحلى"},
+"Boisson à la coco":{en:"Coconut drink",ar:"مشروب جوز الهند"},
+"Boisson au chanvre":{en:"Hemp drink",ar:"مشروب القنب"},
+"Boisson à la noisette":{en:"Hazelnut drink",ar:"مشروب البندق"},
+// Yaourts & Fromages
+"Yaourt nature":{en:"Plain yogurt",ar:"زبادي طبيعي"},
+"Yaourt grec":{en:"Greek yogurt",ar:"زبادي يوناني"},
+"Fromage blanc":{en:"Fromage blanc (fresh cheese)",ar:"جبن أبيض طازج"},
+"Fructose":{en:"Fructose",ar:"فركتوز"},
+"Dattes (sucrant)":{en:"Dates (as sweetener)",ar:"تمر (محلي)"},
+"Nuoc-mâm":{en:"Fish sauce (nuoc-mâm)",ar:"صلصة السمك (نوك مام)"},
+"Ghee":{en:"Ghee (clarified butter)",ar:"سمن مصفى"},
+// Pains & Crackers
+"Biscottes classiques":{en:"Classic rusks",ar:"بسكويت محمص كلاسيكي"},
+"Biscottes complètes":{en:"Wholegrain rusks",ar:"بسكويت محمص كامل الحبوب"},
+"Pain nordique / Knäckebröd":{en:"Nordic bread / Crispbread",ar:"خبز نوردي / خبز مقرمش"},
+"Crackers de seigle":{en:"Rye crackers",ar:"كراكر الجاودار"},
+"Bretzel":{en:"Pretzel",ar:"بريتزل"},
+"Bagel":{en:"Bagel",ar:"بيغل"},
+"Wrap complet":{en:"Whole grain wrap",ar:"لفة كاملة الحبوب"},
+"Pain aux céréales":{en:"Multigrain bread",ar:"خبز متعدد الحبوب"},
+"Pain au lait":{en:"Milk bread roll",ar:"خبز الحليب"},
+"Croissant":{en:"Croissant",ar:"كرواسون"},
+// Céréales & Féculents
+"Ébly (blé étuvé) cuit":{en:"Ébly (parboiled wheat), cooked",ar:"إيبلي (قمح مسلوق مطبوخ)"},
+"Blé en grains cuit":{en:"Cooked wheat grains",ar:"حبوب القمح المطبوخة"},
+"Petit épeautre cuit":{en:"Cooked einkorn wheat",ar:"إسبلت صغير مطبوخ"},
+"Perles de blé cuites":{en:"Cooked wheat pearls",ar:"لؤلؤ القمح المطبوخ"},
+"Polenta chaude":{en:"Hot polenta",ar:"بوليندا ساخنة"},
+"Polenta froide / grillée":{en:"Cold / grilled polenta",ar:"بوليندا باردة / مشوية"},
+"Tapioca cuit":{en:"Cooked tapioca",ar:"تابيوكا مطبوخة"},
+"Porridge":{en:"Porridge",ar:"عصيدة الشوفان"},
+"All-Bran":{en:"All-Bran cereal",ar:"حبوب أول براν"},
+"Muesli":{en:"Muesli",ar:"موسلي"},
+"Muesli suisse (non sucré)":{en:"Unsweetened Swiss muesli",ar:"موسلي سويسري غير محلى"},
+"Pétales de blé complet (Weetabix)":{en:"Wholegrain wheat flakes (Weetabix)",ar:"رقائق القمح الكامل (ويتابيكس)"},
+"Riz soufflé (non sucré)":{en:"Puffed rice (unsweetened)",ar:"أرز منفوخ (غير محلى)"},
+"Riz soufflé sucré (Rice Krispies)":{en:"Sweetened puffed rice (Rice Krispies)",ar:"أرز منفوخ محلى (رايس كريسبيز)"},
+"Riz à sushi refroidi":{en:"Cooled sushi rice",ar:"أرز سوشي مبرد"},
+"Mochi":{en:"Mochi (Japanese rice cake)",ar:"موتشي"},
+// Pâtes
+"Orzo cuit":{en:"Cooked orzo pasta",ar:"أورزو مطبوخ"},
+"Vermicelles de blé cuits":{en:"Cooked wheat vermicelli",ar:"شعيرية القمح المطبوخة"},
+"Spätzle cuits":{en:"Cooked spätzle",ar:"شبتزلي مطبوخ"},
+"Gnocchis de patate douce":{en:"Sweet potato gnocchi",ar:"نيوكي البطاطا الحلوة"},
+"Soba":{en:"Soba noodles",ar:"نودلز سوبا"},
+"Udon":{en:"Udon noodles",ar:"نودلز أودون"},
+"Crozets de sarrasin cuits":{en:"Cooked buckwheat crozets",ar:"كروزيه الحنطة السوداء المطبوخة"},
+"Crozets de blé cuits":{en:"Cooked wheat crozets",ar:"كروزيه القمح المطبوخة"},
 // Africains
 "Fonio cuit":{en:"Cooked fonio",ar:"فونيو مطبوخ"},
 "Attiéké":{en:"Attiéké (fermented cassava couscous)",ar:"أتيكي"},
@@ -2054,140 +2133,164 @@ function renderComments() {
 function renderLegalSection() {
   const el = document.getElementById('legal-content');
   if (!el) return;
-  const today = new Date().toLocaleDateString('fr-FR', {day:'numeric', month:'long', year:'numeric'});
+  const lang = currentLang || 'fr';
+  const locale = {fr:'fr-FR', en:'en-GB', ar:'ar-SA'}[lang] || 'fr-FR';
+  const today = new Date().toLocaleDateString(locale, {day:'numeric', month:'long', year:'numeric'});
+
+  // Textes traduits
+  const L = {
+    fr: {
+      title_legal:"⚖️ Mentions légales", updated:"Dernière mise à jour :",
+      h_editor:"1. Éditeur du site", h_host:"2. Hébergement", h_ip:"3. Propriété intellectuelle", h_medical:"4. Avertissement médical",
+      title_privacy:"🔒 Politique de confidentialité",
+      h_data:"1. Données collectées", h_ga:"2. Google Analytics 4", h_cookies:"3. Cookies", h_legal_basis:"4. Base légale du traitement (RGPD)", h_rights:"5. Vos droits",
+      title_cgu:"📋 Conditions d'utilisation",
+      h_access:"1. Accès au service", h_accuracy:"2. Exactitude des données", h_links:"3. Liens externes", h_liability:"4. Responsabilité", h_law:"5. Droit applicable",
+      title_contact:"📬 Contact",
+      note_official: null,
+    },
+    en: {
+      title_legal:"⚖️ Legal Notice", updated:"Last updated:",
+      h_editor:"1. Website publisher", h_host:"2. Hosting", h_ip:"3. Intellectual property", h_medical:"4. Medical disclaimer",
+      title_privacy:"🔒 Privacy Policy",
+      h_data:"1. Data collected", h_ga:"2. Google Analytics 4", h_cookies:"3. Cookies", h_legal_basis:"4. Legal basis for processing (GDPR)", h_rights:"5. Your rights",
+      title_cgu:"📋 Terms of Use",
+      h_access:"1. Access to the service", h_accuracy:"2. Data accuracy", h_links:"3. External links", h_liability:"4. Liability", h_law:"5. Applicable law",
+      title_contact:"📬 Contact",
+      note_official:"ℹ️ The official legal documents are written in French, which is the governing language for legal purposes.",
+    },
+    ar: {
+      title_legal:"⚖️ الإشعار القانوني", updated:"آخر تحديث:",
+      h_editor:"1. ناشر الموقع", h_host:"2. الاستضافة", h_ip:"3. الملكية الفكرية", h_medical:"4. إخلاء المسؤولية الطبية",
+      title_privacy:"🔒 سياسة الخصوصية",
+      h_data:"1. البيانات المجمّعة", h_ga:"2. Google Analytics 4", h_cookies:"3. ملفات تعريف الارتباط (Cookies)", h_legal_basis:"4. الأساس القانوني للمعالجة (GDPR)", h_rights:"5. حقوقك",
+      title_cgu:"📋 شروط الاستخدام",
+      h_access:"1. الوصول إلى الخدمة", h_accuracy:"2. دقة البيانات", h_links:"3. الروابط الخارجية", h_liability:"4. المسؤولية", h_law:"5. القانون المطبّق",
+      title_contact:"📬 تواصل معنا",
+      note_official:"ℹ️ الوثائق القانونية الرسمية محررة باللغة الفرنسية، وهي اللغة المرجعية للأغراض القانونية.",
+    },
+  };
+  const lx = L[lang] || L.fr;
+  // Contenu complet par langue
+  const content = {
+    fr: {
+      editor_p: `Le site <strong>GlycoChef</strong> (accessible à l'adresse <strong>https://glycochef.netlify.app</strong>) est édité à titre personnel par son créateur.<br><strong>Contact :</strong> <a href="mailto:contact.glycochef@gmail.com" style="color:var(--blue);">contact.glycochef@gmail.com</a>`,
+      host_p: `Ce site est hébergé par <strong>Netlify, Inc.</strong><br>44 Montgomery Street, Suite 300, San Francisco, CA 94104, États-Unis.<br>Site : <a href="https://www.netlify.com" style="color:var(--blue);" target="_blank">www.netlify.com</a>`,
+      ip_p: `L'ensemble du contenu de ce site (textes, données, interface, code source) est la propriété exclusive de son éditeur. Toute reproduction, même partielle, est interdite sans autorisation préalable écrite.`,
+      medical_p: `<strong>⚠️ Important :</strong> Les informations fournies par GlycoChef sont à titre <strong>éducatif et informatif uniquement</strong>. Consultez un professionnel de santé qualifié avant tout changement de régime alimentaire, particulièrement en cas de diabète, grossesse ou pathologie chronique.`,
+      data_p: `GlycoChef ne collecte <strong>aucune donnée personnelle identifiante</strong> directement (pas de compte utilisateur, pas d'inscription).`,
+      data_li: [`<strong>Données de navigation anonymes</strong> via Google Analytics 4 (pages visitées, durée, pays, appareil)`, `<strong>Suggestions laissées volontairement</strong> dans la section commentaires (stockées localement dans votre navigateur, non transmises à un serveur)`],
+      ga_p: `Ce site utilise <strong>Google Analytics 4</strong> (Google LLC, 1600 Amphitheatre Parkway, Mountain View, CA 94043, USA) pour mesurer l'audience. Ces données sont <strong>anonymisées</strong>. <strong>Désactivation :</strong> <a href="https://tools.google.com/dlpage/gaoptout" target="_blank" style="color:var(--blue);">tools.google.com/dlpage/gaoptout</a>`,
+      ga_li: [`Pages visitées et durée de visite`, `Pays et langue du navigateur`, `Type d'appareil (mobile, desktop, tablette)`, `Source du trafic (Google, direct, réseaux sociaux)`],
+      cookies_p: `Ce site utilise uniquement des <strong>cookies analytiques</strong> (Google Analytics) et des <strong>cookies fonctionnels</strong>. <strong>Aucun cookie publicitaire</strong> n'est utilisé à ce jour.`,
+      gdpr_p: `Conformément au RGPD (UE 2016/679), le traitement des données analytiques repose sur l'<strong>intérêt légitime</strong> de l'éditeur à comprendre l'utilisation du site afin de l'améliorer.`,
+      rights_intro: `Conformément au RGPD, vous disposez des droits suivants :`,
+      rights_li: [`<strong>Droit d'accès</strong> à vos données personnelles`, `<strong>Droit de rectification</strong> des données inexactes`, `<strong>Droit à l'effacement</strong> ("droit à l'oubli")`, `<strong>Droit d'opposition</strong> au traitement`, `<strong>Droit à la portabilité</strong> de vos données`, `<strong>Droit de réclamation</strong> auprès de la CNIL`],
+      rights_contact: `Pour exercer ces droits :`,
+      cnil: `CNIL :`,
+      access_p: `GlycoChef est un service gratuit et librement accessible. L'éditeur se réserve le droit de modifier, suspendre ou interrompre le service à tout moment sans préavis.`,
+      accuracy_p: `Les valeurs d'index glycémique sont issues de tables scientifiques internationales reconnues. Elles peuvent varier selon :`,
+      accuracy_li: [`Le mode et temps de cuisson`, `La variété et maturité de l'aliment`, `La combinaison avec d'autres aliments`, `Les différences individuelles métaboliques`],
+      links_p: `GlycoChef peut contenir des liens vers des sites tiers. L'éditeur n'est pas responsable du contenu de ces sites.`,
+      liability_p: `L'éditeur ne saurait être tenu responsable des dommages résultant de l'utilisation du site ou de l'application des informations fournies.`,
+      law_p: `Le présent site est soumis au droit français. Tout litige sera soumis aux tribunaux compétents français.`,
+      contact_p: `Pour toute question relative aux mentions légales, à la politique de confidentialité, ou pour exercer vos droits RGPD :`,
+      contact_delay: `<strong>Délai de réponse :</strong> sous 30 jours maximum conformément au RGPD.`,
+      note: `ℹ️ Ce site est exploité à titre non commercial. Aucune donnée personnelle n'est vendue à des tiers.`,
+    },
+    en: {
+      editor_p: `The site <strong>GlycoChef</strong> (accessible at <strong>https://glycochef.netlify.app</strong>) is published as a personal project by its creator.<br><strong>Contact:</strong> <a href="mailto:contact.glycochef@gmail.com" style="color:var(--blue);">contact.glycochef@gmail.com</a>`,
+      host_p: `This site is hosted by <strong>Netlify, Inc.</strong><br>44 Montgomery Street, Suite 300, San Francisco, CA 94104, USA.<br>Website: <a href="https://www.netlify.com" style="color:var(--blue);" target="_blank">www.netlify.com</a>`,
+      ip_p: `All content on this site (texts, data, interface, source code) is the exclusive property of its publisher. Any reproduction, even partial, is prohibited without prior written authorization.`,
+      medical_p: `<strong>⚠️ Important:</strong> Information provided by GlycoChef is for <strong>educational and informational purposes only</strong>. Always consult a qualified healthcare professional before any dietary change, especially in case of diabetes, pregnancy or chronic illness.`,
+      data_p: `GlycoChef does <strong>not collect any personally identifiable data</strong> directly (no user account, no registration).`,
+      data_li: [`<strong>Anonymous browsing data</strong> via Google Analytics 4 (pages visited, duration, country, device)`, `<strong>Voluntarily submitted suggestions</strong> in the comments section (stored locally in your browser, not transmitted to a server)`],
+      ga_p: `This site uses <strong>Google Analytics 4</strong> (Google LLC, 1600 Amphitheatre Parkway, Mountain View, CA 94043, USA) to measure audience. Data is <strong>anonymized</strong>. <strong>Opt-out:</strong> <a href="https://tools.google.com/dlpage/gaoptout" target="_blank" style="color:var(--blue);">tools.google.com/dlpage/gaoptout</a>`,
+      ga_li: [`Pages visited and visit duration`, `Country and browser language`, `Device type (mobile, desktop, tablet)`, `Traffic source (Google, direct, social media)`],
+      cookies_p: `This site uses only <strong>analytical cookies</strong> (Google Analytics) and <strong>functional cookies</strong>. <strong>No advertising cookies</strong> are currently used.`,
+      gdpr_p: `In accordance with the GDPR (EU 2016/679), analytical data processing is based on the <strong>legitimate interest</strong> of the publisher to understand and improve site usage.`,
+      rights_intro: `Under GDPR, you have the following rights:`,
+      rights_li: [`<strong>Right of access</strong> to your personal data`, `<strong>Right to rectification</strong> of inaccurate data`, `<strong>Right to erasure</strong> ("right to be forgotten")`, `<strong>Right to object</strong> to processing`, `<strong>Right to data portability</strong>`, `<strong>Right to lodge a complaint</strong> with the CNIL`],
+      rights_contact: `To exercise these rights:`,
+      cnil: `CNIL (French DPA):`,
+      access_p: `GlycoChef is a free and freely accessible service. The publisher reserves the right to modify, suspend or discontinue the service at any time without notice.`,
+      accuracy_p: `Glycemic index values are from recognized international scientific tables. They may vary depending on:`,
+      accuracy_li: [`Cooking method and time`, `Variety and ripeness of the food`, `Combination with other foods`, `Individual metabolic differences`],
+      links_p: `GlycoChef may contain links to third-party sites. The publisher is not responsible for the content of these sites.`,
+      liability_p: `The publisher shall not be liable for any direct or indirect damages resulting from the use of the site or the application of the information provided.`,
+      law_p: `This site is governed by French law. Any dispute shall be submitted to the competent French courts.`,
+      contact_p: `For any questions regarding legal notices, privacy policy, or to exercise your GDPR rights:`,
+      contact_delay: `<strong>Response time:</strong> within 30 days maximum in accordance with GDPR.`,
+      note: `ℹ️ This site is operated on a non-commercial basis. No personal data is sold to third parties.`,
+    },
+    ar: {
+      editor_p: `موقع <strong>GlycoChef</strong> (متاح على <strong>https://glycochef.netlify.app</strong>) يُنشر بصفة شخصية من قِبل منشئه.<br><strong>التواصل:</strong> <a href="mailto:contact.glycochef@gmail.com" style="color:var(--blue);">contact.glycochef@gmail.com</a>`,
+      host_p: `يستضيف هذا الموقع <strong>Netlify, Inc.</strong><br>44 Montgomery Street, Suite 300, San Francisco, CA 94104, USA.<br>الموقع: <a href="https://www.netlify.com" style="color:var(--blue);" target="_blank">www.netlify.com</a>`,
+      ip_p: `جميع محتويات هذا الموقع (نصوص، بيانات، واجهة، كود مصدري) هي ملك حصري لناشره. يُحظر أي نسخ، جزئي أو كلي، دون إذن كتابي مسبق.`,
+      medical_p: `<strong>⚠️ مهم:</strong> المعلومات المقدمة من GlycoChef هي <strong>لأغراض تعليمية وإعلامية فقط</strong>. استشر دائماً متخصصاً في الصحة قبل أي تغيير في النظام الغذائي، خاصةً في حالة السكري أو الحمل أو الأمراض المزمنة.`,
+      data_p: `لا يجمع GlycoChef <strong>أي بيانات شخصية قابلة للتعريف</strong> مباشرةً (لا حساب مستخدم، لا تسجيل).`,
+      data_li: [`<strong>بيانات تصفح مجهولة</strong> عبر Google Analytics 4 (الصفحات المزارة، المدة، البلد، الجهاز)`, `<strong>اقتراحات مقدمة طوعاً</strong> في قسم التعليقات (مخزنة محلياً في متصفحك، غير مرسلة إلى خادم)`],
+      ga_p: `يستخدم هذا الموقع <strong>Google Analytics 4</strong> (Google LLC) لقياس الجمهور. البيانات <strong>مجهولة الهوية</strong>. <strong>إلغاء الاشتراك:</strong> <a href="https://tools.google.com/dlpage/gaoptout" target="_blank" style="color:var(--blue);">tools.google.com/dlpage/gaoptout</a>`,
+      ga_li: [`الصفحات المزارة ومدة الزيارة`, `البلد ولغة المتصفح`, `نوع الجهاز (موبايل، سطح مكتب، جهاز لوحي)`, `مصدر الزيارة (Google، مباشر، شبكات اجتماعية)`],
+      cookies_p: `يستخدم هذا الموقع فقط <strong>ملفات تحليلية</strong> (Google Analytics) و<strong>ملفات وظيفية</strong>. <strong>لا تُستخدم ملفات إعلانية</strong> حالياً.`,
+      gdpr_p: `وفقاً للائحة حماية البيانات (GDPR — الاتحاد الأوروبي 2016/679)، تستند معالجة البيانات التحليلية إلى <strong>المصلحة المشروعة</strong> للناشر لفهم استخدام الموقع وتحسينه.`,
+      rights_intro: `بموجب اللائحة العامة لحماية البيانات (GDPR)، لديك الحقوق التالية:`,
+      rights_li: [`<strong>حق الوصول</strong> إلى بياناتك الشخصية`, `<strong>حق التصحيح</strong> للبيانات غير الدقيقة`, `<strong>حق الحذف</strong> ("حق النسيان")`, `<strong>حق الاعتراض</strong> على المعالجة`, `<strong>حق نقل البيانات</strong>`, `<strong>حق تقديم شكوى</strong> لدى هيئة حماية البيانات`],
+      rights_contact: `لممارسة هذه الحقوق:`,
+      cnil: `هيئة حماية البيانات الفرنسية (CNIL):`,
+      access_p: `GlycoChef خدمة مجانية ومتاحة بحرية. يحتفظ الناشر بالحق في تعديل الخدمة أو تعليقها أو إيقافها في أي وقت دون إشعار مسبق.`,
+      accuracy_p: `قيم المؤشر الجلايسيمي مستمدة من جداول علمية دولية معترف بها. قد تتفاوت حسب:`,
+      accuracy_li: [`طريقة ووقت الطهي`, `نوع ونضج الغذاء`, `التركيبة مع أغذية أخرى`, `الاختلافات الفردية في الأيض`],
+      links_p: `قد يحتوي GlycoChef على روابط لمواقع خارجية. الناشر غير مسؤول عن محتوى هذه المواقع.`,
+      liability_p: `لا يتحمل الناشر المسؤولية عن أي أضرار ناجمة عن استخدام الموقع أو تطبيق المعلومات المقدمة.`,
+      law_p: `يخضع هذا الموقع للقانون الفرنسي. يُحال أي نزاع إلى المحاكم الفرنسية المختصة.`,
+      contact_p: `لأي سؤال يتعلق بالإشعار القانوني أو سياسة الخصوصية أو لممارسة حقوقك:`,
+      contact_delay: `<strong>وقت الرد:</strong> خلال 30 يوماً كحد أقصى وفقاً للائحة GDPR.`,
+      note: `ℹ️ يُشغَّل هذا الموقع على أساس غير تجاري. لا تُباع أي بيانات شخصية لأطراف ثالثة.`,
+    },
+  };
+  const c = content[lang] || content.fr;
+
+  const h3 = (txt) => `<h3 style="color:var(--navy);margin:16px 0 8px;">${txt}</h3>`;
+  const ul = (items) => `<ul style="font-size:.9rem;line-height:1.8;padding-left:18px;margin-bottom:12px;">${items.map(i=>`<li>${i}</li>`).join('')}</ul>`;
+  const p = (txt) => `<p style="font-size:.9rem;line-height:1.7;">${txt}</p>`;
+
   el.innerHTML = `
-    <!-- MENTIONS LÉGALES -->
+    ${lx.note_official ? `<div class="alert alert-info" style="margin-bottom:16px;font-size:.87rem;">${lx.note_official}</div>` : ''}
+
     <div class="card">
-      <h2>⚖️ Mentions légales</h2>
-      <p style="font-size:.82rem;color:var(--muted);margin-bottom:16px;">Dernière mise à jour : ${today}</p>
-
-      <h3 style="color:var(--navy);margin:16px 0 8px;">1. Éditeur du site</h3>
-      <p style="font-size:.9rem;line-height:1.7;">
-        Le site <strong>GlycoChef</strong> (accessible à l'adresse <strong>https://glycochef.netlify.app</strong>) est édité à titre personnel par son créateur.<br>
-        <strong>Contact :</strong> <a href="mailto:contact.glycochef@gmail.com" style="color:var(--blue);">contact.glycochef@gmail.com</a>
-      </p>
-
-      <h3 style="color:var(--navy);margin:16px 0 8px;">2. Hébergement</h3>
-      <p style="font-size:.9rem;line-height:1.7;">
-        Ce site est hébergé par <strong>Netlify, Inc.</strong><br>
-        44 Montgomery Street, Suite 300, San Francisco, CA 94104, États-Unis.<br>
-        Site : <a href="https://www.netlify.com" style="color:var(--blue);" target="_blank">www.netlify.com</a>
-      </p>
-
-      <h3 style="color:var(--navy);margin:16px 0 8px;">3. Propriété intellectuelle</h3>
-      <p style="font-size:.9rem;line-height:1.7;">
-        L'ensemble du contenu de ce site (textes, données, interface, code source) est la propriété exclusive de son éditeur. Toute reproduction, même partielle, est interdite sans autorisation préalable écrite.
-      </p>
-
-      <h3 style="color:var(--navy);margin:16px 0 8px;">4. Avertissement médical</h3>
-      <div class="alert alert-warn" style="font-size:.88rem;">
-        <strong>⚠️ Important :</strong> Les informations fournies par GlycoChef sont à titre <strong>éducatif et informatif uniquement</strong>. Elles ne constituent en aucun cas un avis médical, diététique ou nutritionnel personnalisé. Consultez un professionnel de santé qualifié (médecin, diététicien) avant tout changement de régime alimentaire, particulièrement en cas de diabète, grossesse ou pathologie chronique.
-      </div>
+      <h2>${lx.title_legal}</h2>
+      <p style="font-size:.82rem;color:var(--muted);margin-bottom:16px;">${lx.updated} ${today}</p>
+      ${h3(lx.h_editor)}${p(c.editor_p)}
+      ${h3(lx.h_host)}${p(c.host_p)}
+      ${h3(lx.h_ip)}${p(c.ip_p)}
+      ${h3(lx.h_medical)}<div class="alert alert-warn" style="font-size:.88rem;">${c.medical_p}</div>
     </div>
 
-    <!-- POLITIQUE DE CONFIDENTIALITÉ -->
     <div class="card">
-      <h2>🔒 Politique de confidentialité</h2>
-
-      <h3 style="color:var(--navy);margin:16px 0 8px;">1. Données collectées</h3>
-      <p style="font-size:.9rem;line-height:1.7;">
-        GlycoChef ne collecte <strong>aucune donnée personnelle identifiante</strong> directement (pas de compte utilisateur, pas d'inscription).<br><br>
-        Les seules données collectées sont :
-      </p>
-      <ul style="font-size:.9rem;line-height:1.8;padding-left:18px;margin-bottom:12px;">
-        <li><strong>Données de navigation anonymes</strong> via Google Analytics 4 (pages visitées, durée, pays, appareil)</li>
-        <li><strong>Suggestions laissées volontairement</strong> dans la section commentaires (stockées localement dans votre navigateur, non transmises à un serveur)</li>
-      </ul>
-
-      <h3 style="color:var(--navy);margin:16px 0 8px;">2. Google Analytics 4</h3>
-      <p style="font-size:.9rem;line-height:1.7;">
-        Ce site utilise <strong>Google Analytics 4</strong> (Google LLC, 1600 Amphitheatre Parkway, Mountain View, CA 94043, USA) pour mesurer l'audience.<br><br>
-        Google Analytics collecte de manière anonyme :
-      </p>
-      <ul style="font-size:.9rem;line-height:1.8;padding-left:18px;margin-bottom:12px;">
-        <li>Pages visitées et durée de visite</li>
-        <li>Pays et langue du navigateur</li>
-        <li>Type d'appareil (mobile, desktop, tablette)</li>
-        <li>Source du trafic (Google, direct, réseaux sociaux)</li>
-      </ul>
-      <p style="font-size:.9rem;line-height:1.7;">
-        Ces données sont <strong>anonymisées</strong> — aucune adresse IP complète n'est stockée. Google peut transférer ces données aux États-Unis conformément aux clauses contractuelles types de l'UE.<br><br>
-        <strong>Désactivation :</strong> Vous pouvez désactiver Google Analytics via l'extension officielle :
-        <a href="https://tools.google.com/dlpage/gaoptout" target="_blank" style="color:var(--blue);">tools.google.com/dlpage/gaoptout</a>
-      </p>
-
-      <h3 style="color:var(--navy);margin:16px 0 8px;">3. Cookies</h3>
-      <p style="font-size:.9rem;line-height:1.7;">
-        Ce site utilise uniquement des <strong>cookies analytiques</strong> (Google Analytics) et des <strong>cookies fonctionnels</strong> (mémorisation de la langue choisie, suggestions enregistrées en local).<br><br>
-        <strong>Aucun cookie publicitaire</strong> n'est utilisé à ce jour. Si une régie publicitaire est intégrée à l'avenir (Google AdSense), cette politique sera mise à jour.
-      </p>
-
-      <h3 style="color:var(--navy);margin:16px 0 8px;">4. Base légale du traitement (RGPD)</h3>
-      <p style="font-size:.9rem;line-height:1.7;">
-        Conformément au Règlement Général sur la Protection des Données (RGPD — UE 2016/679), le traitement des données analytiques repose sur l'<strong>intérêt légitime</strong> de l'éditeur à comprendre l'utilisation du site afin de l'améliorer.
-      </p>
-
-      <h3 style="color:var(--navy);margin:16px 0 8px;">5. Vos droits</h3>
-      <p style="font-size:.9rem;line-height:1.7;">Conformément au RGPD, vous disposez des droits suivants :</p>
-      <ul style="font-size:.9rem;line-height:1.8;padding-left:18px;margin-bottom:12px;">
-        <li><strong>Droit d'accès</strong> à vos données personnelles</li>
-        <li><strong>Droit de rectification</strong> des données inexactes</li>
-        <li><strong>Droit à l'effacement</strong> ("droit à l'oubli")</li>
-        <li><strong>Droit d'opposition</strong> au traitement de vos données</li>
-        <li><strong>Droit à la portabilité</strong> de vos données</li>
-        <li><strong>Droit de réclamation</strong> auprès de la CNIL (Commission Nationale de l'Informatique et des Libertés)</li>
-      </ul>
-      <p style="font-size:.9rem;">Pour exercer ces droits : <a href="mailto:contact.glycochef@gmail.com" style="color:var(--blue);">contact.glycochef@gmail.com</a></p>
-      <p style="font-size:.9rem;margin-top:6px;">CNIL : <a href="https://www.cnil.fr" target="_blank" style="color:var(--blue);">www.cnil.fr</a></p>
+      <h2>${lx.title_privacy}</h2>
+      ${h3(lx.h_data)}${p(c.data_p)}${ul(c.data_li)}
+      ${h3(lx.h_ga)}${p(c.ga_p)}${ul(c.ga_li)}
+      ${h3(lx.h_cookies)}${p(c.cookies_p)}
+      ${h3(lx.h_legal_basis)}${p(c.gdpr_p)}
+      ${h3(lx.h_rights)}${p(c.rights_intro)}${ul(c.rights_li)}
+      ${p(c.rights_contact + ' <a href="mailto:contact.glycochef@gmail.com" style="color:var(--blue);">contact.glycochef@gmail.com</a>')}
+      ${p(c.cnil + ' <a href="https://www.cnil.fr" target="_blank" style="color:var(--blue);">www.cnil.fr</a>')}
     </div>
 
-    <!-- CONDITIONS D'UTILISATION -->
     <div class="card">
-      <h2>📋 Conditions d'utilisation</h2>
-
-      <h3 style="color:var(--navy);margin:16px 0 8px;">1. Accès au service</h3>
-      <p style="font-size:.9rem;line-height:1.7;">
-        GlycoChef est un service gratuit et librement accessible. L'éditeur se réserve le droit de modifier, suspendre ou interrompre le service à tout moment sans préavis.
-      </p>
-
-      <h3 style="color:var(--navy);margin:16px 0 8px;">2. Exactitude des données</h3>
-      <p style="font-size:.9rem;line-height:1.7;">
-        Les valeurs d'index glycémique présentées sont issues de tables scientifiques internationales reconnues. Elles sont données à titre indicatif et peuvent varier selon :
-      </p>
-      <ul style="font-size:.9rem;line-height:1.8;padding-left:18px;margin-bottom:12px;">
-        <li>Le mode et temps de cuisson</li>
-        <li>La variété et maturité de l'aliment</li>
-        <li>La combinaison avec d'autres aliments</li>
-        <li>Les différences individuelles métaboliques</li>
-      </ul>
-
-      <h3 style="color:var(--navy);margin:16px 0 8px;">3. Liens externes</h3>
-      <p style="font-size:.9rem;line-height:1.7;">
-        GlycoChef peut contenir des liens vers des sites tiers. L'éditeur n'est pas responsable du contenu de ces sites et ne peut garantir leur disponibilité.
-      </p>
-
-      <h3 style="color:var(--navy);margin:16px 0 8px;">4. Responsabilité</h3>
-      <p style="font-size:.9rem;line-height:1.7;">
-        L'éditeur ne saurait être tenu responsable des dommages directs ou indirects résultant de l'utilisation du site ou de l'application des informations fournies. L'utilisation de GlycoChef se fait sous la seule responsabilité de l'utilisateur.
-      </p>
-
-      <h3 style="color:var(--navy);margin:16px 0 8px;">5. Droit applicable</h3>
-      <p style="font-size:.9rem;line-height:1.7;">
-        Le présent site est soumis au droit français. Tout litige relatif à son utilisation sera soumis aux tribunaux compétents français.
-      </p>
+      <h2>${lx.title_cgu}</h2>
+      ${h3(lx.h_access)}${p(c.access_p)}
+      ${h3(lx.h_accuracy)}${p(c.accuracy_p)}${ul(c.accuracy_li)}
+      ${h3(lx.h_links)}${p(c.links_p)}
+      ${h3(lx.h_liability)}${p(c.liability_p)}
+      ${h3(lx.h_law)}${p(c.law_p)}
     </div>
 
-    <!-- CONTACT -->
     <div class="card">
-      <h2>📬 Contact</h2>
-      <p style="font-size:.9rem;line-height:1.7;">
-        Pour toute question relative aux mentions légales, à la politique de confidentialité, ou pour exercer vos droits RGPD :<br><br>
-        <strong>Email :</strong> <a href="mailto:contact.glycochef@gmail.com" style="color:var(--blue);">contact.glycochef@gmail.com</a><br>
-        <strong>Délai de réponse :</strong> sous 30 jours maximum conformément au RGPD.
-      </p>
-      <div class="alert alert-info" style="margin-top:12px;font-size:.85rem;">
-        ℹ️ Ce site est exploité à titre non commercial. Aucune donnée personnelle n'est vendue à des tiers.
-      </div>
+      <h2>${lx.title_contact}</h2>
+      ${p(c.contact_p + '<br><br><strong>Email :</strong> <a href="mailto:contact.glycochef@gmail.com" style="color:var(--blue);">contact.glycochef@gmail.com</a><br>' + c.contact_delay)}
+      <div class="alert alert-info" style="margin-top:12px;font-size:.85rem;">${c.note}</div>
     </div>`;
 }
 
@@ -2196,20 +2299,26 @@ function renderStarchGuide() {
   const el = document.getElementById('feculents-content');
   if (!el) return;
 
+  const starchNames = {
+    fr: ['Pâtes (spaghetti)','Riz blanc','Riz basmati','Riz brun','Pomme de terre','Quinoa','Orge','Boulgour','Couscous','Polenta','Lentilles','Flocons d\'avoine','Ébly (blé étuvé)'],
+    en: ['Pasta (spaghetti)','White rice','Basmati rice','Brown rice','Potato','Quinoa','Barley','Bulgur','Couscous','Polenta','Lentils','Oat flakes','Ébly (parboiled wheat)'],
+    ar: ['معكرونة (سباغيتي)','أرز أبيض','أرز بسمتي','أرز بني','بطاطا','كينوا','شعير','برغل','كسكس','بوليندا','عدس','رقائق الشوفان','إيبلي (قمح مسلوق)'],
+  };
+  const names = starchNames[currentLang] || starchNames.fr;
   const starchData = [
-    {name:'Pâtes (spaghetti)', raw:'—', aldente:45, normal:65, overcook:80, cold:35},
-    {name:'Riz blanc',         raw:'—', aldente:64, normal:72, overcook:85, cold:55},
-    {name:'Riz basmati',       raw:'—', aldente:50, normal:58, overcook:70, cold:45},
-    {name:'Riz brun',          raw:'—', aldente:45, normal:50, overcook:60, cold:40},
-    {name:'Pomme de terre',    raw:'—', aldente:55, normal:65, overcook:85, cold:58},
-    {name:'Quinoa',            raw:'—', aldente:50, normal:53, overcook:60, cold:45},
-    {name:'Orge',              raw:'—', aldente:22, normal:28, overcook:40, cold:20},
-    {name:'Boulgour',          raw:'—', aldente:40, normal:46, overcook:55, cold:38},
-    {name:'Couscous',          raw:'—', aldente:55, normal:65, overcook:75, cold:50},
-    {name:'Polenta',           raw:'—', aldente:55, normal:70, overcook:85, cold:40},
-    {name:'Lentilles',         raw:'—', aldente:25, normal:30, overcook:40, cold:22},
-    {name:'Flocons d\'avoine', raw:'—', aldente:45, normal:55, overcook:65, cold:40},
-    {name:'Ébly (blé étuvé)',  raw:'—', aldente:40, normal:45, overcook:55, cold:38},
+    {name:names[0],  raw:'—', aldente:45, normal:65, overcook:80, cold:35},
+    {name:names[1],  raw:'—', aldente:64, normal:72, overcook:85, cold:55},
+    {name:names[2],  raw:'—', aldente:50, normal:58, overcook:70, cold:45},
+    {name:names[3],  raw:'—', aldente:45, normal:50, overcook:60, cold:40},
+    {name:names[4],  raw:'—', aldente:55, normal:65, overcook:85, cold:58},
+    {name:names[5],  raw:'—', aldente:50, normal:53, overcook:60, cold:45},
+    {name:names[6],  raw:'—', aldente:22, normal:28, overcook:40, cold:20},
+    {name:names[7],  raw:'—', aldente:40, normal:46, overcook:55, cold:38},
+    {name:names[8],  raw:'—', aldente:55, normal:65, overcook:75, cold:50},
+    {name:names[9],  raw:'—', aldente:55, normal:70, overcook:85, cold:40},
+    {name:names[10], raw:'—', aldente:25, normal:30, overcook:40, cold:22},
+    {name:names[11], raw:'—', aldente:45, normal:55, overcook:65, cold:40},
+    {name:names[12], raw:'—', aldente:40, normal:45, overcook:55, cold:38},
   ];
 
   const giColor = v => v === '—' ? '#aaa' : v <= 55 ? 'var(--green)' : v <= 69 ? 'var(--orange)' : 'var(--red)';
@@ -2227,18 +2336,18 @@ function renderStarchGuide() {
       <div style="display:flex;flex-wrap:wrap;gap:10px;">
         <div style="flex:1;min-width:130px;padding:12px;background:var(--red-light);border-radius:10px;text-align:center;">
           <div style="font-size:1.4rem;">🔥</div>
-          <strong style="color:var(--red);font-size:.9rem;">Chaud</strong>
-          <div style="font-size:.82rem;color:var(--muted);margin-top:4px;">IG le plus élevé</div>
+          <strong style="color:var(--red);font-size:.9rem;">${t.starch_hot||'Chaud'}</strong>
+          <div style="font-size:.82rem;color:var(--muted);margin-top:4px;">${t.starch_hot_sub||'IG le plus élevé'}</div>
         </div>
         <div style="flex:1;min-width:130px;padding:12px;background:var(--orange-light);border-radius:10px;text-align:center;">
           <div style="font-size:1.4rem;">😐</div>
-          <strong style="color:var(--orange);font-size:.9rem;">Tiède</strong>
-          <div style="font-size:.82rem;color:var(--muted);margin-top:4px;">IG intermédiaire</div>
+          <strong style="color:var(--orange);font-size:.9rem;">${t.starch_warm||'Tiède'}</strong>
+          <div style="font-size:.82rem;color:var(--muted);margin-top:4px;">${t.starch_warm_sub||'IG intermédiaire'}</div>
         </div>
         <div style="flex:1;min-width:130px;padding:12px;background:var(--green-light);border-radius:10px;text-align:center;">
           <div style="font-size:1.4rem;">❄️</div>
-          <strong style="color:var(--green);font-size:.9rem;">Froid / refroidi</strong>
-          <div style="font-size:.82rem;color:var(--muted);margin-top:4px;">IG le plus bas</div>
+          <strong style="color:var(--green);font-size:.9rem;">${t.starch_cold_label||'Froid / refroidi'}</strong>
+          <div style="font-size:.82rem;color:var(--muted);margin-top:4px;">${t.starch_cold_sub||'IG le plus bas'}</div>
         </div>
       </div>
     </div>
@@ -2269,10 +2378,11 @@ function renderStarchGuide() {
         </table>
       </div>
       <div style="display:flex;gap:12px;margin-top:10px;flex-wrap:wrap;font-size:.8rem;">
-        <span><span style="background:var(--green-light);color:var(--green);padding:2px 8px;border-radius:10px;font-weight:700;">≤55</span> Faible</span>
-        <span><span style="background:var(--orange-light);color:var(--orange);padding:2px 8px;border-radius:10px;font-weight:700;">56–69</span> Modéré</span>
-        <span><span style="background:var(--red-light);color:var(--red);padding:2px 8px;border-radius:10px;font-weight:700;">≥70</span> Élevé</span>
+        <span><span style="background:var(--green-light);color:var(--green);padding:2px 8px;border-radius:10px;font-weight:700;">≤55</span> ${t.gi_low}</span>
+        <span><span style="background:var(--orange-light);color:var(--orange);padding:2px 8px;border-radius:10px;font-weight:700;">56–69</span> ${t.gi_moderate}</span>
+        <span><span style="background:var(--red-light);color:var(--red);padding:2px 8px;border-radius:10px;font-weight:700;">≥70</span> ${t.gi_high}</span>
       </div>
+      <p style="font-size:.78rem;color:var(--muted);margin-top:10px;font-style:italic;">${t.starch_table_note||''}</p>
     </div>
 
     <div class="card">
@@ -2288,6 +2398,10 @@ function renderStarchGuide() {
       <div class="tip-item">
         <div class="tip-icon">🫘</div>
         <div class="tip-text"><strong>${t.starch_tip3_title}</strong><span>${t.starch_tip3_text}</span></div>
+      </div>
+      <div class="tip-item" style="border-top:2px solid var(--orange-border);margin-top:8px;padding-top:14px;">
+        <div class="tip-icon">🍟</div>
+        <div class="tip-text"><strong>${t.starch_fry_title}</strong><span>${t.starch_fry_text}</span></div>
       </div>
     </div>`;
 }
@@ -2521,7 +2635,7 @@ var LANGS = {
     res_back:"← Modifier la recette", res_all_tips:"📖 Tous les conseils", res_pdf:"📄 Exporter en PDF",
     alert_add_ing:"Ajoutez au moins un ingrédient.", alert_no_valid:"Aucun ingrédient valide détecté.",
     tip_al_dente_t:"Cuisson al dente", tip_al_dente_d:"Réduire de 2–3 minutes la cuisson des pâtes ou du riz pour préserver la structure de l'amidon et abaisser l'IG de 15 à 20 points.",
-    tip_cool_t:"Refroidir avant de servir", tip_cool_d:"Préparer le riz ou les pâtes à l'avance et les refroidir au réfrigérateur transforme l'amidon en amidon résistant. Réchauffer à la vapeur — l'effet se maintient.",
+    tip_cool_t:"Refroidir avant de servir", tip_cool_d:"Préparer le riz ou les pâtes à l'avance et les refroidir au réfrigérateur convertit l'amidon en amidon résistant — celui-ci n'est pas absorbé comme sucre dans l'intestin grêle, mais fermenté dans le côlon comme une fibre bénéfique pour le microbiote. Réchauffer à la vapeur — l'effet se maintient.",
     tip_lemon_t:"Ajouter du jus de citron", tip_lemon_d:"Incorporer 1–2 cuillères à soupe de citron dans la pâte ou la sauce réduit l'activité de l'amylase et ralentit la digestion des glucides.",
     tip_flour_t:"Remplacer 30% de la farine blanche", tip_flour_d:"Substituer 30% de farine blanche par de la farine d'orge, de pois chiche ou de sarrasin réduit significativement l'IG sans altérer la texture.",
     tip_potato_t:"Cuire à la vapeur, pas au four", tip_potato_d:"La pomme de terre vapeur (IG 65) a un IG bien inférieur à la version au four (IG 85). La consommer froide dans une salade descend encore à IG 58.",
@@ -2610,8 +2724,9 @@ var LANGS = {
     starch_intro: "L'index glycémique d'un féculent varie considérablement selon le mode de cuisson, le temps de cuisson et la température de service. Ce guide vous aide à optimiser vos choix.",
     starch_cooking_title: "⏱️ Impact de la cuisson sur l'IG",
     starch_temp_title: "🌡️ Température de service",
-    starch_temp_text: "Refroidir un féculent après cuisson convertit l'amidon en amidon résistant (non digestible), ce qui réduit significativement l'IG. Réchauffer à la vapeur préserve cet effet.",
+    starch_temp_text: "Refroidir un féculent après cuisson convertit l'amidon en amidon résistant — celui-ci n'est pas absorbé comme sucre dans l'intestin grêle, mais fermenté dans le côlon comme une fibre bénéfique pour le microbiote. L'IG peut chuter de 15 à 30 points. Réchauffer à la vapeur préserve cet effet.",
     starch_table_title: "📊 Tableau comparatif par féculent",
+    starch_table_note: "⚠️ Valeurs indicatives issues de la littérature scientifique internationale. Les index glycémiques peuvent varier selon la variété, la marque, la quantité d'eau et les conditions exactes de cuisson.",
     starch_food: "Féculent", starch_raw: "IG cru/sec", starch_aldente: "Al dente / court", starch_normal: "Cuisson normale", starch_overcook: "Trop cuit", starch_cold: "Refroidi",
     starch_tip1_title: "Règle d'or : al dente",
     starch_tip1_text: "Réduire le temps de cuisson de 2-3 minutes peut abaisser l'IG de 15 à 20 points. Testez la texture : le féculent doit résister légèrement sous la dent.",
@@ -2619,6 +2734,11 @@ var LANGS = {
     starch_tip2_text: "Préparer riz, pâtes ou pommes de terre la veille et les conserver au réfrigérateur. L'IG peut chuter de 20 à 30 points. Réchauffez à la vapeur pour préserver l'effet.",
     starch_tip3_title: "Associer avec fibres et protéines",
     starch_tip3_text: "Ajouter des légumineuses, des légumes ou une source de protéines au même repas ralentit l'absorption du féculent et réduit l'impact glycémique global.",
+    starch_fry_title: "🍟 La friture : un IG plus bas, mais attention",
+    starch_fry_text: "La friture abaisse mécaniquement l'IG des féculents — la matière grasse ralentit la vidange gastrique et forme une barrière autour de l'amidon. Les frites ont ainsi un IG (~54) inférieur à la pomme de terre au four (~85). Mais ce \"gain\" glycémique est trompeur : la friture augmente considérablement l'apport calorique, les graisses pro-inflammatoires et le risque cardiovasculaire. Sur le plan métabolique global, ce mode de cuisson reste défavorable malgré un IG plus bas.",
+    starch_hot:"Chaud", starch_hot_sub:"IG le plus élevé", starch_warm:"Tiède", starch_warm_sub:"IG intermédiaire", starch_cold_label:"Froid / refroidi", starch_cold_sub:"IG le plus bas",
+    cookie_text:'🍪 <strong>GlycoChef utilise des cookies analytiques</strong> (Google Analytics) pour mesurer l\'audience et améliorer le site. Aucune donnée personnelle identifiante n\'est collectée. <a href="#" onclick="showTab(\'legal\');hideCookieBanner();return false;" style="color:#f9ca24;text-decoration:underline;margin-left:4px;">En savoir plus</a>',
+    cookie_accept:"✅ Accepter", cookie_refuse:"❌ Refuser", cookie_customize:"Personnaliser",
     nav_comments: "💬 Vos suggestions",
     nav_about: "ℹ️ À propos",
     cuisine_title: "🍽️ Type de cuisine",
@@ -2667,7 +2787,7 @@ var LANGS = {
     res_back:"← Edit recipe", res_all_tips:"📖 All tips", res_pdf:"📄 Export to PDF",
     alert_add_ing:"Please add at least one ingredient.", alert_no_valid:"No valid ingredient detected.",
     tip_al_dente_t:"Cook al dente", tip_al_dente_d:"Reduce pasta or rice cooking time by 2–3 minutes to preserve starch structure and lower GI by 15 to 20 points.",
-    tip_cool_t:"Cool before serving", tip_cool_d:"Preparing rice or pasta in advance and refrigerating it turns starch into resistant starch. Reheating by steaming maintains this effect.",
+    tip_cool_t:"Cool before serving", tip_cool_d:"Preparing rice or pasta in advance and refrigerating it converts starch into resistant starch — which is not absorbed as sugar in the small intestine, but fermented in the colon as a beneficial fibre for the gut microbiome. Reheating by steaming maintains this effect.",
     tip_lemon_t:"Add lemon juice", tip_lemon_d:"Adding 1–2 tablespoons of lemon juice to the dough or sauce reduces amylase activity and slows carbohydrate digestion.",
     tip_flour_t:"Replace 30% of white flour", tip_flour_d:"Substituting 30% of white flour with barley, chickpea or buckwheat flour significantly lowers GI without altering texture.",
     tip_potato_t:"Steam, don't bake", tip_potato_d:"Steamed potato (GI 65) has a much lower GI than baked (GI 85). Eating it cold in a salad brings it further down to GI 58.",
@@ -2724,7 +2844,7 @@ var LANGS = {
       ]},
       {title:"🍳 Cooking methods", items:[
         {icon:"⏱️",t:"Al dente pasta and rice",d:"Al dente cooking preserves starch structure. Al dente pasta has a GI of ~45 vs ~65 when overcooked. Reduce cooking time by 2–3 minutes."},
-        {icon:"❄️",t:"Cool then reheat",d:"Cooling cooked rice or pasta converts starch into resistant starch. Reheating doesn't destroy this effect. GI can drop 15–20 points."},
+        {icon:"❄️",t:"Cool then reheat",d:"Cooling cooked rice or pasta converts starch into resistant starch — not absorbed as sugar in the small intestine, but fermented in the colon as a beneficial fibre for the microbiome. GI can drop 15–20 points. Reheating by steam preserves this effect."},
         {icon:"🥘",t:"Avoid overcooking vegetables",d:"Raw carrots have a GI of 16, cooked they reach 47. Prefer short steaming or wok cooking."},
         {icon:"🥔",t:"Steam potatoes and let them cool",d:"Cold steamed potato (potato salad) has a GI of ~58 vs ~85 when baked hot."}
       ]},
@@ -2756,8 +2876,9 @@ var LANGS = {
     starch_intro: "The glycemic index of a starch varies considerably depending on cooking method, cooking time and serving temperature. This guide helps you make better choices.",
     starch_cooking_title: "⏱️ Impact of cooking on GI",
     starch_temp_title: "🌡️ Serving temperature",
-    starch_temp_text: "Cooling a starch after cooking converts starch into resistant starch (indigestible), significantly lowering the GI. Reheating by steam preserves this effect.",
+    starch_temp_text: "Cooling a starch after cooking converts it into resistant starch — not absorbed as sugar in the small intestine, but fermented in the colon as a beneficial fibre for the microbiome. This significantly lowers the GI. Reheating by steam preserves this effect.",
     starch_table_title: "📊 Comparison table by starch",
+    starch_table_note: "⚠️ Indicative values from international scientific literature. Glycemic indices may vary depending on variety, brand, water quantity and exact cooking conditions.",
     starch_food: "Starch", starch_raw: "Raw/dry GI", starch_aldente: "Al dente / short", starch_normal: "Normal cooking", starch_overcook: "Overcooked", starch_cold: "Cooled",
     starch_tip1_title: "Golden rule: al dente",
     starch_tip1_text: "Reducing cooking time by 2-3 minutes can lower the GI by 15-20 points. Test the texture: the starch should slightly resist when bitten.",
@@ -2765,6 +2886,11 @@ var LANGS = {
     starch_tip2_text: "Prepare rice, pasta or potatoes the day before and refrigerate. GI can drop by 20-30 points. Reheat by steaming to preserve the effect.",
     starch_tip3_title: "Combine with fiber and protein",
     starch_tip3_text: "Adding legumes, vegetables or a protein source to the same meal slows starch absorption and reduces overall glycemic impact.",
+    starch_fry_title: "🍟 Frying: a lower GI, but beware",
+    starch_fry_text: "Frying mechanically lowers the GI of starches — fat slows gastric emptying and forms a barrier around the starch. French fries have a GI (~54) lower than baked potato (~85). But this glycemic \"gain\" is misleading: frying considerably increases caloric intake, pro-inflammatory fats and cardiovascular risk. From an overall metabolic standpoint, this cooking method remains unfavourable despite a lower GI.",
+    starch_hot:"Hot", starch_hot_sub:"Highest GI", starch_warm:"Warm", starch_warm_sub:"Intermediate GI", starch_cold_label:"Cold / cooled", starch_cold_sub:"Lowest GI",
+    cookie_text:'🍪 <strong>GlycoChef uses analytical cookies</strong> (Google Analytics) to measure audience and improve the site. No personally identifiable data is collected. <a href="#" onclick="showTab(\'legal\');hideCookieBanner();return false;" style="color:#f9ca24;text-decoration:underline;margin-left:4px;">Learn more</a>',
+    cookie_accept:"✅ Accept", cookie_refuse:"❌ Refuse", cookie_customize:"Customize",
     nav_comments: "💬 Your suggestions",
     nav_about: "ℹ️ About",
     cuisine_title: "🍽️ Cuisine type",
@@ -2813,7 +2939,7 @@ var LANGS = {
     res_back:"← تعديل الوصفة", res_all_tips:"📖 جميع النصائح", res_pdf:"📄 تصدير PDF",
     alert_add_ing:"يرجى إضافة مكوّن واحد على الأقل.", alert_no_valid:"لم يتم اكتشاف أي مكوّن صالح.",
     tip_al_dente_t:"طهي متوسط النضج", tip_al_dente_d:"تقليل وقت طهي المعكرونة أو الأرز بمقدار 2-3 دقائق للحفاظ على بنية النشاء وخفض المؤشر بـ 15 إلى 20 نقطة.",
-    tip_cool_t:"التبريد قبل التقديم", tip_cool_d:"تحضير الأرز أو المعكرونة مسبقاً وتبريدها في الثلاجة يحوّل النشاء إلى نشاء مقاوم. إعادة التسخين بالبخار تحافظ على هذا التأثير.",
+    tip_cool_t:"التبريد قبل التقديم", tip_cool_d:"تحضير الأرز أو المعكرونة مسبقاً وتبريدها في الثلاجة يحوّل النشاء إلى نشاء مقاوم — لا يُمتص كسكر في الأمعاء الدقيقة، بل يتخمّر في القولون كألياف مفيدة للميكروبيوم. إعادة التسخين بالبخار تحافظ على هذا التأثير.",
     tip_lemon_t:"إضافة عصير الليمون", tip_lemon_d:"إضافة 1-2 ملعقة كبيرة من الليمون يقلل نشاط الأميليز ويبطئ هضم الكربوهيدرات.",
     tip_flour_t:"استبدال 30% من الدقيق الأبيض", tip_flour_d:"استبدال 30% من الدقيق الأبيض بدقيق الشعير أو الحمص أو الحنطة السوداء يخفض المؤشر بشكل ملحوظ دون التأثير على الملمس.",
     tip_potato_t:"الطهي بالبخار لا بالفرن", tip_potato_d:"البطاطا المطهوة بالبخار (م.ج 65) لها مؤشر أقل بكثير من المشوية في الفرن (م.ج 85). تناولها بارداً في السلطة يخفضها إلى 58.",
@@ -2870,7 +2996,7 @@ var LANGS = {
       ]},
       {title:"🍳 طرق الطهي", items:[
         {icon:"⏱️",t:"طهي المعكرونة والأرز متوسط النضج",d:"الطهي المتوسط يحافظ على بنية النشاء. المعكرونة متوسطة النضج لها مؤشر ~45 مقابل ~65 للمطبوخ جيداً. قلل وقت الطهي بـ 2-3 دقائق."},
-        {icon:"❄️",t:"التبريد ثم إعادة التسخين",d:"تبريد الأرز أو المعكرونة بعد الطهي يحوّل النشاء إلى نشاء مقاوم. إعادة التسخين لا تتلف هذا التأثير. يمكن أن يقل المؤشر بـ 15-20 نقطة."},
+        {icon:"❄️",t:"التبريد ثم إعادة التسخين",d:"تبريد الأرز أو المعكرونة بعد الطهي يحوّله إلى نشاء مقاوم — لا يُمتص كسكر في الأمعاء الدقيقة، بل يتخمّر في القولون كألياف مفيدة للميكروبيوم. يمكن أن يقل المؤشر بـ 15-20 نقطة. إعادة التسخين بالبخار تحافظ على التأثير."},
         {icon:"🥘",t:"تجنب الإفراط في طهي الخضار",d:"الجزر النيء له مؤشر 16، وعند طهيه يرتفع إلى 47. يُفضَّل الطهي السريع على البخار أو الوك."},
         {icon:"🥔",t:"طهي البطاطا بالبخار وتركها تبرد",d:"البطاطا المطبوخة بالبخار والباردة (سلطة البطاطا) لها مؤشر ~58 مقابل ~85 عند شيّها ساخنة."}
       ]},
@@ -2902,8 +3028,9 @@ var LANGS = {
     starch_intro: "يتفاوت المؤشر الجلايسيمي للنشويات بشكل كبير حسب طريقة الطهي ومدته ودرجة حرارة التقديم. يساعدك هذا الدليل على اختياراتك.",
     starch_cooking_title: "⏱️ تأثير الطهي على المؤشر",
     starch_temp_title: "🌡️ درجة حرارة التقديم",
-    starch_temp_text: "تبريد النشا بعد الطهي يحوّله إلى نشا مقاوم (غير قابل للهضم)، مما يخفض المؤشر بشكل ملحوظ. إعادة التسخين بالبخار تحافظ على هذا التأثير.",
+    starch_temp_text: "تبريد النشا بعد الطهي يحوّله إلى نشا مقاوم — لا يُمتص كسكر في الأمعاء الدقيقة، بل يتخمّر في القولون كألياف مفيدة للميكروبيوم. يمكن أن ينخفض المؤشر بـ 15 إلى 30 نقطة. إعادة التسخين بالبخار تحافظ على هذا التأثير.",
     starch_table_title: "📊 جدول مقارنة النشويات",
+    starch_table_note: "⚠️ قيم إرشادية مستمدة من الأدبيات العلمية الدولية. قد تتفاوت المؤشرات الجلايسيمية حسب الصنف والعلامة التجارية وكمية الماء وظروف الطهي الدقيقة.",
     starch_food: "النشا", starch_raw: "م.ج نيء/جاف", starch_aldente: "نضج متوسط", starch_normal: "طهي عادي", starch_overcook: "طهي زائد", starch_cold: "مبرد",
     starch_tip1_title: "القاعدة الذهبية: طهي متوسط",
     starch_tip1_text: "تقليل وقت الطهي بـ 2-3 دقائق يخفض المؤشر بـ 15-20 نقطة. اختبر القوام: يجب أن يقاوم النشا قليلاً عند العض.",
@@ -2911,6 +3038,11 @@ var LANGS = {
     starch_tip2_text: "حضّر الأرز والمعكرونة أو البطاطا يوم السابق واحفظها في الثلاجة. يمكن أن ينخفض المؤشر بـ 20-30 نقطة. أعد التسخين بالبخار للحفاظ على التأثير.",
     starch_tip3_title: "الجمع مع الألياف والبروتين",
     starch_tip3_text: "إضافة البقوليات أو الخضار أو مصدر بروتين في نفس الوجبة يبطئ امتصاص النشا ويقلل التأثير الجلايسيمي الإجمالي.",
+    starch_fry_title: "🍟 القلي: مؤشر أدنى، لكن احذر",
+    starch_fry_text: "القلي يخفض المؤشر الجلايسيمي للنشويات آلياً — الدهن يبطئ إفراغ المعدة ويشكّل حاجزاً حول النشاء. البطاطا المقلية (م.ج ~54) لها مؤشر أدنى من البطاطا المشوية في الفرن (~85). لكن هذا \"الكسب\" الجلايسيمي مُضلِّل: القلي يزيد بشكل كبير من السعرات الحرارية والدهون المسببة للالتهاب وخطر الأمراض القلبية. من الناحية الأيضية الشاملة، يبقى هذا أسلوب طهي غير مُفضَّل رغم المؤشر المنخفض.",
+    starch_hot:"ساخن", starch_hot_sub:"أعلى مؤشر", starch_warm:"دافئ", starch_warm_sub:"مؤشر متوسط", starch_cold_label:"بارد / مبرد", starch_cold_sub:"أدنى مؤشر",
+    cookie_text:'🍪 <strong>يستخدم GlycoChef ملفات تحليلية</strong> (Google Analytics) لقياس الجمهور وتحسين الموقع. لا تُجمع أي بيانات شخصية قابلة للتعريف. <a href="#" onclick="showTab(\'legal\');hideCookieBanner();return false;" style="color:#f9ca24;text-decoration:underline;margin-right:4px;">اعرف المزيد</a>',
+    cookie_accept:"✅ قبول", cookie_refuse:"❌ رفض", cookie_customize:"تخصيص",
     nav_comments: "💬 اقتراحاتكم",
     nav_about: "ℹ️ حول الموقع",
     cuisine_title: "🍽️ نوع المطبخ",
@@ -2975,6 +3107,7 @@ function setLang(lang) {
   });
 
   // Re-render dynamic sections
+  updateCookieBanner();
   renderComments();
   renderStarchGuide();
   renderTipsSection();
@@ -2987,15 +3120,70 @@ function setLang(lang) {
 }
 
 // ═══════════════════════════════════════════════════════════════
+//  COOKIES CONSENT
+// ═══════════════════════════════════════════════════════════════
+function updateCookieBanner() {
+  const t = LANGS[currentLang] || LANGS.fr;
+  const txt = document.getElementById('cookie-text');
+  const acc = document.getElementById('cookie-accept');
+  const ref = document.getElementById('cookie-refuse');
+  const cus = document.getElementById('cookie-customize');
+  if (txt) txt.innerHTML = t.cookie_text || '';
+  if (acc) acc.textContent = t.cookie_accept || '✅ Accepter';
+  if (ref) ref.textContent = t.cookie_refuse || '❌ Refuser';
+  if (cus) cus.textContent = t.cookie_customize || 'Personnaliser';
+  // RTL support
+  const banner = document.getElementById('cookie-banner');
+  if (banner) banner.dir = currentLang === 'ar' ? 'rtl' : 'ltr';
+}
+
+function initCookieBanner() {
+  const consent = localStorage.getItem('gc_cookie_consent');
+  if (!consent) {
+    // Première visite — afficher le bandeau après 1 seconde
+    setTimeout(() => {
+      document.getElementById('cookie-banner').style.display = 'block';
+    }, 1000);
+  } else if (consent === 'refused') {
+    // Désactiver Google Analytics si refusé
+    disableGA();
+  }
+}
+
+function acceptCookies() {
+  localStorage.setItem('gc_cookie_consent', 'accepted');
+  hideCookieBanner();
+  // GA déjà actif par défaut
+}
+
+function refuseCookies() {
+  localStorage.setItem('gc_cookie_consent', 'refused');
+  hideCookieBanner();
+  disableGA();
+}
+
+function hideCookieBanner() {
+  const b = document.getElementById('cookie-banner');
+  if (b) b.style.display = 'none';
+}
+
+function disableGA() {
+  // Désactive Google Analytics
+  window['ga-disable-G-WPTCJQWEDS'] = true;
+}
+
+// ═══════════════════════════════════════════════════════════════
 //  INIT — après LANGS pour éviter les erreurs de référence
 // ═══════════════════════════════════════════════════════════════
 addIngredient();
+updateCookieBanner();
 renderComments();
 renderStarchGuide();
 renderTipsSection();
 renderCommentsSection();
 renderAboutSection();
 renderLegalSection();
+initCookieBanner();
 </script>
 </body>
 </html>
