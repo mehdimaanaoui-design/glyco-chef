@@ -326,6 +326,9 @@
       <div class="cuisine-btn" onclick="selectCuisine(this,'africaine')">
         <span class="icon">🌍</span><span data-i18n="cuisine_african">Africaine</span>
       </div>
+      <div class="cuisine-btn" onclick="selectCuisine(this,'sud-americaine')">
+        <span class="icon">🌽</span><span data-i18n="cuisine_south_american">Sud-américaine</span>
+      </div>
     </div>
   </div>
 
@@ -476,7 +479,7 @@ const DB = [
   {n:"Riz sauvage cuit",                 gi:35, cat:"Céréale",     ori:["occidentale"]},
   {n:"Riz jasmin cuit",                  gi:89, cat:"Céréale",     ori:["asiatique"],             alt:{asiatique:"Riz brun (IG 50) ou riz basmati complet (IG 45)", orientale:"Riz basmati complet (IG 45)", occidentale:"Quinoa (IG 53)"}},
   {n:"Riz gluant cuit",                  gi:98, cat:"Céréale",     ori:["asiatique"],             alt:{asiatique:"Riz brun (IG 50) — pour le sushi : riz à IG modéré refroidi (IG ~55)", orientale:"Boulgour (IG 46)", occidentale:"Orge mondé (IG 22)"}},
-  {n:"Quinoa cuit",                      gi:53, cat:"Céréale",     ori:["occidentale"]},
+  {n:"Quinoa cuit",                      gi:53, cat:"Céréale",     ori:["occidentale","sud-americaine"]},
   {n:"Orge perlé cuit",                  gi:28, cat:"Céréale",     ori:["occidentale"]},
   {n:"Orge mondé cuit",                  gi:22, cat:"Céréale",     ori:["occidentale"]},
   {n:"Sarrasin cuit",                    gi:40, cat:"Céréale",     ori:["occidentale"]},
@@ -582,7 +585,7 @@ const DB = [
   {n:"Pois chiches cuits",               gi:28, cat:"Légumineuse", ori:["orientale"]},
   {n:"Pois chiches",                     gi:28, cat:"Légumineuse", ori:["orientale"]},
   {n:"Haricots rouges cuits",            gi:24, cat:"Légumineuse", ori:["occidentale"]},
-  {n:"Haricots noirs cuits",             gi:30, cat:"Légumineuse", ori:["occidentale"]},
+  {n:"Haricots noirs cuits",             gi:30, cat:"Légumineuse", ori:["occidentale","sud-americaine"]},
   {n:"Haricots blancs cuits",            gi:33, cat:"Légumineuse", ori:["occidentale"]},
   {n:"Fèves cuites",                     gi:40, cat:"Légumineuse", ori:["orientale"]},
   {n:"Edamame",                          gi:18, cat:"Légumineuse", ori:["asiatique"]},
@@ -595,11 +598,11 @@ const DB = [
   {n:"Pomme de terre",                   gi:65, cat:"Légume",      ori:["occidentale"],           alt:{occidentale:"Patate douce (IG 63) ou igname (IG 35)", orientale:"Igname (IG 35)", asiatique:"Taro (IG 56)"}},
   {n:"Pomme de terre au four",           gi:85, cat:"Légume",      ori:["occidentale"],           alt:{occidentale:"Patate douce cuite vapeur (IG 63) ou igname (IG 35)", orientale:"Igname (IG 35)", asiatique:"Taro (IG 56)"}},
   {n:"Purée de pomme de terre",          gi:80, cat:"Légume",      ori:["occidentale"],           alt:{occidentale:"Purée de patate douce (IG ~63) ou purée de céleri-rave (IG 35)", orientale:"Purée d'igname (IG 35)", asiatique:"Purée de taro (IG 56)"}},
-  {n:"Patate douce cuite",               gi:63, cat:"Légume",      ori:["orientale"]},
-  {n:"Patate douce",                     gi:63, cat:"Légume",      ori:["orientale"]},
+  {n:"Patate douce cuite",               gi:63, cat:"Légume",      ori:["orientale","sud-americaine"]},
+  {n:"Patate douce",                     gi:63, cat:"Légume",      ori:["orientale","sud-americaine"]},
   {n:"Igname cuite",                     gi:35, cat:"Légume",      ori:["orientale"]},
   {n:"Taro cuit",                        gi:56, cat:"Légume",      ori:["asiatique"]},
-  {n:"Manioc cuit",                      gi:46, cat:"Légume",      ori:["orientale"]},
+  {n:"Manioc cuit",                      gi:46, cat:"Légume",      ori:["orientale","sud-americaine"]},
   {n:"Courge butternut cuite",           gi:51, cat:"Légume",      ori:["occidentale"]},
   {n:"Citrouille cuite",                 gi:75, cat:"Légume",      ori:["occidentale"],           alt:{occidentale:"Courge butternut (IG 51) ou courgette (IG 15)", orientale:"Potimarron (IG 65)", asiatique:"Taro (IG 56)"}},
   {n:"Potiron cuit",                     gi:75, cat:"Légume",      ori:["occidentale"],           alt:{occidentale:"Courge butternut (IG 51) ou courgette (IG 15)", orientale:"Potimarron (IG 65)", asiatique:"Taro (IG 56)"}},
@@ -685,7 +688,7 @@ const DB = [
   {n:"Melon",                            gi:65, cat:"Fruit",       ori:["orientale"],             alt:{orientale:"Orange (IG 43) ou grenade (IG 53)", occidentale:"Pêche (IG 42)", asiatique:"Kiwi (IG 50)"}},
   {n:"Mangue",                           gi:60, cat:"Fruit",       ori:["asiatique"],             alt:{asiatique:"Kiwi (IG 50) ou mandarine (IG 30)", orientale:"Grenade (IG 53)", occidentale:"Pomme (IG 36)"}},
   {n:"Papaye",                           gi:56, cat:"Fruit",       ori:["asiatique"]},
-  {n:"Ananas",                           gi:59, cat:"Fruit",       ori:["tropicale"],             alt:{asiatique:"Kiwi (IG 50) ou mandarine (IG 30)", occidentale:"Fraise (IG 40)", orientale:"Grenade (IG 53)"}},
+  {n:"Ananas",                           gi:59, cat:"Fruit",       ori:["tropicale","sud-americaine"],alt:{asiatique:"Kiwi (IG 50) ou mandarine (IG 30)", occidentale:"Fraise (IG 40)", orientale:"Grenade (IG 53)"}},
   {n:"Kiwi",                             gi:50, cat:"Fruit",       ori:["asiatique"]},
   {n:"Pêche",                            gi:42, cat:"Fruit",       ori:["occidentale"]},
   {n:"Abricot frais",                    gi:57, cat:"Fruit",       ori:["orientale"]},
@@ -693,18 +696,18 @@ const DB = [
   {n:"Dattes",                           gi:62, cat:"Fruit",       ori:["orientale"],             alt:{orientale:"Figues fraîches (IG 35) ou abricots secs (IG 30)", asiatique:"Litchi (IG 57)", occidentale:"Pruneaux (IG 29)"}},
   {n:"Grenade",                          gi:53, cat:"Fruit",       ori:["orientale"]},
   {n:"Litchi",                           gi:57, cat:"Fruit",       ori:["asiatique"]},
-  {n:"Avocat",                           gi:15, cat:"Fruit",       ori:["tropicale"]},
+  {n:"Avocat",                           gi:15, cat:"Fruit",       ori:["tropicale","sud-americaine"]},
   {n:"Noix de coco",                     gi:45, cat:"Fruit",       ori:["asiatique"]},
   // Fruits supplémentaires
   {n:"Nectarine",                        gi:35, cat:"Fruit",       ori:["occidentale"]},
   {n:"Mûre",                             gi:25, cat:"Fruit",       ori:["occidentale"]},
   {n:"Cassis",                           gi:15, cat:"Fruit",       ori:["occidentale"]},
   {n:"Groseille",                        gi:25, cat:"Fruit",       ori:["occidentale"]},
-  {n:"Goyave",                           gi:30, cat:"Fruit",       ori:["tropicale"]},
+  {n:"Goyave",                           gi:30, cat:"Fruit",       ori:["tropicale","sud-americaine"]},
   {n:"Physalis",                         gi:20, cat:"Fruit",       ori:["tropicale"]},
   {n:"Carambole",                        gi:25, cat:"Fruit",       ori:["asiatique"]},
   {n:"Coing",                            gi:35, cat:"Fruit",       ori:["orientale"]},
-  {n:"Banane plantain cuite",            gi:40, cat:"Fruit",       ori:["tropicale"]},
+  {n:"Banane plantain cuite",            gi:40, cat:"Fruit",       ori:["tropicale","sud-americaine"]},
   // ── LÉGUMINEUSES AFRICAINES ──
   {n:"Niébé / haricots à œil noir",     gi:30, cat:"Légumineuse", ori:["africaine"]},
   {n:"Pois bambara",                     gi:30, cat:"Légumineuse", ori:["africaine"]},
@@ -717,7 +720,7 @@ const DB = [
   {n:"Baobab (pulpe fraîche)",           gi:20, cat:"Fruit",       ori:["africaine"]},
   {n:"Baobab (poudre)",                  gi:20, cat:"Fruit",       ori:["africaine"]},
   {n:"Datte de palmier",                 gi:55, cat:"Fruit",       ori:["africaine"]},
-  {n:"Maracuja / fruit de la passion",   gi:30, cat:"Fruit",       ori:["africaine"]},
+  {n:"Maracuja / fruit de la passion",   gi:30, cat:"Fruit",       ori:["africaine","sud-americaine"]},
   {n:"Anone / corossol",                 gi:35, cat:"Fruit",       ori:["africaine"]},
   {n:"Jujube frais",                     gi:35, cat:"Fruit",       ori:["africaine"]},
   // ── VIANDES & PROTÉINES AFRICAINES ──
@@ -951,6 +954,40 @@ const DB = [
   {n:"Skyr",                             gi:11, cat:"Protéine",    ori:["occidentale"]},
   {n:"Fromage blanc 0%",                 gi:30, cat:"Protéine",    ori:["occidentale"]},
   {n:"Proteines de pois",                gi:0,  cat:"Protéine",    ori:["occidentale"]},
+
+  // ── HERBES & AROMATES FRAÎCHES ──
+  {n:"Basilic frais",                    gi:15, cat:"Légume",      ori:["occidentale","orientale"]},
+  {n:"Menthe fraîche",                   gi:15, cat:"Légume",      ori:["orientale","occidentale"]},
+  {n:"Persil",                           gi:15, cat:"Légume",      ori:["occidentale","orientale"]},
+  {n:"Coriandre fraîche",                gi:15, cat:"Légume",      ori:["asiatique","orientale"]},
+
+  // ── CONDIMENTS, FROMAGES & AUTRES COMPLÉMENTS ──
+  {n:"Olives noires",                    gi:15, cat:"Condiment",   ori:["occidentale","orientale"]},
+  {n:"Olives vertes",                    gi:15, cat:"Condiment",   ori:["occidentale","orientale"]},
+  {n:"Pignons de pin",                   gi:15, cat:"Oléagineux",  ori:["occidentale","orientale"]},
+  {n:"Cornichons",                       gi:15, cat:"Condiment",   ori:["occidentale"]},
+  {n:"Mayonnaise",                       gi:0,  cat:"Condiment",   ori:["occidentale"]},
+  {n:"Salade verte",                     gi:15, cat:"Légume",      ori:["occidentale"]},
+  {n:"Cheddar",                          gi:0,  cat:"Laitage",     ori:["occidentale"]},
+  {n:"Gouda",                            gi:0,  cat:"Laitage",     ori:["occidentale"]},
+  {n:"Pommes de terre frites",           gi:54, cat:"Légume",      ori:["occidentale"],           alt:{occidentale:"Patate douce vapeur (IG 63) ou pomme de terre vapeur (IG 65)", orientale:"Igname (IG 35)", asiatique:"Taro (IG 56)"}},
+
+  // ── CUISINE SUD-AMÉRICAINE ──
+  {n:"Arepa de maïs",                    gi:70, cat:"Pain",        ori:["sud-americaine"],        alt:{"sud-americaine":"Tortilla de maïs (IG 52) ou yuca bouillie (IG 46)", occidentale:"Pain au levain (IG 54)", orientale:"Pain pita complet (IG 57)"}},
+  {n:"Tortilla de maïs",                 gi:52, cat:"Pain",        ori:["sud-americaine"]},
+  {n:"Yuca bouillie",                    gi:46, cat:"Légume",      ori:["sud-americaine"]},
+  {n:"Yuca frite",                       gi:70, cat:"Légume",      ori:["sud-americaine"],        alt:{"sud-americaine":"Yuca bouillie (IG 46) ou patate douce vapeur (IG 63)", occidentale:"Pomme de terre vapeur (IG 65)", asiatique:"Taro (IG 56)"}},
+  {n:"Farofa de manioc",                 gi:65, cat:"Céréale",     ori:["sud-americaine"],        alt:{"sud-americaine":"Quinoa cuit (IG 53) ou riz brun cuit (IG 50)", occidentale:"Boulgour (IG 46)", asiatique:"Riz brun cuit (IG 50)"}},
+  {n:"Tostones de plantain (frits)",     gi:70, cat:"Fruit",       ori:["sud-americaine"],        alt:{"sud-americaine":"Plantain bouilli (IG 40) ou patate douce vapeur (IG 63)", occidentale:"Banane (IG 60)", asiatique:"Mangue (IG 60)"}},
+  {n:"Açaï (pulpe)",                     gi:30, cat:"Fruit",       ori:["sud-americaine"]},
+  {n:"Chimichurri",                      gi:15, cat:"Condiment",   ori:["sud-americaine"]},
+  {n:"Salsa criolla",                    gi:20, cat:"Condiment",   ori:["sud-americaine"]},
+  {n:"Pico de gallo",                    gi:20, cat:"Condiment",   ori:["sud-americaine"]},
+  {n:"Dulce de leche",                   gi:60, cat:"Sucre",       ori:["sud-americaine"],        alt:{"sud-americaine":"Sucre de coco (IG 35) ou banane écrasée (IG 60)", occidentale:"Sucre de coco (IG 35) ou xylitol (IG 7)", orientale:"Sirop de datte (IG 55)"}},
+  {n:"Ceviche de poisson",               gi:0,  cat:"Poisson",     ori:["sud-americaine"]},
+  {n:"Empanada à la viande",             gi:55, cat:"Transformé",  ori:["sud-americaine"],        alt:{"sud-americaine":"Arepa de maïs garnie de viande maigre (IG 70) ou ceviche (IG 0)", occidentale:"Pain complet garni de viande maigre (IG ~50)", orientale:"Pain pita complet garni (IG 57)"}},
+  {n:"Yerba maté (infusion)",            gi:0,  cat:"Boisson",     ori:["sud-americaine"]},
+  {n:"Choclo (maïs péruvien)",           gi:52, cat:"Légume",      ori:["sud-americaine"]},
 ];
 
 // Build lookup index (normalized)
@@ -1532,6 +1569,36 @@ const FOOD_NAMES = {
 "Quorn":{en:"Quorn",ar:"كورن"},
 "Skyr":{en:"Skyr",ar:"سكير"},
 "Proteines de pois":{en:"Pea protein",ar:"بروتين البازلاء"},
+// Herbes & aromates fraîches
+"Basilic frais":{en:"Fresh basil",ar:"ريحان طازج"},
+"Menthe fraîche":{en:"Fresh mint",ar:"نعناع طازج"},
+"Persil":{en:"Parsley",ar:"بقدونس"},
+"Coriandre fraîche":{en:"Fresh coriander",ar:"كزبرة طازجة"},
+// Condiments, fromages & autres compléments
+"Olives noires":{en:"Black olives",ar:"زيتون أسود"},
+"Olives vertes":{en:"Green olives",ar:"زيتون أخضر"},
+"Pignons de pin":{en:"Pine nuts",ar:"صنوبر"},
+"Cornichons":{en:"Pickles",ar:"مخلل خيار"},
+"Salade verte":{en:"Green salad",ar:"خس / سلطة خضراء"},
+"Cheddar":{en:"Cheddar cheese",ar:"جبن شيدر"},
+"Gouda":{en:"Gouda cheese",ar:"جبن جودة"},
+"Pommes de terre frites":{en:"French fries",ar:"بطاطا مقلية"},
+// Cuisine sud-américaine
+"Arepa de maïs":{en:"Corn arepa",ar:"أريبا الذرة"},
+"Tortilla de maïs":{en:"Corn tortilla",ar:"تورتيا الذرة"},
+"Yuca bouillie":{en:"Boiled cassava",ar:"يوكا مسلوقة"},
+"Yuca frite":{en:"Fried cassava",ar:"يوكا مقلية"},
+"Farofa de manioc":{en:"Cassava farofa",ar:"فاروفا المنيهوت"},
+"Tostones de plantain (frits)":{en:"Fried plantain (tostones)",ar:"موز الجنة المقلي (توستونيس)"},
+"Açaï (pulpe)":{en:"Açaí pulp",ar:"عجينة الأساي"},
+"Chimichurri":{en:"Chimichurri sauce",ar:"صلصة تشيميتشوري"},
+"Salsa criolla":{en:"Salsa criolla",ar:"صلصة كريولا"},
+"Pico de gallo":{en:"Pico de gallo",ar:"بيكو دي غايو"},
+"Dulce de leche":{en:"Dulce de leche",ar:"دولسي دي ليتشي"},
+"Ceviche de poisson":{en:"Fish ceviche",ar:"سيفيتشي السمك"},
+"Empanada à la viande":{en:"Meat empanada",ar:"إمبانادا باللحم"},
+"Yerba maté (infusion)":{en:"Yerba mate (infusion)",ar:"شاي اليربا متة"},
+"Choclo (maïs péruvien)":{en:"Choclo (Peruvian corn)",ar:"تشوكلو (ذرة بيروفية)"},
 };
 
 // ── Alias multilingues EN + AR → nom français normalisé ──
@@ -1673,6 +1740,31 @@ const ALIASES = {
   'بطاطا حلوة':'patate douce','عدس':'lentilles vertes cuites',
   'حمص':'pois chiches','تفاحة':'pomme','موزة':'banane',
   'برتقال':'orange','مانغو':'mangue','توفو':'tofu ferme',
+  // Herbes & aromates
+  basil:'basilic frais',mint:'menthe fraiche',parsley:'persil',
+  coriander:'coriandre fraiche',cilantro:'coriandre fraiche',
+  // Condiments, fromages & autres compléments
+  olive:'olives noires',olives:'olives noires','black olives':'olives noires',
+  'green olives':'olives vertes','pine nuts':'pignons de pin',pinenuts:'pignons de pin',
+  pickle:'cornichons',pickles:'cornichons',gherkin:'cornichons',gherkins:'cornichons',
+  mayo:'mayonnaise',mayonnaise:'mayonnaise',
+  salad:'salade verte','green salad':'salade verte','lettuce salad':'salade verte',
+  cheddar:'cheddar',gouda:'gouda',
+  fries:'pommes de terre frites','french fries':'pommes de terre frites',
+  'potato fries':'pommes de terre frites',frites:'pommes de terre frites',
+  // Cuisine sud-américaine
+  arepa:'arepa de mais','corn arepa':'arepa de mais',
+  'corn tortilla':'tortilla de mais',
+  cassava:'manioc cuit',yuca:'yuca bouillie','boiled cassava':'yuca bouillie',
+  'fried cassava':'yuca frite',farofa:'farofa de manioc',
+  plantain:'banane plantain cuite',tostones:'tostones de plantain frits',
+  patacones:'tostones de plantain frits',acai:'acai pulpe',
+  chimichurri:'chimichurri','salsa criolla':'salsa criolla',
+  'pico de gallo':'pico de gallo',
+  'dulce de leche':'dulce de leche',ceviche:'ceviche de poisson',
+  empanada:'empanada a la viande',empanadas:'empanada a la viande',
+  'yerba mate':'yerba mate infusion',mate:'yerba mate infusion',
+  choclo:'choclo mais peruvien',
 };
 
 function resolveQuery(query) {
@@ -1890,7 +1982,7 @@ function renderResults(items, recipeGI, recipeName, hasGlucidic) {
   const barColor = recipeGI === 0 ? '#95a5a6' : recipeGI <= 55 ? 'var(--green)' : recipeGI <= 69 ? 'var(--orange)' : 'var(--red)';
   const giLabel = recipeGI === 0 ? t.gi_none : recipeGI <= 55 ? t.gi_low : recipeGI <= 69 ? t.gi_moderate : t.gi_high;
 
-  const cuisineLabel = {occidentale: t.cuisine_west, orientale: t.cuisine_east, asiatique: t.cuisine_asian, africaine: t.cuisine_african}[selectedCuisine] || selectedCuisine;
+  const cuisineLabel = {occidentale: t.cuisine_west, orientale: t.cuisine_east, asiatique: t.cuisine_asian, africaine: t.cuisine_african, 'sud-americaine': t.cuisine_south_american}[selectedCuisine] || selectedCuisine;
 
   // Alternatives
   const highGiItems = items.filter(it => it.food && it.food.gi >= 70 && it.food.alt);
@@ -2746,6 +2838,7 @@ var LANGS = {
     cuisine_east: "Orientale",
     cuisine_asian: "Asiatique",
     cuisine_african: "Africaine",
+    cuisine_south_american: "Sud-américaine",
     ing_title: "📝 Ingrédients de la recette",
     ing_hint: "Tapez le nom d'un aliment et saisissez la quantité en grammes. L'autocomplétion vous guide.",
     ing_add: "+ Ajouter un aliment",
@@ -2898,6 +2991,7 @@ var LANGS = {
     cuisine_east: "Eastern",
     cuisine_asian: "Asian",
     cuisine_african: "African",
+    cuisine_south_american: "South American",
     ing_title: "📝 Recipe ingredients",
     ing_hint: "Type a food name and enter the quantity in grams. Autocomplete will guide you.",
     ing_add: "+ Add an ingredient",
@@ -3050,6 +3144,7 @@ var LANGS = {
     cuisine_east: "شرقي",
     cuisine_asian: "آسيوي",
     cuisine_african: "أفريقي",
+    cuisine_south_american: "أمريكا الجنوبية",
     ing_title: "📝 مكونات الوصفة",
     ing_hint: "اكتب اسم المادة الغذائية وأدخل الكمية بالغرام. الإكمال التلقائي سيرشدك.",
     ing_add: "+ إضافة مكوّن",
