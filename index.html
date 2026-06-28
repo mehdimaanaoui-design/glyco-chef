@@ -4,23 +4,108 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>GlycoChef — Analyseur d'Index Glycémique de vos Recettes</title>
-<meta name="description" content="Analysez l'index glycémique de vos recettes. Alternatives saines, conseils personnalisés. Base de 350+ aliments FR/EN/AR.">
-<meta name="keywords" content="index glycémique, charge glycémique, recette IG bas, alimentation saine, diabète, glycémie, aliments IG, calculateur glycémique">
+<meta name="description" content="Analysez l'index glycémique de vos recettes. Alternatives saines, conseils personnalisés. Base de 480+ aliments FR/EN/AR.">
+<meta name="keywords" content="index glycémique, charge glycémique, recette IG bas, alimentation saine, diabète, glycémie, aliments IG, calculateur glycémique, cuisine diabétique, IG aliments">
 <meta name="author" content="GlycoChef">
 <meta name="robots" content="index, follow">
 <link rel="canonical" href="https://glycochef.netlify.app/">
 
+<!-- hreflang multilingue -->
+<link rel="alternate" hreflang="fr" href="https://glycochef.netlify.app/">
+<link rel="alternate" hreflang="en" href="https://glycochef.netlify.app/">
+<link rel="alternate" hreflang="ar" href="https://glycochef.netlify.app/">
+<link rel="alternate" hreflang="x-default" href="https://glycochef.netlify.app/">
+
 <!-- Open Graph (partage sur réseaux sociaux) -->
-<meta property="og:title" content="GlycoChef — Analyseur d'Index Glycémique">
-<meta property="og:description" content="Analysez l'index glycémique de vos recettes et découvrez des alternatives plus saines. Base de données de 350+ aliments FR/EN/AR.">
+<meta property="og:title" content="GlycoChef — Analyseur d'Index Glycémique de vos Recettes">
+<meta property="og:description" content="Analysez l'index glycémique de vos recettes et découvrez des alternatives plus saines. Base de données de 480+ aliments FR/EN/AR.">
 <meta property="og:type" content="website">
 <meta property="og:url" content="https://glycochef.netlify.app/">
 <meta property="og:locale" content="fr_FR">
+<meta property="og:locale:alternate" content="en_US">
+<meta property="og:locale:alternate" content="ar_SA">
+<meta property="og:site_name" content="GlycoChef">
 
 <!-- Twitter Card -->
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="GlycoChef — Analyseur d'Index Glycémique">
-<meta name="twitter:description" content="Analysez l'index glycémique de vos recettes et découvrez des alternatives plus saines.">
+<meta name="twitter:description" content="Analysez l'index glycémique de vos recettes et découvrez des alternatives plus saines. Base de 480+ aliments FR/EN/AR.">
+<meta name="twitter:url" content="https://glycochef.netlify.app/">
+
+<!-- Schema.org JSON-LD — WebApplication -->
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": "WebApplication",
+  "name": "GlycoChef",
+  "url": "https://glycochef.netlify.app/",
+  "description": "Analyseur d'index glycémique de recettes. Saisissez vos ingrédients, obtenez l'IG global de votre recette et des alternatives saines adaptées à votre type de cuisine. Base de 480+ aliments.",
+  "applicationCategory": "HealthApplication",
+  "browserRequirements": "Requires JavaScript",
+  "inLanguage": ["fr", "en", "ar"],
+  "isAccessibleForFree": true,
+  "offers": {
+    "@type": "Offer",
+    "price": "0",
+    "priceCurrency": "EUR"
+  },
+  "creator": {
+    "@type": "Organization",
+    "name": "GlycoChef"
+  },
+  "keywords": "index glycémique, charge glycémique, recette IG bas, alimentation saine, diabète, glycémie, cuisine diabétique"
+}
+</script>
+
+<!-- Schema.org JSON-LD — FAQPage -->
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": "FAQPage",
+  "mainEntity": [
+    {
+      "@type": "Question",
+      "name": "Qu'est-ce que l'index glycémique (IG) ?",
+      "acceptedAnswer": {
+        "@type": "Answer",
+        "text": "L'index glycémique (IG) mesure la vitesse à laquelle un aliment fait monter le taux de sucre dans le sang (glycémie). Il est noté de 0 à 100. Un IG bas (inférieur à 55) indique une élévation lente et modérée de la glycémie, favorable pour la santé et la gestion du diabète."
+      }
+    },
+    {
+      "@type": "Question",
+      "name": "Comment calculer l'index glycémique d'une recette ?",
+      "acceptedAnswer": {
+        "@type": "Answer",
+        "text": "GlycoChef calcule l'index glycémique pondéré de votre recette : saisissez chaque ingrédient et sa quantité en grammes, l'application calcule automatiquement l'IG global en tenant compte de la charge glycémique de chaque aliment et de son poids dans la recette."
+      }
+    },
+    {
+      "@type": "Question",
+      "name": "Quels aliments ont un index glycémique bas ?",
+      "acceptedAnswer": {
+        "@type": "Answer",
+        "text": "Les aliments à IG bas (inférieur à 55) incluent la plupart des légumes, les légumineuses (lentilles, pois chiches), le quinoa, les céréales complètes, les oléagineux (amandes, noix), les produits laitiers non sucrés et la majorité des fruits frais. GlycoChef propose une base de 480+ aliments classés par IG."
+      }
+    },
+    {
+      "@type": "Question",
+      "name": "GlycoChef est-il gratuit ?",
+      "acceptedAnswer": {
+        "@type": "Answer",
+        "text": "Oui, GlycoChef est entièrement gratuit et accessible sans inscription. L'application fonctionne directement dans votre navigateur en français, anglais et arabe."
+      }
+    },
+    {
+      "@type": "Question",
+      "name": "GlycoChef est-il adapté aux personnes diabétiques ?",
+      "acceptedAnswer": {
+        "@type": "Answer",
+        "text": "GlycoChef est conçu pour aider à comprendre l'impact glycémique des recettes et à faire de meilleurs choix alimentaires. Il propose des alternatives à IG plus bas pour les ingrédients à fort index glycémique. Il ne remplace pas l'avis d'un professionnel de santé."
+      }
+    }
+  ]
+}
+</script>
 <!-- Google tag (gtag.js) -->
 <script async src="https://www.googletagmanager.com/gtag/js?id=G-WPTCJQWEDS"></script>
 <script>
